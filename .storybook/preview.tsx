@@ -1,6 +1,6 @@
 import type { Preview } from '@storybook/react-vite'
 import '../src/styles/globals.css'
-// theme.css será importado na T-08 após definição dos tokens
+import '../src/styles/theme.css'
 
 const preview: Preview = {
   parameters: {
