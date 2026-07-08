@@ -1,0 +1,60 @@
+import React from 'react'
+import { cn } from '../../../utils/cn'
+import { Spinner } from '../Spinner/Spinner'
+
+type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'outline' | 'danger'
+type ButtonSize = 'sm' | 'md' | 'lg'
+
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: ButtonVariant
+  size?: ButtonSize
+  isLoading?: boolean
+  leftIcon?: React.ReactNode
+  rightIcon?: React.ReactNode
+}
+
+const variantClasses: Record<ButtonVariant, string> = {
+  primary: 'bg-primary text-primary-foreground hover:bg-primary-hover',
+  secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary-hover',
+  ghost: 'bg-transparent text-foreground hover:bg-muted',
+  outline: 'border border-border bg-transparent text-foreground hover:bg-muted',
+  danger: 'bg-destructive text-destructive-foreground hover:bg-destructive-hover',
+}
+
+const sizeClasses: Record<ButtonSize, string> = {
+  sm: 'h-8 px-3 text-sm gap-1.5',
+  md: 'h-10 px-4 text-base gap-2',
+  lg: 'h-12 px-6 text-lg gap-2',
+}
+
+const baseClasses =
+  'inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50'
+
+export function Button({
+  variant = 'primary',
+  size = 'md',
+  isLoading = false,
+  leftIcon,
+  rightIcon,
+  children,
+  className,
+  disabled,
+  ...props
+}: ButtonProps) {
+  return (
+    <button
+      className={cn(baseClasses, variantClasses[variant], sizeClasses[size], className)}
+      disabled={isLoading || disabled}
+      aria-busy={isLoading ? 'true' : undefined}
+      {...props}
+    >
+      {isLoading ? (
+        <Spinner size="sm" aria-label="Loading" />
+      ) : (
+        leftIcon
+      )}
+      {children}
+      {!isLoading && rightIcon}
+    </button>
+  )
+}
