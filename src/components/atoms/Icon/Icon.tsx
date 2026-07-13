@@ -5,6 +5,8 @@ import { cn } from '../../../utils/cn'
 type IconName = keyof typeof LucideIcons
 type IconSize = 'sm' | 'md' | 'lg' | 'xl'
 
+export type { IconName, IconSize }
+
 interface IconProps {
   name: IconName
   size?: IconSize
