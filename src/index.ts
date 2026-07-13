@@ -86,3 +86,16 @@ export { Sidebar } from './components/organisms/Sidebar/Sidebar'
 
 export { Table } from './components/organisms/Table/Table'
 export type { TableColumn } from './components/organisms/Table/Table'
+
+export { Footer } from './components/organisms/Footer/Footer'
+export type { FooterProps, FooterColumn, FooterSocialLink } from './components/organisms/Footer/Footer'
+
+export { Toast } from './components/organisms/Toast/Toast'
+export type { ToastProps, ToastVariant, ToastAction } from './components/organisms/Toast/Toast'
+
+export { ToastProvider } from './components/organisms/Toast/ToastProvider'
+export type { ToastContextValue, ToastOptions, ToastItem } from './components/organisms/Toast/ToastProvider'
+
+export { ToastViewport } from './components/organisms/Toast/ToastViewport'
+
+export { useToast } from './components/organisms/Toast/useToast'
