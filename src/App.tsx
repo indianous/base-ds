@@ -606,12 +606,10 @@ export function App() {
                     { label: 'Docs', href: '#' },
                     { label: 'Changelog', href: '#' },
                   ]}
-                  actions={
-                    <div className="flex items-center gap-2">
-                      <Button variant="ghost" size="sm" leftIcon={<Icon name="GitBranch" size="sm" />}>GitHub</Button>
-                      <Button variant="primary" size="sm">Get Started</Button>
-                    </div>
-                  }
+                  actions={[
+                    <Button key="github" variant="ghost" size="sm" leftIcon={<Icon name="GitBranch" size="sm" />}>GitHub</Button>,
+                    <Button key="cta" variant="primary" size="sm">Get Started</Button>,
+                  ]}
                 />
               </div>
             </ComponentCard>

@@ -154,6 +154,32 @@ Nova prop `search?: ReactNode` (o consumidor injeta um `SearchField` já existen
 8. **3.8** — Atualizar `Navbar.test.tsx`: renderiza busca no lugar certo, items descem para segunda linha quando há busca, dropdown item abre o `DropdownMenu`, múltiplas actions renderizam todas, botão hambúrguer abre/fecha o Drawer, `jest-axe`.
 9. **3.9** — Revisar `src/index.ts` — nenhuma mudança de export necessária (Navbar já exportado), mas conferir se `DropdownMenuItem`/`NavItem` precisam ser exportados como tipos públicos (recomendo exportar `NavItem` já que vira união discriminada útil para consumidores tipar arrays externos).
 
+### Adendo 3.10 — Layout específico de mobile (logo centralizado + actions colapsáveis)
+
+Refinamento pedido após a implementação inicial da Tarefa 3: no breakpoint mobile (abaixo de `md`), a ordem visual não deve ser "logo à esquerda, hambúrguer/actions à direita" (herdada do desktop) — deve ser:
+
+- **Esquerda**: botão hambúrguer (abre o `Drawer` de navegação já existente, `side="left"`).
+- **Centro**: `logo`.
+- **Direita**:
+  - **1 action** → renderiza essa action diretamente.
+  - **mais de 1 action** → um botão com ícone de engrenagem (`Icon name="Settings"`, `aria-label="More actions"`) que abre um **novo `Drawer`, `side="right"`**, listando todas as actions em coluna.
+
+**Decisão de implementação — CSS puro, sem detecção de viewport em JS**: o projeto não tem (e não deve ganhar só por causa disso) nenhum hook de `matchMedia`/resize — todo responsivo existente é feito via classes `hidden md:flex` / `flex md:hidden` do Tailwind. Mantendo esse padrão:
+
+- A linha 1 passa a ter 4 "slots" flex (`flex-1` cada, technique já usada para centralizar `logo`/`search`/`items`), na seguinte ordem de DOM: **hambúrguer** (`flex md:hidden`) → **logo** (sempre visível, `justify-center` no mobile / `justify-start` no desktop) → **search-ou-items** (`hidden md:flex`, inalterado) → **actions** (sempre visível, mas com conteúdo interno diferente por breakpoint).
+- Como elementos com `display:none` (via `hidden`) saem do fluxo do flex, a ordem visual correta emerge automaticamente em cada breakpoint **sem precisar de `order-*`**: no mobile, o slot de busca/items desaparece do fluxo e sobram hambúrguer → logo → actions (exatamente a ordem pedida); no desktop, o slot do hambúrguer desaparece e sobram logo → busca/items → actions (ordem já existente, preservada).
+- O slot de `actions` sempre existe nas duas larguras (não precisa de `hidden`/`flex` no wrapper externo — só muda o que ele contém): dentro dele, um sub-bloco `hidden md:flex` mostra a lista completa de actions (desktop, comportamento já existente) e um sub-bloco `flex md:hidden` mostra a action única **ou** o botão de engrenagem (mobile).
+- Isso significa que, com **exatamente 1 action**, o mesmo elemento React é montado duas vezes no DOM (uma cópia em cada sub-bloco, cada uma visível só no seu breakpoint via CSS) — mesmo padrão já usado nesta tarefa para `logo`/`search`/`items` no Drawer de navegação. Testes que dependem de encontrar essa action por `getByTestId`/`getByRole` precisam usar `getAllBy*` (2 ocorrências) ao invés de `getBy*`.
+- Novo estado interno `isActionsDrawerOpen` (mesmo padrão de `isMobileMenuOpen`), independente do drawer de navegação.
+
+**Tarefas do adendo:**
+
+1. **3.10.1** — Reestruturar a linha 1 do `Navbar.tsx` nos 4 slots `flex-1` descritos acima (hambúrguer, logo, busca/items, actions), sem duplicar `logo`.
+2. **3.10.2** — Sub-blocos dentro do slot de actions: `hidden md:flex` (lista completa) e `flex md:hidden` (1 action direta, ou botão de engrenagem quando `actions.length > 1`).
+3. **3.10.3** — Novo `<Drawer side="right" open={isActionsDrawerOpen} onClose={...} title="Actions">` renderizado só quando `actions !== undefined && actions.length > 1`, listando as actions em coluna (`flex flex-col gap-2`).
+4. **3.10.4** — Atualizar `Navbar.test.tsx`: botão hambúrguer é o primeiro elemento focável da linha (ordem DOM), botão de engrenagem some/aparece conforme quantidade de actions, drawer de actions abre/fecha, ação única aparece 1x visível por breakpoint (2x no DOM total via `getAllBy*`), `jest-axe` com múltiplas actions abrindo o drawer direito.
+5. **3.10.5** — Atualizar `Navbar.stories.tsx` (`MobileDrawer` e uma nova story dedicada a múltiplas actions em mobile) para refletir o novo comportamento.
+
 ---
 
 ## 4. Button polimórfico (button **ou** link, nunca os dois)
