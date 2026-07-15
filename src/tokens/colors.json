@@ -145,6 +145,10 @@
     "muted":               "#f3f4f6",
     "muted-foreground":    "#6b7280",
 
+    "brutalist":           "#fcd34d",
+    "brutalist-foreground":"#111827",
+    "brutalist-border":    "#111827",
+
     "border":              "#e5e7eb",
     "input":               "#d1d5db",
     "ring":                "#2563eb",

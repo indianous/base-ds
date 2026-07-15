@@ -1,6 +1,9 @@
 // ────────────────────────────────────────────────────────────────────────────
 // base-ds — Public API
 // ────────────────────────────────────────────────────────────────────────────
+// NOTE: this package is client-only (see tsup.config.ts `banner` — esbuild
+// drops a "use client" directive written here when bundling to a single
+// file, so it's injected at the dist output level instead).
 
 // Utilities
 export { cn } from './utils/cn'
@@ -13,6 +16,7 @@ export { Badge } from './components/atoms/Badge/Badge'
 export type { BadgeProps } from './components/atoms/Badge/Badge'
 
 export { Button } from './components/atoms/Button/Button'
+export type { ButtonProps } from './components/atoms/Button/Button'
 
 export { Checkbox } from './components/atoms/Checkbox/Checkbox'
 export type { CheckboxProps } from './components/atoms/Checkbox/Checkbox'

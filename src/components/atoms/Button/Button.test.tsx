@@ -112,4 +112,117 @@ describe('Button', () => {
     const results = await axe(container)
     expect(results).toHaveNoViolations()
   })
+
+  describe('as="a"', () => {
+    it('renders an anchor element instead of a button', () => {
+      render(<Button as="a" href="/docs">Docs</Button>)
+      const link = screen.getByRole('link')
+      expect(link.tagName).toBe('A')
+      expect(screen.queryByRole('button')).not.toBeInTheDocument()
+    })
+
+    it('propagates href to the anchor', () => {
+      render(<Button as="a" href="/docs">Docs</Button>)
+      expect(screen.getByRole('link')).toHaveAttribute('href', '/docs')
+    })
+
+    it('applies the same variant and size classes as the button mode', () => {
+      render(<Button as="a" href="/docs" variant="secondary" size="lg">Docs</Button>)
+      const link = screen.getByRole('link')
+      expect(link).toHaveClass('bg-secondary')
+      expect(link).toHaveClass('h-12')
+    })
+
+    it('calls onClick when the link is not disabled', async () => {
+      const onClick = vi.fn()
+      render(<Button as="a" href="/docs" onClick={onClick}>Docs</Button>)
+      await userEvent.click(screen.getByRole('link'))
+      expect(onClick).toHaveBeenCalledTimes(1)
+    })
+
+    it('sets aria-disabled and blocks onClick when disabled', async () => {
+      const onClick = vi.fn()
+      render(<Button as="a" href="/docs" disabled onClick={onClick}>Docs</Button>)
+      const link = screen.getByRole('link')
+      expect(link).toHaveAttribute('aria-disabled', 'true')
+      expect(link).not.toHaveAttribute('disabled')
+      await userEvent.click(link)
+      expect(onClick).not.toHaveBeenCalled()
+    })
+
+    it('sets aria-disabled and blocks onClick when isLoading', async () => {
+      const onClick = vi.fn()
+      render(<Button as="a" href="/docs" isLoading onClick={onClick}>Docs</Button>)
+      const link = screen.getByRole('link')
+      expect(link).toHaveAttribute('aria-disabled', 'true')
+      expect(link).toHaveAttribute('aria-busy', 'true')
+      await userEvent.click(link)
+      expect(onClick).not.toHaveBeenCalled()
+    })
+
+    it('shows Spinner when isLoading=true', () => {
+      render(<Button as="a" href="/docs" isLoading>Docs</Button>)
+      expect(screen.getByRole('status')).toBeInTheDocument()
+    })
+
+    it('is not reachable by keyboard tab order when disabled', () => {
+      render(<Button as="a" href="/docs" disabled>Docs</Button>)
+      expect(screen.getByRole('link')).toHaveAttribute('tabIndex', '-1')
+    })
+
+    it('has no accessibility violations', async () => {
+      const { container } = render(<Button as="a" href="/docs">Docs</Button>)
+      const results = await axe(container)
+      expect(results).toHaveNoViolations()
+    })
+  })
+
+  describe('variant="brutalist"', () => {
+    it('applies bg-brutalist class', () => {
+      render(<Button variant="brutalist">Submit</Button>)
+      expect(screen.getByRole('button')).toHaveClass('bg-brutalist')
+    })
+
+    it('renders a decorative shadow element behind the button', () => {
+      const { container } = render(<Button variant="brutalist">Submit</Button>)
+      const shadow = container.querySelector('[aria-hidden="true"]')
+      expect(shadow).not.toBeNull()
+      expect(shadow).toHaveClass('bg-brutalist-border')
+    })
+
+    it('does not render a decorative shadow element for other variants', () => {
+      const { container } = render(<Button variant="primary">Submit</Button>)
+      expect(container.querySelector('[aria-hidden="true"]')).toBeNull()
+    })
+
+    it('applies the resting translate-offset classes', () => {
+      render(<Button variant="brutalist">Submit</Button>)
+      const button = screen.getByRole('button')
+      expect(button).toHaveClass('-translate-x-[var(--button-brutalist-offset)]')
+      expect(button).toHaveClass('-translate-y-[var(--button-brutalist-offset)]')
+    })
+
+    it('keeps the disabled state working', async () => {
+      const onClick = vi.fn()
+      render(<Button variant="brutalist" disabled onClick={onClick}>Submit</Button>)
+      const button = screen.getByRole('button')
+      expect(button).toBeDisabled()
+      await userEvent.click(button)
+      expect(onClick).not.toHaveBeenCalled()
+    })
+
+    it('renders the shadow element when as="a" too', () => {
+      const { container } = render(
+        <Button as="a" href="/docs" variant="brutalist">Docs</Button>,
+      )
+      expect(screen.getByRole('link')).toBeInTheDocument()
+      expect(container.querySelector('[aria-hidden="true"]')).toHaveClass('bg-brutalist-border')
+    })
+
+    it('has no accessibility violations', async () => {
+      const { container } = render(<Button variant="brutalist">Submit</Button>)
+      const results = await axe(container)
+      expect(results).toHaveNoViolations()
+    })
+  })
 })

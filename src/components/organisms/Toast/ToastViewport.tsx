@@ -1,9 +1,19 @@
+import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Toast } from './Toast'
 import { useToast } from './useToast'
 
 export function ToastViewport() {
   const { toasts, dismiss } = useToast()
+  const [mounted, setMounted] = useState(false)
+
+  // document.body doesn't exist during SSR — defer the portal until after
+  // mount, otherwise this crashes any server-rendered page that includes it.
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) return null
 
   return createPortal(
     <div

@@ -22,14 +22,28 @@ export const Disabled: Story = { args: { children: 'Disabled', disabled: true } 
 export const WithIcons: Story = {
   args: { children: 'With Icon', leftIcon: <Icon name="Search" size="sm" /> },
 }
+export const AsLink: Story = {
+  args: { as: 'a', href: 'https://example.com/docs', children: 'Go to docs' },
+}
+export const AsLinkDisabled: Story = {
+  args: { as: 'a', href: 'https://example.com/docs', disabled: true, children: 'Go to docs' },
+}
+export const Brutalist: Story = { args: { children: 'Brutalist', variant: 'brutalist' } }
+export const BrutalistDisabled: Story = {
+  args: { children: 'Brutalist', variant: 'brutalist', disabled: true },
+}
+export const BrutalistAsLink: Story = {
+  args: { as: 'a', href: '#', variant: 'brutalist', children: 'Brutalist link' },
+}
 export const AllVariants: Story = {
   render: () => (
-    <div className="flex gap-3 flex-wrap">
+    <div className="flex gap-3 flex-wrap p-2">
       <Button variant="primary">Primary</Button>
       <Button variant="secondary">Secondary</Button>
       <Button variant="ghost">Ghost</Button>
       <Button variant="outline">Outline</Button>
       <Button variant="danger">Danger</Button>
+      <Button variant="brutalist">Brutalist</Button>
     </div>
   ),
 }

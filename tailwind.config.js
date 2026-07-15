@@ -21,6 +21,12 @@ export default {
           foreground: 'var(--color-muted-foreground)',
         },
 
+        brutalist: {
+          DEFAULT:    'var(--color-brutalist)',
+          foreground: 'var(--color-brutalist-foreground)',
+          border:     'var(--color-brutalist-border)',
+        },
+
         primary: {
           DEFAULT:    'var(--color-primary)',
           foreground: 'var(--color-primary-foreground)',

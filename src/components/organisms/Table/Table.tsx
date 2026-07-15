@@ -10,7 +10,7 @@ export interface TableColumn<T> {
   sortable?: boolean
 }
 
-interface TableProps<T extends Record<string, unknown>> {
+interface TableProps<T extends object> {
   columns: TableColumn<T>[]
   data: T[]
   caption?: string
@@ -18,7 +18,7 @@ interface TableProps<T extends Record<string, unknown>> {
   className?: string
 }
 
-export function Table<T extends Record<string, unknown>>({
+export function Table<T extends object>({
   columns,
   data,
   caption,
@@ -88,7 +88,7 @@ export function Table<T extends Record<string, unknown>>({
                   <td key={col.key} className="px-4 py-3 text-foreground">
                     {col.render
                       ? col.render(row, ri)
-                      : String(row[col.key] ?? '')}
+                      : String((row as Record<string, unknown>)[col.key] ?? '')}
                   </td>
                 ))}
               </tr>
