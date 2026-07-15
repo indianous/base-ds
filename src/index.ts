@@ -52,6 +52,9 @@ export { Text } from './components/atoms/Typography/Text'
 
 export { Breadcrumb } from './components/molecules/Breadcrumb/Breadcrumb'
 
+export { DropdownMenu } from './components/molecules/DropdownMenu/DropdownMenu'
+export type { DropdownMenuProps, DropdownMenuItem } from './components/molecules/DropdownMenu/DropdownMenu'
+
 export { FileUpload } from './components/molecules/FileUpload/FileUpload'
 
 export { FormField } from './components/molecules/FormField/FormField'
