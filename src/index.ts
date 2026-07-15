@@ -88,6 +88,7 @@ export { Drawer } from './components/organisms/Drawer/Drawer'
 export type { DrawerProps } from './components/organisms/Drawer/Drawer'
 
 export { Navbar } from './components/organisms/Navbar/Navbar'
+export type { NavbarProps, NavItem } from './components/organisms/Navbar/Navbar'
 
 export { Sidebar } from './components/organisms/Sidebar/Sidebar'
 
