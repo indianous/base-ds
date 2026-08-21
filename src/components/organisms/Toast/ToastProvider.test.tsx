@@ -109,4 +109,29 @@ describe('ToastProvider / useToast', () => {
     expect(screen.getByText('A')).toBeInTheDocument()
     expect(screen.getByText('B')).toBeInTheDocument()
   })
+
+  it('falls back to a generated id when crypto.randomUUID is unavailable (insecure context)', async () => {
+    const originalRandomUUID = crypto.randomUUID
+    // @ts-expect-error simulating an insecure context, where randomUUID does not exist
+    delete crypto.randomUUID
+
+    try {
+      const user = userEvent.setup()
+      render(
+        <ToastProvider>
+          <TestConsumer />
+        </ToastProvider>,
+      )
+      await user.click(screen.getByRole('button', { name: 'Add A' }))
+      await user.click(screen.getByRole('button', { name: 'Add B' }))
+      expect(screen.getByText('A')).toBeInTheDocument()
+      expect(screen.getByText('B')).toBeInTheDocument()
+
+      await user.click(screen.getByRole('button', { name: 'Dismiss A' }))
+      expect(screen.queryByText('A')).not.toBeInTheDocument()
+      expect(screen.getByText('B')).toBeInTheDocument()
+    } finally {
+      crypto.randomUUID = originalRandomUUID
+    }
+  })
 })

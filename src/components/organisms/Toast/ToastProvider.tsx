@@ -22,6 +22,13 @@ interface ToastContextValue {
 
 const DEFAULT_DURATION = 5000
 
+function generateId(): string {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID()
+  }
+  return `toast-${Date.now()}-${Math.random().toString(36).slice(2)}`
+}
+
 const ToastContext = createContext<ToastContextValue | undefined>(undefined)
 
 interface ToastProviderProps {
@@ -43,7 +50,7 @@ export function ToastProvider({ children }: ToastProviderProps) {
 
   const toast = useCallback(
     (options: ToastOptions) => {
-      const id = crypto.randomUUID()
+      const id = generateId()
       const duration = options.duration ?? DEFAULT_DURATION
 
       setToasts((current) => [...current, { ...options, id }])
@@ -68,7 +75,9 @@ export function ToastProvider({ children }: ToastProviderProps) {
     }
   }, [])
 
-  return <ToastContext.Provider value={{ toasts, toast, dismiss }}>{children}</ToastContext.Provider>
+  return (
+    <ToastContext.Provider value={{ toasts, toast, dismiss }}>{children}</ToastContext.Provider>
+  )
 }
 
 export { ToastContext }
