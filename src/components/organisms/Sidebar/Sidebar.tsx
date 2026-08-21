@@ -1,6 +1,7 @@
-import type { ReactNode } from 'react'
-import { useState } from 'react'
+import type { ReactElement, ReactNode } from 'react'
+import { cloneElement, useState } from 'react'
 import { cn } from '../../../utils/cn'
+import { Button } from '../../atoms/Button/Button'
 import { Icon } from '../../atoms/Icon/Icon'
 
 interface SidebarItem {
@@ -9,6 +10,7 @@ interface SidebarItem {
   active?: boolean
   href?: string
   onClick?: () => void
+  asChild?: ReactElement
 }
 
 interface SidebarProps {
@@ -64,9 +66,9 @@ export function Sidebar({ items, collapsed, onCollapse, footer, className }: Sid
           )
 
           const itemClasses = cn(
-            'flex items-center gap-2 px-2 py-2 rounded-md text-sm transition-all duration-200',
+            'w-full justify-start gap-2 rounded-md px-2 py-2 text-sm font-normal',
             item.active
-              ? 'bg-primary text-primary-foreground'
+              ? 'bg-primary text-primary-foreground hover:bg-primary'
               : 'text-foreground hover:bg-muted',
           )
 
@@ -74,19 +76,38 @@ export function Sidebar({ items, collapsed, onCollapse, footer, className }: Sid
 
           return (
             <li key={index}>
-              {item.href ? (
-                <a href={item.href} className={itemClasses} {...activeProps}>
-                  {itemContent}
-                </a>
-              ) : item.onClick ? (
-                <button
-                  type="button"
+              {item.asChild ? (
+                <Button
+                  asChild
                   onClick={item.onClick}
+                  variant="ghost"
+                  size="sm"
+                  className={itemClasses}
+                  {...activeProps}
+                >
+                  {cloneElement(item.asChild, {}, itemContent)}
+                </Button>
+              ) : item.href ? (
+                <Button
+                  as="a"
+                  href={item.href}
+                  variant="ghost"
+                  size="sm"
                   className={itemClasses}
                   {...activeProps}
                 >
                   {itemContent}
-                </button>
+                </Button>
+              ) : item.onClick ? (
+                <Button
+                  onClick={item.onClick}
+                  variant="ghost"
+                  size="sm"
+                  className={itemClasses}
+                  {...activeProps}
+                >
+                  {itemContent}
+                </Button>
               ) : (
                 <span className={itemClasses} {...activeProps}>
                   {itemContent}
@@ -97,9 +118,7 @@ export function Sidebar({ items, collapsed, onCollapse, footer, className }: Sid
         })}
       </ul>
 
-      {footer !== undefined && (
-        <div className="mt-auto p-2">{footer}</div>
-      )}
+      {footer !== undefined && <div className="mt-auto p-2">{footer}</div>}
     </nav>
   )
 }

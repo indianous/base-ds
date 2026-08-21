@@ -67,9 +67,7 @@ describe('Sidebar', () => {
   })
 
   it('item with onClick renders as button', () => {
-    const items = [
-      { label: 'Logout', onClick: vi.fn() },
-    ]
+    const items = [{ label: 'Logout', onClick: vi.fn() }]
     render(<Sidebar items={items} />)
     expect(screen.getByRole('button', { name: 'Logout' })).toBeInTheDocument()
   })
@@ -104,5 +102,69 @@ describe('Sidebar', () => {
     ]
     const { container } = render(<Sidebar items={items} />)
     expect(await axe(container)).toHaveNoViolations()
+  })
+
+  describe('asChild', () => {
+    it('renders the provided element instead of a native anchor', () => {
+      const items = [{ label: 'Orders', asChild: <a href="/orders" aria-label="Orders" /> }]
+      render(<Sidebar items={items} />)
+      const link = screen.getByRole('link', { name: 'Orders' })
+      expect(link).toHaveAttribute('href', '/orders')
+    })
+
+    it('injects the icon and label as children of the provided element', () => {
+      const items = [
+        {
+          label: 'Orders',
+          icon: <span data-testid="orders-icon" />,
+          asChild: <a href="/orders" aria-label="Orders" />,
+        },
+      ]
+      render(<Sidebar items={items} />)
+      const link = screen.getByRole('link', { name: 'Orders' })
+      expect(link.querySelector('[data-testid="orders-icon"]')).toBeInTheDocument()
+      expect(link).toHaveTextContent('Orders')
+    })
+
+    it('preserves the className already set on the provided element', () => {
+      const items = [{ label: 'Orders', asChild: <a href="/orders" aria-label="Orders" className="custom-link" /> }]
+      render(<Sidebar items={items} />)
+      expect(screen.getByRole('link', { name: 'Orders' })).toHaveClass('custom-link')
+    })
+
+    it('applies aria-current="page" when active', () => {
+      const items = [{ label: 'Orders', active: true, asChild: <a href="/orders" aria-label="Orders" /> }]
+      render(<Sidebar items={items} />)
+      expect(screen.getByRole('link', { name: 'Orders' })).toHaveAttribute('aria-current', 'page')
+    })
+
+    it('respects collapsed state, hiding the label with sr-only inside the provided element', () => {
+      const items = [{ label: 'Orders', asChild: <a href="/orders" aria-label="Orders" /> }]
+      render(<Sidebar items={items} collapsed />)
+      const label = screen.getByText('Orders')
+      expect(label).toHaveClass('sr-only')
+    })
+
+    it('calls both the onClick already on the provided element and item.onClick', async () => {
+      const elementOnClick = vi.fn()
+      const itemOnClick = vi.fn()
+      const items = [
+        {
+          label: 'Orders',
+          onClick: itemOnClick,
+          asChild: <a href="/orders" aria-label="Orders" onClick={elementOnClick} />,
+        },
+      ]
+      render(<Sidebar items={items} />)
+      await userEvent.click(screen.getByRole('link', { name: 'Orders' }))
+      expect(elementOnClick).toHaveBeenCalledTimes(1)
+      expect(itemOnClick).toHaveBeenCalledTimes(1)
+    })
+
+    it('has no accessibility violations', async () => {
+      const items = [{ label: 'Orders', asChild: <a href="/orders" aria-label="Orders" /> }]
+      const { container } = render(<Sidebar items={items} />)
+      expect(await axe(container)).toHaveNoViolations()
+    })
   })
 })

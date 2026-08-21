@@ -36,3 +36,26 @@ export const WithFooter: Story = {
     footer: <span className="text-xs text-muted-foreground">v1.0.0</span>,
   },
 }
+
+export const AsChild: Story = {
+  args: {
+    items: [
+      {
+        label: 'Dashboard',
+        icon: <Icon name="LayoutDashboard" size="sm" />,
+        active: true,
+        asChild: <a href="/dashboard" aria-label="Dashboard" />,
+      },
+      {
+        label: 'Projects',
+        icon: <Icon name="Folder" size="sm" />,
+        asChild: <a href="/projects" aria-label="Projects" />,
+      },
+      {
+        label: 'Settings',
+        icon: <Icon name="Settings" size="sm" />,
+        asChild: <a href="/settings" aria-label="Settings" />,
+      },
+    ],
+  },
+}
