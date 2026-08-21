@@ -66,6 +66,12 @@ export { FileUpload } from './components/molecules/FileUpload/FileUpload'
 export { FormField } from './components/molecules/FormField/FormField'
 export type { FormFieldProps } from './components/molecules/FormField/FormField'
 
+export { MultiSelect } from './components/molecules/MultiSelect/MultiSelect'
+export type {
+  MultiSelectProps,
+  MultiSelectOption,
+} from './components/molecules/MultiSelect/MultiSelect'
+
 export { NumberInput } from './components/molecules/NumberInput/NumberInput'
 
 export { Pagination } from './components/molecules/Pagination/Pagination'
