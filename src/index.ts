@@ -79,6 +79,9 @@ export { Rating } from './components/molecules/Rating/Rating'
 
 export { SearchField } from './components/molecules/SearchField/SearchField'
 
+export { Tabs } from './components/molecules/Tabs/Tabs'
+export type { TabsProps, TabItem } from './components/molecules/Tabs/Tabs'
+
 export { TagsInput } from './components/molecules/TagsInput/TagsInput'
 export type { TagsInputProps } from './components/molecules/TagsInput/TagsInput'
 
