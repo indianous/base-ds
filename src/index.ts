@@ -105,6 +105,12 @@ export { Dialog } from './components/organisms/Dialog/Dialog'
 export { Drawer } from './components/organisms/Drawer/Drawer'
 export type { DrawerProps } from './components/organisms/Drawer/Drawer'
 
+export { ImageGallery } from './components/organisms/ImageGallery/ImageGallery'
+export type {
+  ImageGalleryProps,
+  GalleryImage,
+} from './components/organisms/ImageGallery/ImageGallery'
+
 export { Navbar } from './components/organisms/Navbar/Navbar'
 export type { NavbarProps, NavItem } from './components/organisms/Navbar/Navbar'
 
