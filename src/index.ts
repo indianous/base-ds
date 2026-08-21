@@ -91,6 +91,9 @@ export type { TabsProps, TabItem } from './components/molecules/Tabs/Tabs'
 export { TagsInput } from './components/molecules/TagsInput/TagsInput'
 export type { TagsInputProps } from './components/molecules/TagsInput/TagsInput'
 
+export { Tooltip } from './components/molecules/Tooltip/Tooltip'
+export type { TooltipProps } from './components/molecules/Tooltip/Tooltip'
+
 // ── Organisms ────────────────────────────────────────────────────────────────
 
 export { Card } from './components/organisms/Card/Card'
