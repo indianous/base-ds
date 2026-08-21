@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useId, useState } from 'react'
 import { cn } from '../../../utils/cn'
 import { Spinner } from '../Spinner/Spinner'
 
@@ -50,6 +50,31 @@ const baseClasses =
   'inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50'
 
 export function Button(props: ButtonProps) {
+  const [tooltipVisible, setTooltipVisible] = useState(false)
+  const tooltipId = useId()
+
+  const ariaLabel = props['aria-label']
+  const showTooltip = Boolean(props.iconOnly) && Boolean(ariaLabel)
+
+  useEffect(() => {
+    if (!showTooltip || !tooltipVisible) return
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setTooltipVisible(false)
+    }
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [showTooltip, tooltipVisible])
+
+  const tooltipBubble = showTooltip && tooltipVisible && (
+    <span
+      role="tooltip"
+      id={tooltipId}
+      className="pointer-events-none absolute bottom-full left-1/2 z-30 mb-1.5 -translate-x-1/2 whitespace-nowrap rounded-md bg-foreground px-2 py-1 text-xs font-normal text-background shadow-md"
+    >
+      {ariaLabel}
+    </span>
+  )
+
   if (props.as === 'a') {
     const {
       as,
@@ -64,6 +89,10 @@ export function Button(props: ButtonProps) {
       href,
       disabled,
       onClick,
+      onMouseEnter,
+      onMouseLeave,
+      onFocus,
+      onBlur,
       ...rest
     } = props
 
@@ -74,6 +103,7 @@ export function Button(props: ButtonProps) {
         href={href}
         aria-disabled={isDisabled ? 'true' : undefined}
         aria-busy={isLoading ? 'true' : undefined}
+        aria-describedby={showTooltip && tooltipVisible ? tooltipId : undefined}
         tabIndex={isDisabled ? -1 : undefined}
         onClick={(e) => {
           if (isDisabled) {
@@ -82,10 +112,27 @@ export function Button(props: ButtonProps) {
           }
           onClick?.(e)
         }}
+        onMouseEnter={(e) => {
+          onMouseEnter?.(e)
+          if (showTooltip) setTooltipVisible(true)
+        }}
+        onMouseLeave={(e) => {
+          onMouseLeave?.(e)
+          if (showTooltip) setTooltipVisible(false)
+        }}
+        onFocus={(e) => {
+          onFocus?.(e)
+          if (showTooltip) setTooltipVisible(true)
+        }}
+        onBlur={(e) => {
+          onBlur?.(e)
+          if (showTooltip) setTooltipVisible(false)
+        }}
         className={cn(
           baseClasses,
           variantClasses[variant],
           iconOnly ? iconSizeClasses[size] : sizeClasses[size],
+          showTooltip && 'relative',
           isDisabled && 'pointer-events-none opacity-50',
           className,
         )}
@@ -94,6 +141,7 @@ export function Button(props: ButtonProps) {
         {isLoading ? <Spinner size="sm" aria-label="Loading" /> : leftIcon}
         {children}
         {!isLoading && rightIcon}
+        {tooltipBubble}
       </a>
     )
   }
@@ -109,6 +157,10 @@ export function Button(props: ButtonProps) {
     children,
     className,
     disabled,
+    onMouseEnter,
+    onMouseLeave,
+    onFocus,
+    onBlur,
     ...rest
   } = props
 
@@ -118,15 +170,34 @@ export function Button(props: ButtonProps) {
         baseClasses,
         variantClasses[variant],
         iconOnly ? iconSizeClasses[size] : sizeClasses[size],
+        showTooltip && 'relative',
         className,
       )}
       disabled={isLoading || disabled}
       aria-busy={isLoading ? 'true' : undefined}
+      aria-describedby={showTooltip && tooltipVisible ? tooltipId : undefined}
+      onMouseEnter={(e) => {
+        onMouseEnter?.(e)
+        if (showTooltip) setTooltipVisible(true)
+      }}
+      onMouseLeave={(e) => {
+        onMouseLeave?.(e)
+        if (showTooltip) setTooltipVisible(false)
+      }}
+      onFocus={(e) => {
+        onFocus?.(e)
+        if (showTooltip) setTooltipVisible(true)
+      }}
+      onBlur={(e) => {
+        onBlur?.(e)
+        if (showTooltip) setTooltipVisible(false)
+      }}
       {...rest}
     >
       {isLoading ? <Spinner size="sm" aria-label="Loading" /> : leftIcon}
       {children}
       {!isLoading && rightIcon}
+      {tooltipBubble}
     </button>
   )
 }

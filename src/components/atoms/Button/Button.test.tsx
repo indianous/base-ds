@@ -291,4 +291,124 @@ describe('Button', () => {
       expect(results).toHaveNoViolations()
     })
   })
+
+  describe('iconOnly tooltip', () => {
+    it('does not render a tooltip before hover/focus', () => {
+      render(
+        <Button iconOnly aria-label="Remove">
+          <span data-testid="icon" />
+        </Button>,
+      )
+      expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
+    })
+
+    it('shows a tooltip with the aria-label text on hover', async () => {
+      render(
+        <Button iconOnly aria-label="Remove">
+          <span data-testid="icon" />
+        </Button>,
+      )
+      await userEvent.hover(screen.getByRole('button'))
+      expect(screen.getByRole('tooltip')).toHaveTextContent('Remove')
+    })
+
+    it('hides the tooltip on unhover', async () => {
+      render(
+        <Button iconOnly aria-label="Remove">
+          <span data-testid="icon" />
+        </Button>,
+      )
+      const button = screen.getByRole('button')
+      await userEvent.hover(button)
+      expect(screen.getByRole('tooltip')).toBeInTheDocument()
+      await userEvent.unhover(button)
+      expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
+    })
+
+    it('shows the tooltip on keyboard focus', async () => {
+      render(
+        <Button iconOnly aria-label="Remove">
+          <span data-testid="icon" />
+        </Button>,
+      )
+      await userEvent.tab()
+      expect(screen.getByRole('tooltip')).toHaveTextContent('Remove')
+    })
+
+    it('hides the tooltip on blur', async () => {
+      render(
+        <>
+          <Button iconOnly aria-label="Remove">
+            <span data-testid="icon" />
+          </Button>
+          <button>Other</button>
+        </>,
+      )
+      await userEvent.tab()
+      expect(screen.getByRole('tooltip')).toBeInTheDocument()
+      await userEvent.tab()
+      expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
+    })
+
+    it('hides the tooltip on Escape', async () => {
+      render(
+        <Button iconOnly aria-label="Remove">
+          <span data-testid="icon" />
+        </Button>,
+      )
+      await userEvent.hover(screen.getByRole('button'))
+      expect(screen.getByRole('tooltip')).toBeInTheDocument()
+      await userEvent.keyboard('{Escape}')
+      expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
+    })
+
+    it('associates the button with the tooltip via aria-describedby', async () => {
+      render(
+        <Button iconOnly aria-label="Remove">
+          <span data-testid="icon" />
+        </Button>,
+      )
+      const button = screen.getByRole('button')
+      await userEvent.hover(button)
+      const tooltip = screen.getByRole('tooltip')
+      expect(button).toHaveAttribute('aria-describedby', tooltip.id)
+    })
+
+    it('shows a tooltip when as="a" too', async () => {
+      render(
+        <Button as="a" href="/docs" iconOnly aria-label="Docs">
+          <span data-testid="icon" />
+        </Button>,
+      )
+      await userEvent.hover(screen.getByRole('link'))
+      expect(screen.getByRole('tooltip')).toHaveTextContent('Docs')
+    })
+
+    it('does not show a tooltip when iconOnly is false, even with an aria-label', async () => {
+      render(<Button aria-label="Remove">Delete</Button>)
+      await userEvent.hover(screen.getByRole('button'))
+      expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
+    })
+
+    it('does not show a tooltip when there is no aria-label', async () => {
+      render(
+        <Button iconOnly>
+          <span data-testid="icon" />
+        </Button>,
+      )
+      await userEvent.hover(screen.getByRole('button'))
+      expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
+    })
+
+    it('calls through to a consumer-provided onMouseEnter', async () => {
+      const onMouseEnter = vi.fn()
+      render(
+        <Button iconOnly aria-label="Remove" onMouseEnter={onMouseEnter}>
+          <span data-testid="icon" />
+        </Button>,
+      )
+      await userEvent.hover(screen.getByRole('button'))
+      expect(onMouseEnter).toHaveBeenCalledTimes(1)
+    })
+  })
 })
