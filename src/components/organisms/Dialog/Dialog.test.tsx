@@ -28,6 +28,13 @@ describe('Dialog', () => {
     expect(dialog.className).not.toMatch(/max-h-|overflow-y-auto/)
   })
 
+  it('pins the overlay with position:fixed so it does not scroll away with the backdrop content', () => {
+    render(<Dialog open={true} onClose={() => {}} />)
+    const overlay = document.querySelector('.bg-overlay')
+    expect(overlay).toHaveClass('fixed')
+    expect(overlay).not.toHaveClass('absolute')
+  })
+
   it('does not render when open=false', () => {
     render(<Dialog open={false} onClose={() => {}} />)
     expect(screen.queryByRole('dialog')).toBeNull()

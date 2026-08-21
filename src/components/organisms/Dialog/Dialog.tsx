@@ -52,7 +52,7 @@ export function Dialog({
       className="fixed inset-0 z-50 overflow-y-auto"
       onClick={onClose}
     >
-      <div className="absolute inset-0 bg-overlay" aria-hidden="true" />
+      <div className="fixed inset-0 bg-overlay" aria-hidden="true" />
       <div className="flex min-h-full items-center justify-center p-4">
         <div
           ref={dialogRef}
