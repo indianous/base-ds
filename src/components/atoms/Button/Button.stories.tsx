@@ -50,6 +50,24 @@ export const IconOnly: Story = {
     </div>
   ),
 }
+export const TooltipPositions: Story = {
+  render: () => (
+    <div className="flex items-center gap-8 p-16">
+      <Button iconOnly variant="outline" aria-label="Top tooltip" tooltipPosition="top">
+        <Icon name="Search" size="sm" />
+      </Button>
+      <Button iconOnly variant="outline" aria-label="Bottom tooltip" tooltipPosition="bottom">
+        <Icon name="Search" size="sm" />
+      </Button>
+      <Button iconOnly variant="outline" aria-label="Left tooltip" tooltipPosition="left">
+        <Icon name="Search" size="sm" />
+      </Button>
+      <Button iconOnly variant="outline" aria-label="Right tooltip" tooltipPosition="right">
+        <Icon name="Search" size="sm" />
+      </Button>
+    </div>
+  ),
+}
 export const TooltipEscapesClippingAncestor: Story = {
   render: () => (
     <div

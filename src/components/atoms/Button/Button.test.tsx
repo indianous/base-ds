@@ -499,6 +499,110 @@ describe('Button', () => {
         })
       })
     })
+
+    describe('tooltipPosition', () => {
+      afterEach(() => {
+        vi.restoreAllMocks()
+      })
+
+      const mockRect = () =>
+        vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue({
+          top: 100,
+          bottom: 130,
+          left: 50,
+          right: 90,
+          width: 40,
+          height: 30,
+          x: 50,
+          y: 100,
+          toJSON: () => {},
+        })
+
+      it('defaults to "top" when tooltipPosition is not set', async () => {
+        mockRect()
+        render(
+          <Button iconOnly aria-label="Remove">
+            <span data-testid="icon" />
+          </Button>,
+        )
+        await userEvent.hover(screen.getByRole('button'))
+        expect(screen.getByRole('tooltip')).toHaveStyle({
+          top: '94px',
+          left: '70px',
+          transform: 'translate(-50%, -100%)',
+        })
+      })
+
+      it('renders below the button when tooltipPosition="bottom"', async () => {
+        mockRect()
+        render(
+          <Button iconOnly aria-label="Remove" tooltipPosition="bottom">
+            <span data-testid="icon" />
+          </Button>,
+        )
+        await userEvent.hover(screen.getByRole('button'))
+        expect(screen.getByRole('tooltip')).toHaveStyle({
+          top: '136px',
+          left: '70px',
+          transform: 'translate(-50%, 0)',
+        })
+      })
+
+      it('renders to the left of the button when tooltipPosition="left"', async () => {
+        mockRect()
+        render(
+          <Button iconOnly aria-label="Remove" tooltipPosition="left">
+            <span data-testid="icon" />
+          </Button>,
+        )
+        await userEvent.hover(screen.getByRole('button'))
+        expect(screen.getByRole('tooltip')).toHaveStyle({
+          top: '115px',
+          left: '44px',
+          transform: 'translate(-100%, -50%)',
+        })
+      })
+
+      it('renders to the right of the button when tooltipPosition="right"', async () => {
+        mockRect()
+        render(
+          <Button iconOnly aria-label="Remove" tooltipPosition="right">
+            <span data-testid="icon" />
+          </Button>,
+        )
+        await userEvent.hover(screen.getByRole('button'))
+        expect(screen.getByRole('tooltip')).toHaveStyle({
+          top: '115px',
+          left: '96px',
+          transform: 'translate(0, -50%)',
+        })
+      })
+
+      it('flips from top to bottom when there is not enough space above the button', async () => {
+        vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue({
+          top: 10,
+          bottom: 30,
+          left: 0,
+          right: 100,
+          width: 100,
+          height: 20,
+          x: 0,
+          y: 10,
+          toJSON: () => {},
+        })
+        render(
+          <Button iconOnly aria-label="Remove" tooltipPosition="top">
+            <span data-testid="icon" />
+          </Button>,
+        )
+        await userEvent.hover(screen.getByRole('button'))
+        expect(screen.getByRole('tooltip')).toHaveStyle({
+          top: '36px',
+          left: '50px',
+          transform: 'translate(-50%, 0)',
+        })
+      })
+    })
   })
 
   describe('asChild', () => {

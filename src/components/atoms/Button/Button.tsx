@@ -3,11 +3,20 @@ import { createPortal } from 'react-dom'
 import type { ReactElement } from 'react'
 import { cn } from '../../../utils/cn'
 import { computeTooltipCoords } from '../../../utils/tooltipPosition'
-import type { TooltipCoords } from '../../../utils/tooltipPosition'
+import type { TooltipCoords, TooltipSide } from '../../../utils/tooltipPosition'
 import { Spinner } from '../Spinner/Spinner'
 
 type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'outline' | 'danger'
 type ButtonSize = 'sm' | 'md' | 'lg'
+
+const VIEWPORT_MARGIN = 40
+
+const oppositePosition: Record<TooltipSide, TooltipSide> = {
+  top: 'bottom',
+  bottom: 'top',
+  left: 'right',
+  right: 'left',
+}
 
 interface ButtonCommonProps {
   variant?: ButtonVariant
@@ -17,6 +26,7 @@ interface ButtonCommonProps {
   rightIcon?: React.ReactNode
   iconOnly?: boolean
   asChild?: boolean
+  tooltipPosition?: TooltipSide
 }
 
 type ButtonAsButton = ButtonCommonProps & { as?: 'button' } & Omit<
@@ -62,6 +72,7 @@ export function Button(props: ButtonProps) {
 
   const ariaLabel = props['aria-label']
   const showTooltip = Boolean(props.iconOnly) && Boolean(ariaLabel)
+  const tooltipPosition = props.tooltipPosition ?? 'top'
 
   useEffect(() => {
     if (!showTooltip || !tooltipVisible) return
@@ -69,7 +80,18 @@ export function Button(props: ButtonProps) {
     const updateCoords = () => {
       const rect = triggerRef.current?.getBoundingClientRect()
       if (!rect) return
-      setTooltipCoords(computeTooltipCoords(rect, 'top'))
+
+      const notEnoughSpace: Record<TooltipSide, boolean> = {
+        top: rect.top < VIEWPORT_MARGIN,
+        bottom: window.innerHeight - rect.bottom < VIEWPORT_MARGIN,
+        left: rect.left < VIEWPORT_MARGIN,
+        right: window.innerWidth - rect.right < VIEWPORT_MARGIN,
+      }
+      const resolvedPosition = notEnoughSpace[tooltipPosition]
+        ? oppositePosition[tooltipPosition]
+        : tooltipPosition
+
+      setTooltipCoords(computeTooltipCoords(rect, resolvedPosition))
     }
 
     updateCoords()
@@ -79,7 +101,7 @@ export function Button(props: ButtonProps) {
       window.removeEventListener('scroll', updateCoords, true)
       window.removeEventListener('resize', updateCoords)
     }
-  }, [showTooltip, tooltipVisible])
+  }, [showTooltip, tooltipVisible, tooltipPosition])
 
   useEffect(() => {
     if (!showTooltip || !tooltipVisible) return
@@ -118,6 +140,7 @@ export function Button(props: ButtonProps) {
       variant = 'primary',
       size = 'md',
       iconOnly = false,
+      tooltipPosition: _tooltipPosition,
       children,
       className,
       onClick,
@@ -151,6 +174,7 @@ export function Button(props: ButtonProps) {
       leftIcon,
       rightIcon,
       iconOnly = false,
+      tooltipPosition: _tooltipPosition,
       children,
       className,
       href,
@@ -223,6 +247,7 @@ export function Button(props: ButtonProps) {
     leftIcon,
     rightIcon,
     iconOnly = false,
+    tooltipPosition: _tooltipPosition,
     children,
     className,
     disabled,
