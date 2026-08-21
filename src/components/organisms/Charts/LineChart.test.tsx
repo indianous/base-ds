@@ -73,7 +73,7 @@ describe('LineChart', () => {
   it('renders an accessible sr-only table with the same data', () => {
     render(<LineChart labels={labels} series={singleSeries} />)
     const table = screen.getByRole('table')
-    expect(table).toHaveClass('sr-only')
+    expect(table.parentElement).toHaveClass('sr-only')
     expect(within(table).getByText('Jan')).toBeInTheDocument()
     expect(within(table).getByText('200')).toBeInTheDocument()
   })

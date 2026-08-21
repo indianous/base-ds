@@ -57,7 +57,7 @@ describe('Correlation', () => {
   it('renders an accessible sr-only table with x, y, label and group', () => {
     render(<Correlation points={ungroupedPoints} />)
     const table = screen.getByRole('table')
-    expect(table).toHaveClass('sr-only')
+    expect(table.parentElement).toHaveClass('sr-only')
     const row = within(table).getByText('B').closest('tr') as HTMLElement
     expect(within(row).getByText('15')).toBeInTheDocument()
     expect(within(row).getByText('35')).toBeInTheDocument()

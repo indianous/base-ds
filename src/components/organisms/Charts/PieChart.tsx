@@ -159,25 +159,27 @@ export function PieChart({ data, valueFormatter = defaultFormatter, className }:
         </ul>
       </div>
 
-      <table className="sr-only">
-        <caption>Pie chart data</caption>
-        <thead>
-          <tr>
-            <th>Label</th>
-            <th>Value</th>
-            <th>Percent</th>
-          </tr>
-        </thead>
-        <tbody>
-          {angledSlices.map((slice) => (
-            <tr key={slice.label}>
-              <th scope="row">{slice.label}</th>
-              <td>{valueFormatter(slice.value)}</td>
-              <td>{slice.percent.toFixed(0)}%</td>
+      <div className="sr-only">
+        <table>
+          <caption>Pie chart data</caption>
+          <thead>
+            <tr>
+              <th>Label</th>
+              <th>Value</th>
+              <th>Percent</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {angledSlices.map((slice) => (
+              <tr key={slice.label}>
+                <th scope="row">{slice.label}</th>
+                <td>{valueFormatter(slice.value)}</td>
+                <td>{slice.percent.toFixed(0)}%</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </figure>
   )
 }

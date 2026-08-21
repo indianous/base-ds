@@ -61,7 +61,7 @@ describe('BarChart', () => {
   it('renders an accessible sr-only table with the same data', () => {
     render(<BarChart data={singleSeriesData} />)
     const table = screen.getByRole('table')
-    expect(table).toHaveClass('sr-only')
+    expect(table.parentElement).toHaveClass('sr-only')
     expect(within(table).getByText('Organic')).toBeInTheDocument()
     expect(within(table).getByText('420')).toBeInTheDocument()
   })

@@ -120,29 +120,31 @@ export function Candlestick({
         )}
       </div>
 
-      <table className="sr-only">
-        <caption>Candlestick chart data</caption>
-        <thead>
-          <tr>
-            <th>Label</th>
-            <th>Open</th>
-            <th>High</th>
-            <th>Low</th>
-            <th>Close</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((datum) => (
-            <tr key={datum.label}>
-              <th scope="row">{datum.label}</th>
-              <td>{valueFormatter(datum.open)}</td>
-              <td>{valueFormatter(datum.high)}</td>
-              <td>{valueFormatter(datum.low)}</td>
-              <td>{valueFormatter(datum.close)}</td>
+      <div className="sr-only">
+        <table>
+          <caption>Candlestick chart data</caption>
+          <thead>
+            <tr>
+              <th>Label</th>
+              <th>Open</th>
+              <th>High</th>
+              <th>Low</th>
+              <th>Close</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {data.map((datum) => (
+              <tr key={datum.label}>
+                <th scope="row">{datum.label}</th>
+                <td>{valueFormatter(datum.open)}</td>
+                <td>{valueFormatter(datum.high)}</td>
+                <td>{valueFormatter(datum.low)}</td>
+                <td>{valueFormatter(datum.close)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </figure>
   )
 }

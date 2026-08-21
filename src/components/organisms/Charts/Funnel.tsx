@@ -86,25 +86,27 @@ export function Funnel({ steps, valueFormatter = defaultFormatter, className }: 
         })}
       </div>
 
-      <table className="sr-only">
-        <caption>Funnel data</caption>
-        <thead>
-          <tr>
-            <th>Step</th>
-            <th>Value</th>
-            <th>% of first step</th>
-          </tr>
-        </thead>
-        <tbody>
-          {steps.map((step) => (
-            <tr key={step.label}>
-              <th scope="row">{step.label}</th>
-              <td>{valueFormatter(step.value)}</td>
-              <td>{((step.value / firstValue) * 100).toFixed(0)}%</td>
+      <div className="sr-only">
+        <table>
+          <caption>Funnel data</caption>
+          <thead>
+            <tr>
+              <th>Step</th>
+              <th>Value</th>
+              <th>% of first step</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {steps.map((step) => (
+              <tr key={step.label}>
+                <th scope="row">{step.label}</th>
+                <td>{valueFormatter(step.value)}</td>
+                <td>{((step.value / firstValue) * 100).toFixed(0)}%</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </figure>
   )
 }

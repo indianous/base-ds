@@ -66,7 +66,7 @@ describe('PieChart', () => {
   it('renders an accessible sr-only table with the same data', () => {
     render(<PieChart data={fewSlices} />)
     const table = screen.getByRole('table')
-    expect(table).toHaveClass('sr-only')
+    expect(table.parentElement).toHaveClass('sr-only')
     expect(within(table).getByText('Mobile')).toBeInTheDocument()
   })
 

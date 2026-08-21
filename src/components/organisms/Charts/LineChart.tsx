@@ -182,27 +182,29 @@ export function LineChart({
         )}
       </div>
 
-      <table className="sr-only">
-        <caption>Line chart data</caption>
-        <thead>
-          <tr>
-            <th>Label</th>
-            {series.map((s) => (
-              <th key={s.name}>{s.name}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {labels.map((label, index) => (
-            <tr key={label}>
-              <th scope="row">{label}</th>
+      <div className="sr-only">
+        <table>
+          <caption>Line chart data</caption>
+          <thead>
+            <tr>
+              <th>Label</th>
               {series.map((s) => (
-                <td key={s.name}>{valueFormatter(s.values[index] ?? 0)}</td>
+                <th key={s.name}>{s.name}</th>
               ))}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {labels.map((label, index) => (
+              <tr key={label}>
+                <th scope="row">{label}</th>
+                {series.map((s) => (
+                  <td key={s.name}>{valueFormatter(s.values[index] ?? 0)}</td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </figure>
   )
 }

@@ -49,27 +49,29 @@ function DataTable({
   valueFormatter: (value: number) => string
 }) {
   return (
-    <table className="sr-only">
-      <caption>Bar chart data</caption>
-      <thead>
-        <tr>
-          <th>Label</th>
-          {Array.from({ length: seriesCount }, (_, i) => (
-            <th key={i}>{seriesNames?.[i] ?? `Series ${i + 1}`}</th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {data.map((datum) => (
-          <tr key={datum.label}>
-            <th scope="row">{datum.label}</th>
-            {datum.values.map((value, i) => (
-              <td key={i}>{valueFormatter(value)}</td>
+    <div className="sr-only">
+      <table>
+        <caption>Bar chart data</caption>
+        <thead>
+          <tr>
+            <th>Label</th>
+            {Array.from({ length: seriesCount }, (_, i) => (
+              <th key={i}>{seriesNames?.[i] ?? `Series ${i + 1}`}</th>
             ))}
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {data.map((datum) => (
+            <tr key={datum.label}>
+              <th scope="row">{datum.label}</th>
+              {datum.values.map((value, i) => (
+                <td key={i}>{valueFormatter(value)}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   )
 }
 

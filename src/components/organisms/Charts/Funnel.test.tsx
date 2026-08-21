@@ -52,7 +52,7 @@ describe('Funnel', () => {
   it('renders an accessible sr-only table with the same data', () => {
     render(<Funnel steps={steps} />)
     const table = screen.getByRole('table')
-    expect(table).toHaveClass('sr-only')
+    expect(table.parentElement).toHaveClass('sr-only')
     expect(within(table).getByText('Checkout started')).toBeInTheDocument()
   })
 

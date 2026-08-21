@@ -49,7 +49,7 @@ describe('Candlestick', () => {
   it('renders an accessible sr-only table with open/high/low/close', () => {
     render(<Candlestick data={data} />)
     const table = screen.getByRole('table')
-    expect(table).toHaveClass('sr-only')
+    expect(table.parentElement).toHaveClass('sr-only')
     const row = within(table).getByText('Wed').closest('tr') as HTMLElement
     expect(within(row).getByText('112')).toBeInTheDocument()
   })

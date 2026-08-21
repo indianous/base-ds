@@ -174,27 +174,29 @@ export function Correlation({
         )}
       </div>
 
-      <table className="sr-only">
-        <caption>Scatter plot data</caption>
-        <thead>
-          <tr>
-            <th>Label</th>
-            <th>{xLabel ?? 'X'}</th>
-            <th>{yLabel ?? 'Y'}</th>
-            <th>Group</th>
-          </tr>
-        </thead>
-        <tbody>
-          {points.map((point, index) => (
-            <tr key={index}>
-              <th scope="row">{point.label ?? `Point ${index + 1}`}</th>
-              <td>{valueFormatter(point.x)}</td>
-              <td>{valueFormatter(point.y)}</td>
-              <td>{point.group ?? '—'}</td>
+      <div className="sr-only">
+        <table>
+          <caption>Scatter plot data</caption>
+          <thead>
+            <tr>
+              <th>Label</th>
+              <th>{xLabel ?? 'X'}</th>
+              <th>{yLabel ?? 'Y'}</th>
+              <th>Group</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {points.map((point, index) => (
+              <tr key={index}>
+                <th scope="row">{point.label ?? `Point ${index + 1}`}</th>
+                <td>{valueFormatter(point.x)}</td>
+                <td>{valueFormatter(point.y)}</td>
+                <td>{point.group ?? '—'}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </figure>
   )
 }
