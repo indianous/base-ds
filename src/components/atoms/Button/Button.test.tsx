@@ -1,5 +1,5 @@
-import { describe, it, expect, vi } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { describe, it, expect, vi, afterEach } from 'vitest'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { axe } from 'jest-axe'
 import { Button } from './Button'
@@ -409,6 +409,95 @@ describe('Button', () => {
       )
       await userEvent.hover(screen.getByRole('button'))
       expect(onMouseEnter).toHaveBeenCalledTimes(1)
+    })
+
+    describe('portal positioning', () => {
+      afterEach(() => {
+        vi.restoreAllMocks()
+      })
+
+      it('renders the bubble as a portal to document.body, outside an overflow-hidden ancestor', async () => {
+        const { container } = render(
+          <div style={{ overflow: 'hidden', height: 20 }}>
+            <Button iconOnly aria-label="Remove">
+              <span data-testid="icon" />
+            </Button>
+          </div>,
+        )
+        await userEvent.hover(screen.getByRole('button'))
+        const tooltip = screen.getByRole('tooltip')
+        expect(container.contains(tooltip)).toBe(false)
+        expect(tooltip.parentElement).toBe(document.body)
+        expect(tooltip).toHaveStyle({ position: 'fixed' })
+      })
+
+      it('positions the bubble above the button using its measured rect', async () => {
+        vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue({
+          top: 100,
+          bottom: 130,
+          left: 50,
+          right: 90,
+          width: 40,
+          height: 30,
+          x: 50,
+          y: 100,
+          toJSON: () => {},
+        })
+        render(
+          <Button iconOnly aria-label="Remove">
+            <span data-testid="icon" />
+          </Button>,
+        )
+        await userEvent.hover(screen.getByRole('button'))
+        expect(screen.getByRole('tooltip')).toHaveStyle({
+          top: '94px',
+          left: '70px',
+          transform: 'translate(-50%, -100%)',
+        })
+      })
+
+      it('recomputes the position on window scroll while visible', async () => {
+        const rects = [
+          {
+            top: 100,
+            bottom: 130,
+            left: 50,
+            right: 90,
+            width: 40,
+            height: 30,
+            x: 50,
+            y: 100,
+            toJSON: () => {},
+          },
+          {
+            top: 40,
+            bottom: 70,
+            left: 50,
+            right: 90,
+            width: 40,
+            height: 30,
+            x: 50,
+            y: 40,
+            toJSON: () => {},
+          },
+        ]
+        let call = 0
+        vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(
+          () => rects[Math.min(call++, rects.length - 1)] as DOMRect,
+        )
+        render(
+          <Button iconOnly aria-label="Remove">
+            <span data-testid="icon" />
+          </Button>,
+        )
+        await userEvent.hover(screen.getByRole('button'))
+        expect(screen.getByRole('tooltip')).toHaveStyle({ top: '94px' })
+
+        window.dispatchEvent(new Event('scroll'))
+        await waitFor(() => {
+          expect(screen.getByRole('tooltip')).toHaveStyle({ top: '34px' })
+        })
+      })
     })
   })
 

@@ -50,6 +50,27 @@ export const IconOnly: Story = {
     </div>
   ),
 }
+export const TooltipEscapesClippingAncestor: Story = {
+  render: () => (
+    <div
+      style={{
+        overflow: 'hidden',
+        border: '2px dashed red',
+        width: 200,
+        height: 60,
+        padding: 8,
+        margin: '80px auto',
+        display: 'flex',
+        alignItems: 'flex-end',
+        justifyContent: 'center',
+      }}
+    >
+      <Button iconOnly variant="primary" aria-label="Add to cart">
+        <Icon name="Search" size="sm" />
+      </Button>
+    </div>
+  ),
+}
 export const AllVariants: Story = {
   render: () => (
     <div className="flex gap-3 flex-wrap p-2">

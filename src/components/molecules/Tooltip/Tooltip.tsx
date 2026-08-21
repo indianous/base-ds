@@ -1,32 +1,26 @@
 import { cloneElement, useEffect, useId, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import type {
   FocusEvent as ReactFocusEvent,
   MouseEvent as ReactMouseEvent,
   ReactElement,
 } from 'react'
 import { cn } from '../../../utils/cn'
+import { computeTooltipCoords } from '../../../utils/tooltipPosition'
+import type { TooltipCoords, TooltipSide } from '../../../utils/tooltipPosition'
 
 const VIEWPORT_MARGIN = 40
 
-type TooltipPosition = 'top' | 'bottom' | 'left' | 'right'
-
-const oppositePosition: Record<TooltipPosition, TooltipPosition> = {
+const oppositePosition: Record<TooltipSide, TooltipSide> = {
   top: 'bottom',
   bottom: 'top',
   left: 'right',
   right: 'left',
 }
 
-const positionClasses: Record<TooltipPosition, string> = {
-  top: 'bottom-full left-1/2 mb-1.5 -translate-x-1/2',
-  bottom: 'top-full left-1/2 mt-1.5 -translate-x-1/2',
-  left: 'right-full top-1/2 mr-1.5 -translate-y-1/2',
-  right: 'left-full top-1/2 ml-1.5 -translate-y-1/2',
-}
-
 export interface TooltipProps {
   label: string
-  position?: TooltipPosition
+  position?: TooltipSide
   children: ReactElement
   className?: string
   [key: string]: unknown
@@ -34,7 +28,7 @@ export interface TooltipProps {
 
 export function Tooltip({ label, position = 'top', children, className, ...rest }: TooltipProps) {
   const [visible, setVisible] = useState(false)
-  const [resolvedPosition, setResolvedPosition] = useState(position)
+  const [coords, setCoords] = useState<TooltipCoords | null>(null)
   const containerRef = useRef<HTMLSpanElement>(null)
   const tooltipId = useId()
 
@@ -44,17 +38,28 @@ export function Tooltip({ label, position = 'top', children, className, ...rest 
   useEffect(() => {
     if (!visible) return
 
-    const rect = containerRef.current?.getBoundingClientRect()
-    if (!rect) return
+    const updateCoords = () => {
+      const rect = containerRef.current?.getBoundingClientRect()
+      if (!rect) return
 
-    const notEnoughSpace: Record<TooltipPosition, boolean> = {
-      top: rect.top < VIEWPORT_MARGIN,
-      bottom: window.innerHeight - rect.bottom < VIEWPORT_MARGIN,
-      left: rect.left < VIEWPORT_MARGIN,
-      right: window.innerWidth - rect.right < VIEWPORT_MARGIN,
+      const notEnoughSpace: Record<TooltipSide, boolean> = {
+        top: rect.top < VIEWPORT_MARGIN,
+        bottom: window.innerHeight - rect.bottom < VIEWPORT_MARGIN,
+        left: rect.left < VIEWPORT_MARGIN,
+        right: window.innerWidth - rect.right < VIEWPORT_MARGIN,
+      }
+      const resolvedPosition = notEnoughSpace[position] ? oppositePosition[position] : position
+
+      setCoords(computeTooltipCoords(rect, resolvedPosition))
     }
 
-    setResolvedPosition(notEnoughSpace[position] ? oppositePosition[position] : position)
+    updateCoords()
+    window.addEventListener('scroll', updateCoords, true)
+    window.addEventListener('resize', updateCoords)
+    return () => {
+      window.removeEventListener('scroll', updateCoords, true)
+      window.removeEventListener('resize', updateCoords)
+    }
   }, [visible, position])
 
   useEffect(() => {
@@ -98,20 +103,26 @@ export function Tooltip({ label, position = 'top', children, className, ...rest 
   })
 
   return (
-    <span ref={containerRef} className={cn('relative inline-block', className)}>
+    <span ref={containerRef} className={cn('inline-block', className)}>
       {triggerElement}
-      {visible && (
-        <span
-          role="tooltip"
-          id={tooltipId}
-          className={cn(
-            'absolute z-30 whitespace-nowrap rounded-md bg-foreground px-2 py-1 text-xs text-background shadow-md',
-            positionClasses[resolvedPosition],
-          )}
-        >
-          {label}
-        </span>
-      )}
+      {visible &&
+        coords &&
+        createPortal(
+          <span
+            role="tooltip"
+            id={tooltipId}
+            style={{
+              position: 'fixed',
+              top: coords.top,
+              left: coords.left,
+              transform: coords.transform,
+            }}
+            className="z-50 whitespace-nowrap rounded-md bg-foreground px-2 py-1 text-xs text-background shadow-md"
+          >
+            {label}
+          </span>,
+          document.body,
+        )}
     </span>
   )
 }

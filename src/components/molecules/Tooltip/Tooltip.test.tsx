@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { axe } from 'jest-axe'
 import { Tooltip } from './Tooltip'
@@ -117,7 +117,8 @@ describe('Tooltip', () => {
       </Tooltip>,
     )
     await userEvent.hover(screen.getByRole('button'))
-    expect(screen.getByRole('tooltip')).toHaveClass('top-full')
+    const tooltip = screen.getByRole('tooltip')
+    expect(tooltip).toHaveStyle({ top: '36px', left: '50px', transform: 'translate(-50%, 0)' })
   })
 
   it('keeps the requested position when there is enough space', async () => {
@@ -138,7 +139,12 @@ describe('Tooltip', () => {
       </Tooltip>,
     )
     await userEvent.hover(screen.getByRole('button'))
-    expect(screen.getByRole('tooltip')).toHaveClass('bottom-full')
+    const tooltip = screen.getByRole('tooltip')
+    expect(tooltip).toHaveStyle({
+      top: '194px',
+      left: '50px',
+      transform: 'translate(-50%, -100%)',
+    })
   })
 
   it('renders on the left when position="left"', async () => {
@@ -159,7 +165,12 @@ describe('Tooltip', () => {
       </Tooltip>,
     )
     await userEvent.hover(screen.getByRole('button'))
-    expect(screen.getByRole('tooltip')).toHaveClass('right-full')
+    const tooltip = screen.getByRole('tooltip')
+    expect(tooltip).toHaveStyle({
+      top: '110px',
+      left: '194px',
+      transform: 'translate(-100%, -50%)',
+    })
   })
 
   it('renders on the right when position="right"', async () => {
@@ -180,7 +191,8 @@ describe('Tooltip', () => {
       </Tooltip>,
     )
     await userEvent.hover(screen.getByRole('button'))
-    expect(screen.getByRole('tooltip')).toHaveClass('left-full')
+    const tooltip = screen.getByRole('tooltip')
+    expect(tooltip).toHaveStyle({ top: '110px', left: '106px', transform: 'translate(0, -50%)' })
   })
 
   it('flips from left to right when there is not enough space to the left', async () => {
@@ -201,7 +213,8 @@ describe('Tooltip', () => {
       </Tooltip>,
     )
     await userEvent.hover(screen.getByRole('button'))
-    expect(screen.getByRole('tooltip')).toHaveClass('left-full')
+    const tooltip = screen.getByRole('tooltip')
+    expect(tooltip).toHaveStyle({ top: '110px', left: '111px', transform: 'translate(0, -50%)' })
   })
 
   it('flips from right to left when there is not enough space to the right', async () => {
@@ -224,8 +237,71 @@ describe('Tooltip', () => {
       </Tooltip>,
     )
     await userEvent.hover(screen.getByRole('button'))
-    expect(screen.getByRole('tooltip')).toHaveClass('right-full')
+    const tooltip = screen.getByRole('tooltip')
+    expect(tooltip).toHaveStyle({
+      top: '110px',
+      left: '-6px',
+      transform: 'translate(-100%, -50%)',
+    })
     Object.defineProperty(window, 'innerWidth', { value: originalInnerWidth, configurable: true })
+  })
+
+  it('renders the bubble as a portal to document.body, outside an overflow-hidden ancestor', async () => {
+    const { container } = render(
+      <div style={{ overflow: 'hidden', height: 20 }} data-testid="clipping-ancestor">
+        <Tooltip label="Excluir">
+          <button>Delete</button>
+        </Tooltip>
+      </div>,
+    )
+    await userEvent.hover(screen.getByRole('button'))
+    const tooltip = screen.getByRole('tooltip')
+    expect(container.contains(tooltip)).toBe(false)
+    expect(tooltip.parentElement).toBe(document.body)
+    expect(tooltip).toHaveStyle({ position: 'fixed' })
+  })
+
+  it('recomputes the position on window scroll while visible', async () => {
+    const rects = [
+      {
+        top: 100,
+        bottom: 120,
+        left: 0,
+        right: 100,
+        width: 100,
+        height: 20,
+        x: 0,
+        y: 100,
+        toJSON: () => {},
+      },
+      {
+        top: 40,
+        bottom: 60,
+        left: 0,
+        right: 100,
+        width: 100,
+        height: 20,
+        x: 0,
+        y: 40,
+        toJSON: () => {},
+      },
+    ]
+    let call = 0
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(
+      () => rects[Math.min(call++, rects.length - 1)] as DOMRect,
+    )
+    render(
+      <Tooltip label="Excluir">
+        <button>Delete</button>
+      </Tooltip>,
+    )
+    await userEvent.hover(screen.getByRole('button'))
+    expect(screen.getByRole('tooltip')).toHaveStyle({ top: '94px' })
+
+    window.dispatchEvent(new Event('scroll'))
+    await waitFor(() => {
+      expect(screen.getByRole('tooltip')).toHaveStyle({ top: '34px' })
+    })
   })
 
   it('has no accessibility violations while visible', async () => {
