@@ -50,13 +50,17 @@ export function Drawer({
   if (!open) return null
 
   return createPortal(
-    <div data-testid="drawer-backdrop" className="fixed inset-0 z-50" onClick={onClose}>
-      <div className="absolute inset-0 bg-overlay" aria-hidden="true" />
+    <div data-testid="drawer-backdrop" className="fixed inset-0 z-50">
+      <button
+        type="button"
+        aria-label="Dismiss drawer"
+        onClick={onClose}
+        className="absolute inset-0 cursor-default bg-overlay"
+      />
       <div
         role="dialog"
         aria-modal="true"
         {...(title ? { 'aria-labelledby': titleId } : {})}
-        onClick={(e) => e.stopPropagation()}
         className={cn(
           'absolute bg-background shadow-lg flex flex-col',
           SIDE_CLASSES[side],

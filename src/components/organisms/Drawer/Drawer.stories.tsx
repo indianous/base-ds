@@ -52,16 +52,18 @@ export const Bottom: Story = {
   },
 }
 
+function InteractiveDrawer() {
+  const [open, setOpen] = useState(false)
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>Open drawer</Button>
+      <Drawer open={open} onClose={() => setOpen(false)} title="Settings" side="right">
+        <p>Drawer content goes here.</p>
+      </Drawer>
+    </>
+  )
+}
+
 export const Interactive: Story = {
-  render: () => {
-    const [open, setOpen] = useState(false)
-    return (
-      <>
-        <Button onClick={() => setOpen(true)}>Open drawer</Button>
-        <Drawer open={open} onClose={() => setOpen(false)} title="Settings" side="right">
-          <p>Drawer content goes here.</p>
-        </Drawer>
-      </>
-    )
-  },
+  render: () => <InteractiveDrawer />,
 }

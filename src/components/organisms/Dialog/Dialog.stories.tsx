@@ -32,21 +32,23 @@ export const Open: Story = {
   },
 }
 
+function InteractiveDialog() {
+  const [open, setOpen] = useState(false)
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>Open dialog</Button>
+      <Dialog
+        open={open}
+        onClose={() => setOpen(false)}
+        title="Confirm action"
+        description="Click outside, press Escape, or use the close button to dismiss."
+      >
+        <p>Dialog body content.</p>
+      </Dialog>
+    </>
+  )
+}
+
 export const Interactive: Story = {
-  render: () => {
-    const [open, setOpen] = useState(false)
-    return (
-      <>
-        <Button onClick={() => setOpen(true)}>Open dialog</Button>
-        <Dialog
-          open={open}
-          onClose={() => setOpen(false)}
-          title="Confirm action"
-          description="Click outside, press Escape, or use the close button to dismiss."
-        >
-          <p>Dialog body content.</p>
-        </Dialog>
-      </>
-    )
-  },
+  render: () => <InteractiveDialog />,
 }

@@ -1,17 +1,20 @@
-import { useEffect, useState } from 'react'
+import { useSyncExternalStore } from 'react'
 import { createPortal } from 'react-dom'
 import { Toast } from './Toast'
 import { useToast } from './useToast'
 
+const subscribeNever = () => () => {}
+
 export function ToastViewport() {
   const { toasts, dismiss } = useToast()
-  const [mounted, setMounted] = useState(false)
 
   // document.body doesn't exist during SSR — defer the portal until after
-  // mount, otherwise this crashes any server-rendered page that includes it.
-  useEffect(() => {
-    setMounted(true)
-  }, [])
+  // hydration, otherwise this crashes any server-rendered page that includes it.
+  const mounted = useSyncExternalStore(
+    subscribeNever,
+    () => true,
+    () => false,
+  )
 
   if (!mounted) return null
 

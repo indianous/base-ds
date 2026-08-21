@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect, type ClipboardEvent, type KeyboardEvent, type ChangeEvent } from 'react'
+import { useRef, useState, type ClipboardEvent, type KeyboardEvent, type ChangeEvent } from 'react'
 import { cn } from '../../../utils/cn'
 
 export interface PinInputProps {
@@ -29,13 +29,13 @@ export function PinInput({
   })
 
   const inputRefs = useRef<(HTMLInputElement | null)[]>([])
+  const [prevValue, setPrevValue] = useState(value)
 
-  useEffect(() => {
-    if (value !== undefined) {
-      const chars = value.split('')
-      setValues(Array.from({ length }, (_, i) => chars[i] ?? ''))
-    }
-  }, [value, length])
+  if (value !== undefined && value !== prevValue) {
+    setPrevValue(value)
+    const chars = value.split('')
+    setValues(Array.from({ length }, (_, i) => chars[i] ?? ''))
+  }
 
   const focusInput = (index: number) => {
     const el = inputRefs.current[index]
@@ -117,11 +117,7 @@ export function PinInput({
   }
 
   return (
-    <div
-      role="group"
-      aria-label="PIN input"
-      className={cn('flex flex-row gap-2', className)}
-    >
+    <div role="group" aria-label="PIN input" className={cn('flex flex-row gap-2', className)}>
       {Array.from({ length }, (_, i) => (
         <input
           key={i}

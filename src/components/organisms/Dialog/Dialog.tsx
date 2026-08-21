@@ -47,13 +47,14 @@ export function Dialog({
   if (!open) return null
 
   return createPortal(
-    <div
-      data-testid="dialog-backdrop"
-      className="fixed inset-0 z-50 overflow-y-auto"
-      onClick={onClose}
-    >
-      <div className="fixed inset-0 bg-overlay" aria-hidden="true" />
-      <div className="flex min-h-full items-center justify-center p-4">
+    <div data-testid="dialog-backdrop" className="fixed inset-0 z-50 overflow-y-auto">
+      <button
+        type="button"
+        aria-label="Dismiss dialog"
+        onClick={onClose}
+        className="fixed inset-0 cursor-default bg-overlay"
+      />
+      <div className="pointer-events-none flex min-h-full items-center justify-center p-4">
         <div
           ref={dialogRef}
           role="dialog"
@@ -61,9 +62,8 @@ export function Dialog({
           {...(title ? { 'aria-labelledby': titleId } : {})}
           {...(description ? { 'aria-describedby': descId } : {})}
           tabIndex={-1}
-          onClick={(e) => e.stopPropagation()}
           className={cn(
-            'relative z-10 w-full max-w-md rounded-lg bg-background p-6 shadow-lg',
+            'pointer-events-auto relative z-10 w-full max-w-md rounded-lg bg-background p-6 shadow-lg',
             className,
           )}
         >

@@ -105,8 +105,20 @@ describe('Drawer', () => {
         <p>Content</p>
       </Drawer>,
     )
-    await user.click(screen.getByTestId('drawer-backdrop'))
+    await user.click(screen.getByRole('button', { name: 'Dismiss drawer' }))
     expect(onClose).toHaveBeenCalledTimes(1)
+  })
+
+  it('does not call onClose when the drawer panel itself is clicked', async () => {
+    const user = userEvent.setup()
+    const onClose = vi.fn()
+    render(
+      <Drawer open={true} onClose={onClose} title="Test">
+        <p>Content</p>
+      </Drawer>,
+    )
+    await user.click(screen.getByText('Test'))
+    expect(onClose).not.toHaveBeenCalled()
   })
 
   it('renders footer slot when provided', () => {

@@ -31,9 +31,11 @@ export const FewPages: Story = {
   args: { currentPage: 2, totalPages: 3, onPageChange: () => {} },
 }
 
+function InteractivePagination() {
+  const [page, setPage] = useState(1)
+  return <Pagination currentPage={page} totalPages={10} onPageChange={setPage} />
+}
+
 export const Interactive: Story = {
-  render: () => {
-    const [page, setPage] = useState(1)
-    return <Pagination currentPage={page} totalPages={10} onPageChange={setPage} />
-  },
+  render: () => <InteractivePagination />,
 }

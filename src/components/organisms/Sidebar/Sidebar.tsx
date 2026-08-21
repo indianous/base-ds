@@ -52,6 +52,7 @@ export function Sidebar({ items, collapsed, onCollapse, footer, className }: Sid
         </button>
       </div>
 
+      {/* eslint-disable-next-line jsx-a11y/no-redundant-roles -- Tailwind Preflight sets list-style:none on ul, which strips the implicit list role for Safari/VoiceOver; role="list" restores it. */}
       <ul role="list" className="flex flex-col gap-1 p-2">
         {items.map((item, index) => {
           const itemContent = (

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { cn } from '../../../utils/cn'
 import { Button } from '../../atoms/Button/Button'
 import { Input } from '../../atoms/Input/Input'
@@ -26,15 +26,13 @@ export function NumberInput({
   onChange,
   className,
 }: NumberInputProps) {
-  const [internalValue, setInternalValue] = useState<number>(
-    value ?? defaultValue ?? 0,
-  )
+  const [internalValue, setInternalValue] = useState<number>(value ?? defaultValue ?? 0)
+  const [prevValue, setPrevValue] = useState(value)
 
-  useEffect(() => {
-    if (value !== undefined) {
-      setInternalValue(value)
-    }
-  }, [value])
+  if (value !== undefined && value !== prevValue) {
+    setPrevValue(value)
+    setInternalValue(value)
+  }
 
   const handleDecrement = () => {
     const next = internalValue - step

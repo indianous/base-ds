@@ -89,8 +89,20 @@ describe('Dialog', () => {
     const user = userEvent.setup()
     const onClose = vi.fn()
     render(<Dialog open={true} onClose={onClose} />)
-    await user.click(screen.getByTestId('dialog-backdrop'))
+    await user.click(screen.getByRole('button', { name: 'Dismiss dialog' }))
     expect(onClose).toHaveBeenCalledOnce()
+  })
+
+  it('does not call onClose when the dialog panel itself is clicked', async () => {
+    const user = userEvent.setup()
+    const onClose = vi.fn()
+    render(
+      <Dialog open={true} onClose={onClose} title="Test Title">
+        <p>Dialog body</p>
+      </Dialog>,
+    )
+    await user.click(screen.getByText('Test Title'))
+    expect(onClose).not.toHaveBeenCalled()
   })
 
   it('dialog has aria-modal="true"', () => {

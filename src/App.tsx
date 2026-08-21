@@ -59,7 +59,13 @@ function ComponentCard({
 }) {
   return (
     <div className={cn('rounded-lg border border-border bg-background p-5', className)}>
-      <Text as="span" size="xs" color="muted" weight="medium" className="uppercase tracking-wider mb-4 block">
+      <Text
+        as="span"
+        size="xs"
+        color="muted"
+        weight="medium"
+        className="uppercase tracking-wider mb-4 block"
+      >
         {title}
       </Text>
       {children}
@@ -131,7 +137,8 @@ export function App() {
             Component Overview
           </Heading>
           <Text color="muted" size="lg" className="max-w-xl mx-auto">
-            Todos os átomos do sistema de design, implementados com TDD, tokens CSS e acessibilidade.
+            Todos os átomos do sistema de design, implementados com TDD, tokens CSS e
+            acessibilidade.
           </Text>
         </div>
 
@@ -140,19 +147,37 @@ export function App() {
           <div className="grid grid-cols-2 gap-4">
             <ComponentCard title="Heading">
               <div className="space-y-3">
-                <Heading as="h1" size="4xl" weight="bold">Heading 4XL</Heading>
-                <Heading as="h2" size="3xl" weight="semibold">Heading 3XL</Heading>
-                <Heading as="h3" size="2xl" weight="medium">Heading 2XL</Heading>
-                <Heading as="h4" size="xl" weight="regular">Heading XL</Heading>
+                <Heading as="h1" size="4xl" weight="bold">
+                  Heading 4XL
+                </Heading>
+                <Heading as="h2" size="3xl" weight="semibold">
+                  Heading 3XL
+                </Heading>
+                <Heading as="h3" size="2xl" weight="medium">
+                  Heading 2XL
+                </Heading>
+                <Heading as="h4" size="xl" weight="regular">
+                  Heading XL
+                </Heading>
               </div>
             </ComponentCard>
             <ComponentCard title="Text">
               <div className="space-y-3">
-                <Text size="lg" weight="semibold">Large semibold text</Text>
-                <Text size="md" color="default">Regular body text (md)</Text>
-                <Text size="sm" color="muted">Small muted helper text</Text>
-                <Text size="xs" color="destructive">Extra small destructive</Text>
-                <Text as="label" size="sm" weight="medium">Form label (as label)</Text>
+                <Text size="lg" weight="semibold">
+                  Large semibold text
+                </Text>
+                <Text size="md" color="default">
+                  Regular body text (md)
+                </Text>
+                <Text size="sm" color="muted">
+                  Small muted helper text
+                </Text>
+                <Text size="xs" color="destructive">
+                  Extra small destructive
+                </Text>
+                <Text as="label" size="sm" weight="medium">
+                  Form label (as label)
+                </Text>
               </div>
             </ComponentCard>
           </div>
@@ -202,8 +227,18 @@ export function App() {
               <div className="space-y-3">
                 <Input id="input-default" placeholder="Default input (md)" />
                 <Input id="input-sm" size="sm" placeholder="Small input" />
-                <Input id="input-error" state="error" placeholder="Error state" defaultValue="invalid" />
-                <Input id="input-success" state="success" placeholder="Success state" defaultValue="valid@email.com" />
+                <Input
+                  id="input-error"
+                  state="error"
+                  placeholder="Error state"
+                  defaultValue="invalid"
+                />
+                <Input
+                  id="input-success"
+                  state="success"
+                  placeholder="Success state"
+                  defaultValue="valid@email.com"
+                />
                 <Input id="input-disabled" disabled placeholder="Disabled input" />
               </div>
             </ComponentCard>
@@ -216,9 +251,25 @@ export function App() {
                   value={selectValue}
                   onChange={(e) => setSelectValue(e.target.value)}
                 />
-                <Select id="select-error" options={frameworkOptions} state="error" placeholder="Required" />
-                <Select id="select-success" options={frameworkOptions} state="success" value="vue" onChange={() => {}} />
-                <Select id="select-disabled" options={frameworkOptions} disabled placeholder="Disabled" />
+                <Select
+                  id="select-error"
+                  options={frameworkOptions}
+                  state="error"
+                  placeholder="Required"
+                />
+                <Select
+                  id="select-success"
+                  options={frameworkOptions}
+                  state="success"
+                  value="vue"
+                  onChange={() => {}}
+                />
+                <Select
+                  id="select-disabled"
+                  options={frameworkOptions}
+                  disabled
+                  placeholder="Disabled"
+                />
               </div>
             </ComponentCard>
             <ComponentCard title="Checkbox">
@@ -284,9 +335,15 @@ export function App() {
                 <Badge variant="info">Info</Badge>
               </div>
               <div className="flex flex-wrap gap-2">
-                <Badge variant="primary" size="sm">Small primary</Badge>
-                <Badge variant="success" size="sm">Small success</Badge>
-                <Badge variant="danger" size="sm">Small danger</Badge>
+                <Badge variant="primary" size="sm">
+                  Small primary
+                </Badge>
+                <Badge variant="success" size="sm">
+                  Small success
+                </Badge>
+                <Badge variant="danger" size="sm">
+                  Small danger
+                </Badge>
               </div>
             </div>
           </ComponentCard>
@@ -303,10 +360,27 @@ export function App() {
                 <Icon name="Star" size="xl" aria-label="Star extra large" />
               </div>
               <div className="flex flex-wrap gap-4">
-                {(['Search', 'Bell', 'Settings', 'User', 'Home', 'Mail', 'Heart', 'Lock', 'Eye', 'Download', 'Upload', 'Trash2'] as const).map((name) => (
+                {(
+                  [
+                    'Search',
+                    'Bell',
+                    'Settings',
+                    'User',
+                    'Home',
+                    'Mail',
+                    'Heart',
+                    'Lock',
+                    'Eye',
+                    'Download',
+                    'Upload',
+                    'Trash2',
+                  ] as const
+                ).map((name) => (
                   <div key={name} className="flex flex-col items-center gap-1">
                     <Icon name={name} size="md" aria-label={name} />
-                    <Text size="xs" color="muted">{name}</Text>
+                    <Text size="xs" color="muted">
+                      {name}
+                    </Text>
                   </div>
                 ))}
               </div>
@@ -321,15 +395,21 @@ export function App() {
               <div className="flex items-end gap-6">
                 <div className="flex flex-col items-center gap-2">
                   <Spinner size="sm" />
-                  <Text size="xs" color="muted">sm</Text>
+                  <Text size="xs" color="muted">
+                    sm
+                  </Text>
                 </div>
                 <div className="flex flex-col items-center gap-2">
                   <Spinner size="md" />
-                  <Text size="xs" color="muted">md</Text>
+                  <Text size="xs" color="muted">
+                    md
+                  </Text>
                 </div>
                 <div className="flex flex-col items-center gap-2">
                   <Spinner size="lg" />
-                  <Text size="xs" color="muted">lg</Text>
+                  <Text size="xs" color="muted">
+                    lg
+                  </Text>
                 </div>
               </div>
             </ComponentCard>
@@ -359,7 +439,9 @@ export function App() {
                   <Avatar src="https://i.pravatar.cc/150?img=3" alt="João Silva" size="md" />
                   <Avatar alt="Square" fallback="JS" size="md" shape="square" />
                   <Avatar src="broken" alt="Fallback" fallback="FB" size="md" />
-                  <Text size="sm" color="muted">com imagem · quadrado · fallback de erro</Text>
+                  <Text size="sm" color="muted">
+                    com imagem · quadrado · fallback de erro
+                  </Text>
                 </div>
               </div>
             </ComponentCard>
@@ -372,7 +454,9 @@ export function App() {
                     aspectRatio="square"
                     className="rounded-md overflow-hidden"
                   />
-                  <Text size="xs" color="muted" className="mt-1 text-center">square</Text>
+                  <Text size="xs" color="muted" className="mt-1 text-center">
+                    square
+                  </Text>
                 </div>
                 <div>
                   <Image
@@ -381,7 +465,9 @@ export function App() {
                     aspectRatio="video"
                     className="rounded-md overflow-hidden"
                   />
-                  <Text size="xs" color="muted" className="mt-1 text-center">video</Text>
+                  <Text size="xs" color="muted" className="mt-1 text-center">
+                    video
+                  </Text>
                 </div>
                 <div>
                   <Image
@@ -390,7 +476,9 @@ export function App() {
                     aspectRatio="portrait"
                     className="rounded-md overflow-hidden"
                   />
-                  <Text size="xs" color="muted" className="mt-1 text-center">portrait</Text>
+                  <Text size="xs" color="muted" className="mt-1 text-center">
+                    portrait
+                  </Text>
                 </div>
               </div>
             </ComponentCard>
@@ -403,15 +491,21 @@ export function App() {
             <div className="flex flex-wrap gap-8">
               <div className="flex flex-col items-center gap-2">
                 <QrCode value="https://github.com" size={128} />
-                <Text size="xs" color="muted">128px · L</Text>
+                <Text size="xs" color="muted">
+                  128px · L
+                </Text>
               </div>
               <div className="flex flex-col items-center gap-2">
                 <QrCode value="https://github.com" size={160} errorCorrection="M" />
-                <Text size="xs" color="muted">160px · M</Text>
+                <Text size="xs" color="muted">
+                  160px · M
+                </Text>
               </div>
               <div className="flex flex-col items-center gap-2">
                 <QrCode value="https://github.com" size={160} errorCorrection="H" />
-                <Text size="xs" color="muted">160px · H (maior redundância)</Text>
+                <Text size="xs" color="muted">
+                  160px · H (maior redundância)
+                </Text>
               </div>
             </div>
           </ComponentCard>
@@ -419,24 +513,34 @@ export function App() {
 
         {/* ── Molecules ─────────────────────────────────────────── */}
         <Section title="Molecules">
-
           {/* Row 1: NumberInput + PasswordInput */}
           <div className="grid grid-cols-2 gap-4 mb-4">
             <ComponentCard title="NumberInput">
               <div className="space-y-3">
                 <NumberInput id="qty-demo" value={qty} min={0} max={10} onChange={setQty} />
-                <Text size="sm" color="muted">Value: {qty} · min 0 · max 10</Text>
+                <Text size="sm" color="muted">
+                  Value: {qty} · min 0 · max 10
+                </Text>
                 <NumberInput id="qty-step" defaultValue={0} step={5} />
-                <Text size="xs" color="muted">Step 5</Text>
+                <Text size="xs" color="muted">
+                  Step 5
+                </Text>
                 <NumberInput id="qty-dis" value={2} disabled onChange={() => {}} />
-                <Text size="xs" color="muted">Disabled</Text>
+                <Text size="xs" color="muted">
+                  Disabled
+                </Text>
               </div>
             </ComponentCard>
 
             <ComponentCard title="PasswordInput">
               <div className="space-y-3">
                 <PasswordInput id="pwd-demo" placeholder="Enter your password" />
-                <PasswordInput id="pwd-error" state="error" placeholder="Incorrect password" defaultValue="wrongpassword" />
+                <PasswordInput
+                  id="pwd-error"
+                  state="error"
+                  placeholder="Incorrect password"
+                  defaultValue="wrongpassword"
+                />
                 <PasswordInput id="pwd-dis" disabled placeholder="Disabled" />
               </div>
             </ComponentCard>
@@ -447,12 +551,25 @@ export function App() {
             <ComponentCard title="PinInput">
               <div className="space-y-4">
                 <div>
-                  <Text size="xs" color="muted" className="mb-2">4 digits</Text>
-                  <PinInput length={4} value={pinValue} onChange={setPinValue} onComplete={(v) => setPinValue(v)} />
-                  {pinValue.length > 0 && <Text size="xs" color="muted" className="mt-2">PIN: {pinValue}</Text>}
+                  <Text size="xs" color="muted" className="mb-2">
+                    4 digits
+                  </Text>
+                  <PinInput
+                    length={4}
+                    value={pinValue}
+                    onChange={setPinValue}
+                    onComplete={(v) => setPinValue(v)}
+                  />
+                  {pinValue.length > 0 && (
+                    <Text size="xs" color="muted" className="mt-2">
+                      PIN: {pinValue}
+                    </Text>
+                  )}
                 </div>
                 <div>
-                  <Text size="xs" color="muted" className="mb-2">6 digits · masked</Text>
+                  <Text size="xs" color="muted" className="mb-2">
+                    6 digits · masked
+                  </Text>
                   <PinInput length={6} mask />
                 </div>
               </div>
@@ -461,16 +578,24 @@ export function App() {
             <ComponentCard title="Rating">
               <div className="space-y-4">
                 <div>
-                  <Text size="xs" color="muted" className="mb-2">Interactive (click a star)</Text>
+                  <Text size="xs" color="muted" className="mb-2">
+                    Interactive (click a star)
+                  </Text>
                   <Rating value={rating} onChange={setRating} />
-                  <Text size="xs" color="muted" className="mt-1">{rating} / 5 stars</Text>
+                  <Text size="xs" color="muted" className="mt-1">
+                    {rating} / 5 stars
+                  </Text>
                 </div>
                 <div>
-                  <Text size="xs" color="muted" className="mb-2">Read only · 4/5</Text>
+                  <Text size="xs" color="muted" className="mb-2">
+                    Read only · 4/5
+                  </Text>
                   <Rating value={4} readOnly />
                 </div>
                 <div>
-                  <Text size="xs" color="muted" className="mb-2">10 stars · size sm</Text>
+                  <Text size="xs" color="muted" className="mb-2">
+                    10 stars · size sm
+                  </Text>
                   <Rating value={7} max={10} size="sm" readOnly />
                 </div>
               </div>
@@ -481,10 +606,20 @@ export function App() {
           <div className="grid grid-cols-2 gap-4 mb-4">
             <ComponentCard title="TagsInput">
               <div className="space-y-2">
-                <TagsInput id="tags-demo" value={tags} onChange={setTags} placeholder="Add a tag and press Enter..." maxTags={6} />
-                <Text size="xs" color="muted">{tags.length} tag(s) · max 6</Text>
+                <TagsInput
+                  id="tags-demo"
+                  value={tags}
+                  onChange={setTags}
+                  placeholder="Add a tag and press Enter..."
+                  maxTags={6}
+                />
+                <Text size="xs" color="muted">
+                  {tags.length} tag(s) · max 6
+                </Text>
                 <TagsInput id="tags-dis" value={['React', 'Vue']} disabled onChange={() => {}} />
-                <Text size="xs" color="muted">Disabled</Text>
+                <Text size="xs" color="muted">
+                  Disabled
+                </Text>
               </div>
             </ComponentCard>
 
@@ -495,9 +630,17 @@ export function App() {
                   onSearch={(v) => setSearchResult(v)}
                 />
                 {searchResult !== null && (
-                  <Text size="sm" color="muted">Searched for: <strong className="text-foreground">"{searchResult}"</strong></Text>
+                  <Text size="sm" color="muted">
+                    Searched for:{' '}
+                    <strong className="text-foreground">&quot;{searchResult}&quot;</strong>
+                  </Text>
                 )}
-                <SearchField placeholder="Loading state..." isLoading={true} onSearch={() => {}} defaultValue="react" />
+                <SearchField
+                  placeholder="Loading state..."
+                  isLoading={true}
+                  onSearch={() => {}}
+                  defaultValue="react"
+                />
               </div>
             </ComponentCard>
           </div>
@@ -506,7 +649,12 @@ export function App() {
           <div className="mb-4">
             <ComponentCard title="FormField">
               <div className="grid grid-cols-3 gap-6">
-                <FormField label="Email address" id="ff-email" required hint="We'll never share your email">
+                <FormField
+                  label="Email address"
+                  id="ff-email"
+                  required
+                  hint="We'll never share your email"
+                >
                   <Input
                     id="ff-email"
                     type="email"
@@ -515,7 +663,11 @@ export function App() {
                     onChange={(e) => setFormEmail(e.target.value)}
                   />
                 </FormField>
-                <FormField label="Password" id="ff-pwd" {...(formEmail && !formEmail.includes('@') ? { error: 'Must contain @' } : {})}>
+                <FormField
+                  label="Password"
+                  id="ff-pwd"
+                  {...(formEmail && !formEmail.includes('@') ? { error: 'Must contain @' } : {})}
+                >
                   <PasswordInput id="ff-pwd" placeholder="Min. 8 characters" />
                 </FormField>
                 <FormField label="Framework" id="ff-fw" hint="Choose your primary stack">
@@ -529,10 +681,22 @@ export function App() {
           <div className="grid grid-cols-2 gap-4 mb-4">
             <ComponentCard title="Breadcrumb">
               <div className="space-y-4">
-                <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Components', href: '/components' }, { label: 'Molecules' }]} />
                 <Breadcrumb
-                  items={[{ label: 'Dashboard', onClick: () => {} }, { label: 'Settings', onClick: () => {} }, { label: 'Profile' }]}
-                  separator={<Icon name="ChevronRight" size="sm" className="text-muted-foreground mx-1" />}
+                  items={[
+                    { label: 'Home', href: '/' },
+                    { label: 'Components', href: '/components' },
+                    { label: 'Molecules' },
+                  ]}
+                />
+                <Breadcrumb
+                  items={[
+                    { label: 'Dashboard', onClick: () => {} },
+                    { label: 'Settings', onClick: () => {} },
+                    { label: 'Profile' },
+                  ]}
+                  separator={
+                    <Icon name="ChevronRight" size="sm" className="text-muted-foreground mx-1" />
+                  }
                 />
                 <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Current page' }]} />
               </div>
@@ -540,8 +704,15 @@ export function App() {
 
             <ComponentCard title="FileUpload">
               <div className="space-y-3">
-                <FileUpload accept="image/*" multiple maxSize={5 * 1024 * 1024} onChange={(files) => console.log(files)} />
-                <Text size="xs" color="muted">Images only · max 5 MB each</Text>
+                <FileUpload
+                  accept="image/*"
+                  multiple
+                  maxSize={5 * 1024 * 1024}
+                  onChange={(files) => console.log(files)}
+                />
+                <Text size="xs" color="muted">
+                  Images only · max 5 MB each
+                </Text>
               </div>
             </ComponentCard>
           </div>
@@ -550,12 +721,25 @@ export function App() {
           <ComponentCard title="Pagination">
             <div className="space-y-4">
               <div>
-                <Text size="xs" color="muted" className="mb-2">Page {currentPage} of 20</Text>
-                <Pagination currentPage={currentPage} totalPages={20} onPageChange={setCurrentPage} />
+                <Text size="xs" color="muted" className="mb-2">
+                  Page {currentPage} of 20
+                </Text>
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={20}
+                  onPageChange={setCurrentPage}
+                />
               </div>
               <div>
-                <Text size="xs" color="muted" className="mb-2">Few pages · no edges</Text>
-                <Pagination currentPage={2} totalPages={4} onPageChange={() => {}} showEdges={false} />
+                <Text size="xs" color="muted" className="mb-2">
+                  Few pages · no edges
+                </Text>
+                <Pagination
+                  currentPage={2}
+                  totalPages={4}
+                  onPageChange={() => {}}
+                  showEdges={false}
+                />
               </div>
             </div>
           </ComponentCard>
@@ -563,27 +747,46 @@ export function App() {
 
         {/* ── Organisms ─────────────────────────────────────────── */}
         <Section title="Organisms">
-
           {/* Card variants */}
           <div className="mb-4">
             <ComponentCard title="Card">
               <div className="grid grid-cols-3 gap-4">
                 <Card variant="flat">
-                  <Text size="sm" weight="medium" className="mb-1">Flat (default)</Text>
-                  <Text size="xs" color="muted">No shadow, no border</Text>
+                  <Text size="sm" weight="medium" className="mb-1">
+                    Flat (default)
+                  </Text>
+                  <Text size="xs" color="muted">
+                    No shadow, no border
+                  </Text>
                 </Card>
                 <Card
                   variant="elevated"
-                  header={<Text as="span" size="sm" weight="semibold">Elevated</Text>}
+                  header={
+                    <Text as="span" size="sm" weight="semibold">
+                      Elevated
+                    </Text>
+                  }
                 >
-                  <Text size="xs" color="muted">shadow-md applied</Text>
+                  <Text size="xs" color="muted">
+                    shadow-md applied
+                  </Text>
                 </Card>
                 <Card
                   variant="outlined"
-                  header={<Text as="span" size="sm" weight="semibold">Outlined</Text>}
-                  footer={<Button size="sm" variant="primary" className="w-full">Primary action</Button>}
+                  header={
+                    <Text as="span" size="sm" weight="semibold">
+                      Outlined
+                    </Text>
+                  }
+                  footer={
+                    <Button size="sm" variant="primary" className="w-full">
+                      Primary action
+                    </Button>
+                  }
                 >
-                  <Text size="xs" color="muted">border + header + footer slots</Text>
+                  <Text size="xs" color="muted">
+                    border + header + footer slots
+                  </Text>
                 </Card>
               </div>
             </ComponentCard>
@@ -597,7 +800,9 @@ export function App() {
                   logo={
                     <div className="flex items-center gap-2">
                       <Icon name="Layers" size="sm" />
-                      <Text weight="semibold" size="sm">base-ds</Text>
+                      <Text weight="semibold" size="sm">
+                        base-ds
+                      </Text>
                     </div>
                   }
                   items={[
@@ -607,8 +812,17 @@ export function App() {
                     { label: 'Changelog', href: '#' },
                   ]}
                   actions={[
-                    <Button key="github" variant="ghost" size="sm" leftIcon={<Icon name="GitBranch" size="sm" />}>GitHub</Button>,
-                    <Button key="cta" variant="primary" size="sm">Get Started</Button>,
+                    <Button
+                      key="github"
+                      variant="ghost"
+                      size="sm"
+                      leftIcon={<Icon name="GitBranch" size="sm" />}
+                    >
+                      GitHub
+                    </Button>,
+                    <Button key="cta" variant="primary" size="sm">
+                      Get Started
+                    </Button>,
                   ]}
                 />
               </div>
@@ -621,19 +835,31 @@ export function App() {
               <div className="h-52 flex overflow-hidden rounded-lg border border-border">
                 <Sidebar
                   items={[
-                    { label: 'Dashboard', icon: <Icon name="Home" size="sm" />, active: true, href: '#' },
+                    {
+                      label: 'Dashboard',
+                      icon: <Icon name="Home" size="sm" />,
+                      active: true,
+                      href: '#',
+                    },
                     { label: 'Components', icon: <Icon name="Layers" size="sm" />, href: '#' },
                     { label: 'Settings', icon: <Icon name="Settings" size="sm" />, href: '#' },
                     { label: 'Profile', icon: <Icon name="User" size="sm" />, href: '#' },
                   ]}
                   footer={
-                    <Button variant="ghost" size="sm" leftIcon={<Icon name="LogOut" size="sm" />} className="w-full justify-start">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      leftIcon={<Icon name="LogOut" size="sm" />}
+                      className="w-full justify-start"
+                    >
                       Sign out
                     </Button>
                   }
                 />
                 <div className="flex-1 bg-muted flex items-center justify-center">
-                  <Text color="muted" size="sm">Main content area</Text>
+                  <Text color="muted" size="sm">
+                    Main content area
+                  </Text>
                 </div>
               </div>
             </ComponentCard>
@@ -643,8 +869,33 @@ export function App() {
                 type ComponentRow = { component: string; type: string; tests: string }
                 const cols: TableColumn<ComponentRow>[] = [
                   { key: 'component', header: 'Component', sortable: true },
-                  { key: 'type', header: 'Layer', render: (row) => <Badge variant={row.type === 'Atom' ? 'primary' : row.type === 'Molecule' ? 'info' : 'success'} size="sm">{row.type}</Badge> },
-                  { key: 'tests', header: 'Tests', render: (row) => <Badge variant="default" size="sm">{row.tests}</Badge> },
+                  {
+                    key: 'type',
+                    header: 'Layer',
+                    render: (row) => (
+                      <Badge
+                        variant={
+                          row.type === 'Atom'
+                            ? 'primary'
+                            : row.type === 'Molecule'
+                              ? 'info'
+                              : 'success'
+                        }
+                        size="sm"
+                      >
+                        {row.type}
+                      </Badge>
+                    ),
+                  },
+                  {
+                    key: 'tests',
+                    header: 'Tests',
+                    render: (row) => (
+                      <Badge variant="default" size="sm">
+                        {row.tests}
+                      </Badge>
+                    ),
+                  },
                 ]
                 const rows: ComponentRow[] = [
                   { component: 'Button', type: 'Atom', tests: '18' },
@@ -663,17 +914,38 @@ export function App() {
               <Carousel
                 loop
                 items={[
-                  <div key="1" className="bg-primary text-primary-foreground rounded-lg p-10 text-center">
-                    <Heading as="h3" size="xl" weight="bold" className="mb-2">Atoms</Heading>
-                    <Text size="sm">15 indivisible building blocks — Button, Input, Badge, Icon and more</Text>
+                  <div
+                    key="1"
+                    className="bg-primary text-primary-foreground rounded-lg p-10 text-center"
+                  >
+                    <Heading as="h3" size="xl" weight="bold" className="mb-2">
+                      Atoms
+                    </Heading>
+                    <Text size="sm">
+                      15 indivisible building blocks — Button, Input, Badge, Icon and more
+                    </Text>
                   </div>,
-                  <div key="2" className="bg-secondary text-secondary-foreground rounded-lg p-10 text-center">
-                    <Heading as="h3" size="xl" weight="bold" className="mb-2">Molecules</Heading>
-                    <Text size="sm">10 composite components — FormField, Rating, PinInput and more</Text>
+                  <div
+                    key="2"
+                    className="bg-secondary text-secondary-foreground rounded-lg p-10 text-center"
+                  >
+                    <Heading as="h3" size="xl" weight="bold" className="mb-2">
+                      Molecules
+                    </Heading>
+                    <Text size="sm">
+                      10 composite components — FormField, Rating, PinInput and more
+                    </Text>
                   </div>,
-                  <div key="3" className="bg-success text-success-foreground rounded-lg p-10 text-center">
-                    <Heading as="h3" size="xl" weight="bold" className="mb-2">Organisms</Heading>
-                    <Text size="sm">7 complex layouts — Card, Navbar, Sidebar, Table, Dialog, Drawer, Carousel</Text>
+                  <div
+                    key="3"
+                    className="bg-success text-success-foreground rounded-lg p-10 text-center"
+                  >
+                    <Heading as="h3" size="xl" weight="bold" className="mb-2">
+                      Organisms
+                    </Heading>
+                    <Text size="sm">
+                      7 complex layouts — Card, Navbar, Sidebar, Table, Dialog, Drawer, Carousel
+                    </Text>
                   </div>,
                 ]}
               />
@@ -684,8 +956,14 @@ export function App() {
           <div className="grid grid-cols-2 gap-4 mb-4">
             <ComponentCard title="Dialog">
               <div className="space-y-3">
-                <Text size="sm" color="muted">Modal with portal, Escape key & backdrop click to close.</Text>
-                <Button variant="primary" onClick={() => setDialogOpen(true)} leftIcon={<Icon name="ExternalLink" size="sm" />}>
+                <Text size="sm" color="muted">
+                  Modal with portal, Escape key & backdrop click to close.
+                </Text>
+                <Button
+                  variant="primary"
+                  onClick={() => setDialogOpen(true)}
+                  leftIcon={<Icon name="ExternalLink" size="sm" />}
+                >
                   Open Dialog
                 </Button>
                 <Dialog
@@ -695,26 +973,37 @@ export function App() {
                   description="This action is permanent and cannot be undone. All component data will be removed."
                   footer={
                     <>
-                      <Button variant="outline" onClick={() => setDialogOpen(false)}>Cancel</Button>
-                      <Button variant="danger" onClick={() => setDialogOpen(false)}>Delete</Button>
+                      <Button variant="outline" onClick={() => setDialogOpen(false)}>
+                        Cancel
+                      </Button>
+                      <Button variant="danger" onClick={() => setDialogOpen(false)}>
+                        Delete
+                      </Button>
                     </>
                   }
                 >
-                  <Text size="sm">Make sure you have exported any important data before proceeding.</Text>
+                  <Text size="sm">
+                    Make sure you have exported any important data before proceeding.
+                  </Text>
                 </Dialog>
               </div>
             </ComponentCard>
 
             <ComponentCard title="Drawer">
               <div className="space-y-3">
-                <Text size="sm" color="muted">Slide-in panel from any side of the screen.</Text>
+                <Text size="sm" color="muted">
+                  Slide-in panel from any side of the screen.
+                </Text>
                 <div className="flex flex-wrap gap-2">
                   {(['right', 'left', 'bottom'] as const).map((side) => (
                     <Button
                       key={side}
                       variant="outline"
                       size="sm"
-                      onClick={() => { setDrawerSide(side); setDrawerOpen(true) }}
+                      onClick={() => {
+                        setDrawerSide(side)
+                        setDrawerOpen(true)
+                      }}
                     >
                       {side[0]!.toUpperCase() + side.slice(1)}
                     </Button>
@@ -727,21 +1016,36 @@ export function App() {
                   side={drawerSide}
                   footer={
                     <div className="flex justify-end gap-2">
-                      <Button variant="outline" size="sm" onClick={() => setDrawerOpen(false)}>Cancel</Button>
-                      <Button variant="primary" size="sm" onClick={() => setDrawerOpen(false)}>Save</Button>
+                      <Button variant="outline" size="sm" onClick={() => setDrawerOpen(false)}>
+                        Cancel
+                      </Button>
+                      <Button variant="primary" size="sm" onClick={() => setDrawerOpen(false)}>
+                        Save
+                      </Button>
                     </div>
                   }
                 >
                   <div className="space-y-4">
-                    <Text size="sm">Drawer content area. Supports Escape key and backdrop click.</Text>
-                    <Switch id="drawer-notifications" label="Enable notifications" checked={switchOn} onChange={setSwitchOn} />
-                    <Switch id="drawer-darkmode" label="Dark mode" checked={false} onChange={() => {}} />
+                    <Text size="sm">
+                      Drawer content area. Supports Escape key and backdrop click.
+                    </Text>
+                    <Switch
+                      id="drawer-notifications"
+                      label="Enable notifications"
+                      checked={switchOn}
+                      onChange={setSwitchOn}
+                    />
+                    <Switch
+                      id="drawer-darkmode"
+                      label="Dark mode"
+                      checked={false}
+                      onChange={() => {}}
+                    />
                   </div>
                 </Drawer>
               </div>
             </ComponentCard>
           </div>
-
         </Section>
 
         {/* ── Token Grid ────────────────────────────────────────── */}
@@ -756,7 +1060,11 @@ export function App() {
                 { label: 'destructive', bg: 'bg-destructive', text: 'text-destructive-foreground' },
                 { label: 'info', bg: 'bg-info', text: 'text-info-foreground' },
                 { label: 'muted', bg: 'bg-muted', text: 'text-muted-foreground' },
-                { label: 'background', bg: 'bg-background border border-border', text: 'text-foreground' },
+                {
+                  label: 'background',
+                  bg: 'bg-background border border-border',
+                  text: 'text-foreground',
+                },
               ].map(({ label, bg, text }) => (
                 <div key={label} className={cn('rounded-md px-4 py-3', bg)}>
                   <Text as="span" size="sm" weight="medium" className={text}>
@@ -772,10 +1080,16 @@ export function App() {
       {/* Footer */}
       <footer className="border-t border-border mt-12 py-6">
         <div className="max-w-6xl mx-auto px-6 flex items-center justify-between">
-          <Text color="muted" size="sm">base-ds · Design System</Text>
+          <Text color="muted" size="sm">
+            base-ds · Design System
+          </Text>
           <div className="flex items-center gap-2">
-            <Badge variant="success" size="sm">401 testes</Badge>
-            <Badge variant="info" size="sm">15 atoms · 10 molecules · 7 organisms</Badge>
+            <Badge variant="success" size="sm">
+              401 testes
+            </Badge>
+            <Badge variant="info" size="sm">
+              15 atoms · 10 molecules · 7 organisms
+            </Badge>
           </div>
         </div>
       </footer>

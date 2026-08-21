@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
+import type { KeyboardEvent, ChangeEvent } from 'react'
 import { cn } from '../../../utils/cn'
 import { Badge } from '../../atoms/Badge/Badge'
 import { Icon } from '../../atoms/Icon/Icon'
@@ -24,12 +25,12 @@ export function TagsInput({
 }: TagsInputProps) {
   const [tags, setTags] = useState<string[]>(value ?? [])
   const [inputValue, setInputValue] = useState('')
+  const [prevValue, setPrevValue] = useState(value)
 
-  useEffect(() => {
-    if (value !== undefined) {
-      setTags(value)
-    }
-  }, [value])
+  if (value !== undefined && value !== prevValue) {
+    setPrevValue(value)
+    setTags(value)
+  }
 
   const addTag = (val: string) => {
     const trimmed = val.trim().replace(/,$/, '')
@@ -46,7 +47,7 @@ export function TagsInput({
     onChange?.(next)
   }
 
-  const handleKeyDown = (e: import('react').KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' || e.key === ',') {
       e.preventDefault()
       addTag(inputValue)
@@ -57,7 +58,7 @@ export function TagsInput({
     }
   }
 
-  const handleChange = (e: import('react').ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value)
   }
 
