@@ -5,15 +5,14 @@
    ========================================================================== */
 
 :root {
-
   /* --------------------------------------------------------------------------
      CORES — Primitivos
      Paleta bruta. Componentes não referenciam primitivos diretamente.
      -------------------------------------------------------------------------- */
 
   /* Neutral */
-  --color-neutral-0:   #ffffff;
-  --color-neutral-50:  #f9fafb;
+  --color-neutral-0: #ffffff;
+  --color-neutral-50: #f9fafb;
   --color-neutral-100: #f3f4f6;
   --color-neutral-200: #e5e7eb;
   --color-neutral-300: #d1d5db;
@@ -26,7 +25,7 @@
   --color-neutral-950: #030712;
 
   /* Blue */
-  --color-blue-50:  #eff6ff;
+  --color-blue-50: #eff6ff;
   --color-blue-100: #dbeafe;
   --color-blue-200: #bfdbfe;
   --color-blue-300: #93c5fd;
@@ -39,7 +38,7 @@
   --color-blue-950: #172554;
 
   /* Violet */
-  --color-violet-50:  #f5f3ff;
+  --color-violet-50: #f5f3ff;
   --color-violet-100: #ede9fe;
   --color-violet-200: #ddd6fe;
   --color-violet-300: #c4b5fd;
@@ -52,7 +51,7 @@
   --color-violet-950: #2e1065;
 
   /* Green */
-  --color-green-50:  #f0fdf4;
+  --color-green-50: #f0fdf4;
   --color-green-100: #dcfce7;
   --color-green-200: #bbf7d0;
   --color-green-300: #86efac;
@@ -65,7 +64,7 @@
   --color-green-950: #052e16;
 
   /* Amber */
-  --color-amber-50:  #fffbeb;
+  --color-amber-50: #fffbeb;
   --color-amber-100: #fef3c7;
   --color-amber-200: #fde68a;
   --color-amber-300: #fcd34d;
@@ -78,7 +77,7 @@
   --color-amber-950: #451a03;
 
   /* Red */
-  --color-red-50:  #fef2f2;
+  --color-red-50: #fef2f2;
   --color-red-100: #fee2e2;
   --color-red-200: #fecaca;
   --color-red-300: #fca5a5;
@@ -91,7 +90,7 @@
   --color-red-950: #450a0a;
 
   /* Sky */
-  --color-sky-50:  #f0f9ff;
+  --color-sky-50: #f0f9ff;
   --color-sky-100: #e0f2fe;
   --color-sky-200: #bae6fd;
   --color-sky-300: #7dd3fc;
@@ -108,164 +107,191 @@
      Referencie sempre estes tokens nos componentes.
      -------------------------------------------------------------------------- */
 
-  --color-background:         var(--color-neutral-0);
-  --color-foreground:         var(--color-neutral-900);
+  --color-background: var(--color-neutral-0);
+  --color-foreground: var(--color-neutral-900);
 
   /* Primary */
-  --color-primary:            var(--color-blue-600);
+  --color-primary: var(--color-blue-600);
   --color-primary-foreground: var(--color-neutral-0);
-  --color-primary-hover:      var(--color-blue-700);
-  --color-primary-active:     var(--color-blue-800);
-  --color-primary-muted:      var(--color-blue-100);
-  --color-primary-muted-fg:   var(--color-blue-700);
-  --color-primary-border:     var(--color-blue-300);
+  --color-primary-hover: var(--color-blue-700);
+  --color-primary-active: var(--color-blue-800);
+  --color-primary-muted: var(--color-blue-100);
+  --color-primary-muted-fg: var(--color-blue-700);
+  --color-primary-border: var(--color-blue-300);
 
   /* Secondary */
-  --color-secondary:            var(--color-violet-600);
+  --color-secondary: var(--color-violet-600);
   --color-secondary-foreground: var(--color-neutral-0);
-  --color-secondary-hover:      var(--color-violet-700);
-  --color-secondary-active:     var(--color-violet-800);
-  --color-secondary-muted:      var(--color-violet-100);
-  --color-secondary-muted-fg:   var(--color-violet-700);
-  --color-secondary-border:     var(--color-violet-300);
+  --color-secondary-hover: var(--color-violet-700);
+  --color-secondary-active: var(--color-violet-800);
+  --color-secondary-muted: var(--color-violet-100);
+  --color-secondary-muted-fg: var(--color-violet-700);
+  --color-secondary-border: var(--color-violet-300);
 
   /* Success */
-  --color-success:            var(--color-green-600);
+  --color-success: var(--color-green-600);
   --color-success-foreground: var(--color-neutral-0);
-  --color-success-hover:      var(--color-green-700);
-  --color-success-muted:      var(--color-green-100);
-  --color-success-muted-fg:   var(--color-green-700);
-  --color-success-border:     var(--color-green-300);
+  --color-success-hover: var(--color-green-700);
+  --color-success-muted: var(--color-green-100);
+  --color-success-muted-fg: var(--color-green-700);
+  --color-success-border: var(--color-green-300);
 
   /* Warning */
-  --color-warning:            var(--color-amber-600);
+  --color-warning: var(--color-amber-600);
   --color-warning-foreground: var(--color-neutral-0);
-  --color-warning-hover:      var(--color-amber-700);
-  --color-warning-muted:      var(--color-amber-100);
-  --color-warning-muted-fg:   var(--color-amber-700);
-  --color-warning-border:     var(--color-amber-300);
+  --color-warning-hover: var(--color-amber-700);
+  --color-warning-muted: var(--color-amber-100);
+  --color-warning-muted-fg: var(--color-amber-700);
+  --color-warning-border: var(--color-amber-300);
 
   /* Destructive */
-  --color-destructive:            var(--color-red-600);
+  --color-destructive: var(--color-red-600);
   --color-destructive-foreground: var(--color-neutral-0);
-  --color-destructive-hover:      var(--color-red-700);
-  --color-destructive-active:     var(--color-red-800);
-  --color-destructive-muted:      var(--color-red-100);
-  --color-destructive-muted-fg:   var(--color-red-700);
-  --color-destructive-border:     var(--color-red-300);
+  --color-destructive-hover: var(--color-red-700);
+  --color-destructive-active: var(--color-red-800);
+  --color-destructive-muted: var(--color-red-100);
+  --color-destructive-muted-fg: var(--color-red-700);
+  --color-destructive-border: var(--color-red-300);
 
   /* Info */
-  --color-info:            var(--color-sky-600);
+  --color-info: var(--color-sky-600);
   --color-info-foreground: var(--color-neutral-0);
-  --color-info-hover:      var(--color-sky-700);
-  --color-info-muted:      var(--color-sky-100);
-  --color-info-muted-fg:   var(--color-sky-700);
-  --color-info-border:     var(--color-sky-300);
+  --color-info-hover: var(--color-sky-700);
+  --color-info-muted: var(--color-sky-100);
+  --color-info-muted-fg: var(--color-sky-700);
+  --color-info-border: var(--color-sky-300);
 
   /* Muted */
-  --color-muted:            var(--color-neutral-100);
+  --color-muted: var(--color-neutral-100);
   --color-muted-foreground: var(--color-neutral-500);
 
   /* Brutalist (Button variant="brutalist") */
-  --color-brutalist:            var(--color-amber-300);
+  --color-brutalist: var(--color-amber-300);
   --color-brutalist-foreground: var(--color-foreground);
-  --color-brutalist-border:     var(--color-foreground);
+  --color-brutalist-border: var(--color-foreground);
 
   /* Surface */
-  --color-border:   var(--color-neutral-200);
-  --color-input:    var(--color-neutral-300);
-  --color-ring:     var(--color-blue-600);
-  --color-overlay:  rgb(0 0 0 / 0.5);
+  --color-border: var(--color-neutral-200);
+  --color-input: var(--color-neutral-300);
+  --color-ring: var(--color-blue-600);
+  --color-overlay: rgb(0 0 0 / 0.5);
+
+  /* --------------------------------------------------------------------------
+     CORES — Chart (BarChart, Funnel)
+     Paleta dedicada a data viz, validada com o six-checks validator (CVD-safe,
+     ordem fixa) — não reaproveita os tokens semânticos (primary/secondary/...
+     já falham separação de daltonismo entre si e são reservados para outros
+     papéis). Categórica: ordem fixa, nunca cicle. Sequencial/ordinal: uma
+     única cor (blue) em claridade monotônica.
+     -------------------------------------------------------------------------- */
+
+  --color-chart-1: #2a78d6;
+  --color-chart-2: #eb6834;
+  --color-chart-3: #1baf7a;
+  --color-chart-4: #eda100;
+
+  --color-chart-sequential-250: #86b6ef;
+  --color-chart-sequential-300: #6da7ec;
+  --color-chart-sequential-350: #5598e7;
+  --color-chart-sequential-400: #3987e5;
+  --color-chart-sequential-450: #2a78d6;
+  --color-chart-sequential-500: #256abf;
+  --color-chart-sequential-550: #1c5cab;
+  --color-chart-sequential-600: #184f95;
+  --color-chart-sequential-650: #104281;
+  --color-chart-sequential-700: #0d366b;
 
   /* --------------------------------------------------------------------------
      ESPAÇAMENTO — escala base 4px
      -------------------------------------------------------------------------- */
 
-  --spacing-0:    0px;
-  --spacing-0-5:  2px;
-  --spacing-1:    4px;
-  --spacing-1-5:  6px;
-  --spacing-2:    8px;
-  --spacing-2-5:  10px;
-  --spacing-3:    12px;
-  --spacing-3-5:  14px;
-  --spacing-4:    16px;
-  --spacing-5:    20px;
-  --spacing-6:    24px;
-  --spacing-7:    28px;
-  --spacing-8:    32px;
-  --spacing-9:    36px;
-  --spacing-10:   40px;
-  --spacing-11:   44px;
-  --spacing-12:   48px;
-  --spacing-14:   56px;
-  --spacing-16:   64px;
-  --spacing-20:   80px;
-  --spacing-24:   96px;
-  --spacing-28:   112px;
-  --spacing-32:   128px;
-  --spacing-36:   144px;
-  --spacing-40:   160px;
-  --spacing-48:   192px;
-  --spacing-56:   224px;
-  --spacing-64:   256px;
+  --spacing-0: 0px;
+  --spacing-0-5: 2px;
+  --spacing-1: 4px;
+  --spacing-1-5: 6px;
+  --spacing-2: 8px;
+  --spacing-2-5: 10px;
+  --spacing-3: 12px;
+  --spacing-3-5: 14px;
+  --spacing-4: 16px;
+  --spacing-5: 20px;
+  --spacing-6: 24px;
+  --spacing-7: 28px;
+  --spacing-8: 32px;
+  --spacing-9: 36px;
+  --spacing-10: 40px;
+  --spacing-11: 44px;
+  --spacing-12: 48px;
+  --spacing-14: 56px;
+  --spacing-16: 64px;
+  --spacing-20: 80px;
+  --spacing-24: 96px;
+  --spacing-28: 112px;
+  --spacing-32: 128px;
+  --spacing-36: 144px;
+  --spacing-40: 160px;
+  --spacing-48: 192px;
+  --spacing-56: 224px;
+  --spacing-64: 256px;
 
   /* --------------------------------------------------------------------------
      TIPOGRAFIA
      -------------------------------------------------------------------------- */
 
   /* Font families */
-  --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-    'Liberation Mono', 'Courier New', monospace;
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
+    monospace;
 
   /* Font sizes */
-  --text-xs:   0.75rem;
-  --text-sm:   0.875rem;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
   --text-base: 1rem;
-  --text-lg:   1.125rem;
-  --text-xl:   1.25rem;
-  --text-2xl:  1.5rem;
-  --text-3xl:  1.875rem;
-  --text-4xl:  2.25rem;
-  --text-5xl:  3rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+  --text-5xl: 3rem;
 
   /* Font weights */
-  --font-weight-thin:      100;
-  --font-weight-light:     300;
-  --font-weight-normal:    400;
-  --font-weight-medium:    500;
-  --font-weight-semibold:  600;
-  --font-weight-bold:      700;
+  --font-weight-thin: 100;
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
   --font-weight-extrabold: 800;
 
   /* Line heights */
-  --leading-none:    1;
-  --leading-tight:   1.25;
-  --leading-snug:    1.375;
-  --leading-normal:  1.5;
+  --leading-none: 1;
+  --leading-tight: 1.25;
+  --leading-snug: 1.375;
+  --leading-normal: 1.5;
   --leading-relaxed: 1.625;
-  --leading-loose:   2;
+  --leading-loose: 2;
 
   /* Letter spacing */
   --tracking-tighter: -0.05em;
-  --tracking-tight:   -0.025em;
-  --tracking-normal:  0em;
-  --tracking-wide:    0.025em;
-  --tracking-wider:   0.05em;
-  --tracking-widest:  0.1em;
+  --tracking-tight: -0.025em;
+  --tracking-normal: 0em;
+  --tracking-wide: 0.025em;
+  --tracking-wider: 0.05em;
+  --tracking-widest: 0.1em;
 
   /* --------------------------------------------------------------------------
      SOMBRAS
      -------------------------------------------------------------------------- */
 
-  --shadow-none:  none;
-  --shadow-sm:    0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md:    0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg:    0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  --shadow-xl:    0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-  --shadow-2xl:   0 25px 50px -12px rgb(0 0 0 / 0.25);
+  --shadow-none: none;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
   --shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
 
   /* --------------------------------------------------------------------------
@@ -274,12 +300,12 @@
 
   /* Border radius */
   --radius-none: 0px;
-  --radius-sm:   2px;
-  --radius-md:   6px;
-  --radius-lg:   8px;
-  --radius-xl:   12px;
-  --radius-2xl:  16px;
-  --radius-3xl:  24px;
+  --radius-sm: 2px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+  --radius-3xl: 24px;
   --radius-full: 9999px;
 
   /* Border width */

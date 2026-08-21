@@ -100,6 +100,25 @@ export { Card } from './components/organisms/Card/Card'
 
 export { Carousel } from './components/organisms/Carousel/Carousel'
 
+// ── Charts (Organisms/Charts) ──────────────────────────────────────────────
+export { BarChart } from './components/organisms/Charts/BarChart'
+export type { BarChartProps, BarChartDatum } from './components/organisms/Charts/BarChart'
+
+export { Candlestick } from './components/organisms/Charts/Candlestick'
+export type { CandlestickProps, CandlestickDatum } from './components/organisms/Charts/Candlestick'
+
+export { Correlation } from './components/organisms/Charts/Correlation'
+export type { CorrelationProps, CorrelationPoint } from './components/organisms/Charts/Correlation'
+
+export { Funnel } from './components/organisms/Charts/Funnel'
+export type { FunnelProps, FunnelStep } from './components/organisms/Charts/Funnel'
+
+export { LineChart } from './components/organisms/Charts/LineChart'
+export type { LineChartProps, LineChartSeriesData } from './components/organisms/Charts/LineChart'
+
+export { PieChart } from './components/organisms/Charts/PieChart'
+export type { PieChartProps, PieChartDatum } from './components/organisms/Charts/PieChart'
+
 export { Dialog } from './components/organisms/Dialog/Dialog'
 
 export { Drawer } from './components/organisms/Drawer/Drawer'
