@@ -15,6 +15,10 @@ export interface TransferListProps {
   onChange: (next: string[]) => void
   availableLabel?: string
   selectedLabel?: string
+  moveLabel?: string
+  moveAllLabel?: string
+  moveBackLabel?: string
+  moveAllBackLabel?: string
   disabled?: boolean
   className?: string
 }
@@ -111,6 +115,10 @@ export function TransferList({
   onChange,
   availableLabel = 'Available',
   selectedLabel = 'Selected',
+  moveLabel,
+  moveAllLabel,
+  moveBackLabel,
+  moveAllBackLabel,
   disabled = false,
   className,
 }: TransferListProps) {
@@ -160,7 +168,7 @@ export function TransferList({
           iconOnly
           size="sm"
           variant="outline"
-          aria-label={`Move to ${selectedLabel}`}
+          aria-label={moveLabel ?? `Move to ${selectedLabel}`}
           disabled={disabled || highlightedAvailable === undefined}
           onClick={() => {
             if (highlightedAvailable !== undefined) moveToSelected(highlightedAvailable)
@@ -172,7 +180,7 @@ export function TransferList({
           iconOnly
           size="sm"
           variant="outline"
-          aria-label={`Move all to ${selectedLabel}`}
+          aria-label={moveAllLabel ?? `Move all to ${selectedLabel}`}
           disabled={disabled || availableOptions.length === 0}
           onClick={moveAllToSelected}
         >
@@ -182,7 +190,7 @@ export function TransferList({
           iconOnly
           size="sm"
           variant="outline"
-          aria-label={`Move all to ${availableLabel}`}
+          aria-label={moveAllBackLabel ?? `Move all to ${availableLabel}`}
           disabled={disabled || selectedOptions.length === 0}
           onClick={moveAllToAvailable}
         >
@@ -192,7 +200,7 @@ export function TransferList({
           iconOnly
           size="sm"
           variant="outline"
-          aria-label={`Move to ${availableLabel}`}
+          aria-label={moveBackLabel ?? `Move to ${availableLabel}`}
           disabled={disabled || highlightedSelected === undefined}
           onClick={() => {
             if (highlightedSelected !== undefined) moveToAvailable(highlightedSelected)

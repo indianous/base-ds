@@ -45,6 +45,21 @@ export const Empty: Story = {
   },
 }
 
+export const FullyLocalized: Story = {
+  render: (args) => <ControlledTransferList {...args} />,
+  args: {
+    options: permissionOptions,
+    value: ['orders.read'],
+    onChange: () => {},
+    availableLabel: 'Disponível',
+    selectedLabel: 'Atribuído',
+    moveLabel: 'Atribuir',
+    moveAllLabel: 'Atribuir todas',
+    moveBackLabel: 'Remover',
+    moveAllBackLabel: 'Remover todas',
+  },
+}
+
 export const Disabled: Story = {
   args: {
     options: permissionOptions,

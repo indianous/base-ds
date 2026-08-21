@@ -134,4 +134,54 @@ describe('TransferList', () => {
     )
     expect(await axe(container)).toHaveNoViolations()
   })
+
+  describe('custom move button labels', () => {
+    it('uses moveLabel for the single move-to-selected button', () => {
+      render(<TransferList options={options} value={[]} onChange={vi.fn()} moveLabel="Atribuir" />)
+      expect(screen.getByRole('button', { name: 'Atribuir' })).toBeInTheDocument()
+      expect(screen.queryByRole('button', { name: /Move to Selected/ })).not.toBeInTheDocument()
+    })
+
+    it('uses moveAllLabel for the move-all-to-selected button', () => {
+      render(
+        <TransferList
+          options={options}
+          value={[]}
+          onChange={vi.fn()}
+          moveAllLabel="Atribuir todas"
+        />,
+      )
+      expect(screen.getByRole('button', { name: 'Atribuir todas' })).toBeInTheDocument()
+    })
+
+    it('uses moveBackLabel for the single move-to-available button', () => {
+      render(
+        <TransferList
+          options={options}
+          value={['write']}
+          onChange={vi.fn()}
+          moveBackLabel="Remover"
+        />,
+      )
+      expect(screen.getByRole('button', { name: 'Remover' })).toBeInTheDocument()
+    })
+
+    it('uses moveAllBackLabel for the move-all-to-available button', () => {
+      render(
+        <TransferList
+          options={options}
+          value={['write']}
+          onChange={vi.fn()}
+          moveAllBackLabel="Remover todas"
+        />,
+      )
+      expect(screen.getByRole('button', { name: 'Remover todas' })).toBeInTheDocument()
+    })
+
+    it('falls back to the default English template when not customized', () => {
+      render(<TransferList options={options} value={[]} onChange={vi.fn()} />)
+      expect(screen.getByRole('button', { name: 'Move to Selected' })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: 'Move all to Selected' })).toBeInTheDocument()
+    })
+  })
 })
