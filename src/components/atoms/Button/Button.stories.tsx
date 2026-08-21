@@ -28,6 +28,13 @@ export const AsLink: Story = {
 export const AsLinkDisabled: Story = {
   args: { as: 'a', href: 'https://example.com/docs', disabled: true, children: 'Go to docs' },
 }
+export const AsChild: Story = {
+  render: () => (
+    <Button asChild variant="primary">
+      <a href="/checkout">Finalizar compra</a>
+    </Button>
+  ),
+}
 export const IconOnly: Story = {
   render: () => (
     <div className="flex items-center gap-3">

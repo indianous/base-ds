@@ -1,4 +1,5 @@
-import React, { useEffect, useId, useState } from 'react'
+import React, { cloneElement, useEffect, useId, useState } from 'react'
+import type { ReactElement } from 'react'
 import { cn } from '../../../utils/cn'
 import { Spinner } from '../Spinner/Spinner'
 
@@ -12,6 +13,7 @@ interface ButtonCommonProps {
   leftIcon?: React.ReactNode
   rightIcon?: React.ReactNode
   iconOnly?: boolean
+  asChild?: boolean
 }
 
 type ButtonAsButton = ButtonCommonProps & { as?: 'button' } & Omit<
@@ -74,6 +76,37 @@ export function Button(props: ButtonProps) {
       {ariaLabel}
     </span>
   )
+
+  if (props.asChild) {
+    const {
+      asChild,
+      as,
+      variant = 'primary',
+      size = 'md',
+      iconOnly = false,
+      children,
+      className,
+      onClick,
+      ...rest
+    } = props as ButtonAsButton
+
+    const child = children as ReactElement<Record<string, unknown>>
+
+    return cloneElement(child, {
+      ...rest,
+      className: cn(
+        baseClasses,
+        variantClasses[variant],
+        iconOnly ? iconSizeClasses[size] : sizeClasses[size],
+        className,
+        child.props.className as string | undefined,
+      ),
+      onClick: (e: React.MouseEvent) => {
+        onClick?.(e as React.MouseEvent<HTMLButtonElement>)
+        ;(child.props.onClick as ((e: React.MouseEvent) => void) | undefined)?.(e)
+      },
+    })
+  }
 
   if (props.as === 'a') {
     const {

@@ -411,4 +411,85 @@ describe('Button', () => {
       expect(onMouseEnter).toHaveBeenCalledTimes(1)
     })
   })
+
+  describe('asChild', () => {
+    it('renders the child element instead of a button', () => {
+      render(
+        <Button asChild>
+          <a href="/checkout">Finalizar compra</a>
+        </Button>,
+      )
+      expect(screen.getByRole('link', { name: 'Finalizar compra' })).toBeInTheDocument()
+      expect(screen.queryByRole('button')).not.toBeInTheDocument()
+    })
+
+    it('applies variant and size classes to the child element', () => {
+      render(
+        <Button asChild variant="secondary" size="lg">
+          <a href="/checkout">Finalizar compra</a>
+        </Button>,
+      )
+      const link = screen.getByRole('link')
+      expect(link).toHaveClass('bg-secondary')
+      expect(link).toHaveClass('h-12')
+    })
+
+    it('merges the className passed to Button with the classes it applies', () => {
+      render(
+        <Button asChild className="mt-4">
+          <a href="/checkout">Finalizar compra</a>
+        </Button>,
+      )
+      const link = screen.getByRole('link')
+      expect(link).toHaveClass('mt-4')
+      expect(link).toHaveClass('bg-primary')
+    })
+
+    it("preserves the child's own className", () => {
+      render(
+        <Button asChild>
+          <a href="/checkout" className="custom-link">
+            Finalizar compra
+          </a>
+        </Button>,
+      )
+      expect(screen.getByRole('link')).toHaveClass('custom-link')
+    })
+
+    it("preserves the child's own href and content", () => {
+      render(
+        <Button asChild>
+          <a href="/checkout">Finalizar compra</a>
+        </Button>,
+      )
+      const link = screen.getByRole('link')
+      expect(link).toHaveAttribute('href', '/checkout')
+      expect(link).toHaveTextContent('Finalizar compra')
+    })
+
+    it("calls both Button's onClick and the child's own onClick", async () => {
+      const buttonOnClick = vi.fn()
+      const childOnClick = vi.fn()
+      render(
+        <Button asChild onClick={buttonOnClick}>
+          <a href="/checkout" onClick={childOnClick}>
+            Finalizar compra
+          </a>
+        </Button>,
+      )
+      await userEvent.click(screen.getByRole('link'))
+      expect(buttonOnClick).toHaveBeenCalledTimes(1)
+      expect(childOnClick).toHaveBeenCalledTimes(1)
+    })
+
+    it('has no accessibility violations', async () => {
+      const { container } = render(
+        <Button asChild>
+          <a href="/checkout">Finalizar compra</a>
+        </Button>,
+      )
+      const results = await axe(container)
+      expect(results).toHaveNoViolations()
+    })
+  })
 })
