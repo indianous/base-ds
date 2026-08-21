@@ -312,6 +312,22 @@ describe('Button', () => {
       expect(screen.getByRole('tooltip')).toHaveTextContent('Remove')
     })
 
+    it('wraps long aria-labels instead of forcing a single line', async () => {
+      render(
+        <Button
+          iconOnly
+          aria-label="This is a very long accessible label that should wrap instead of overflowing the viewport edge"
+        >
+          <span data-testid="icon" />
+        </Button>,
+      )
+      await userEvent.hover(screen.getByRole('button'))
+      const tooltip = screen.getByRole('tooltip')
+      expect(tooltip).toHaveClass('whitespace-normal')
+      expect(tooltip).toHaveClass('max-w-[12rem]')
+      expect(tooltip).not.toHaveClass('whitespace-nowrap')
+    })
+
     it('hides the tooltip on unhover', async () => {
       render(
         <Button iconOnly aria-label="Remove">

@@ -365,4 +365,17 @@ describe('Tooltip', () => {
       expect(screen.getByRole('tooltip')).toHaveTextContent('Abrir menu')
     })
   })
+
+  it('wraps long labels instead of forcing a single line', async () => {
+    render(
+      <Tooltip label="This is a very long tooltip label that should wrap onto multiple lines instead of overflowing the viewport edge">
+        <button>Trigger</button>
+      </Tooltip>,
+    )
+    await userEvent.hover(screen.getByRole('button'))
+    const tooltip = screen.getByRole('tooltip')
+    expect(tooltip).toHaveClass('whitespace-normal')
+    expect(tooltip).toHaveClass('max-w-[12rem]')
+    expect(tooltip).not.toHaveClass('whitespace-nowrap')
+  })
 })

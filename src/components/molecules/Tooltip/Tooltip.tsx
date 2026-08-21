@@ -117,7 +117,7 @@ export function Tooltip({ label, position = 'top', children, className, ...rest 
               left: coords.left,
               transform: coords.transform,
             }}
-            className="z-50 whitespace-nowrap rounded-md bg-foreground px-2 py-1 text-xs text-background shadow-md"
+            className="z-50 max-w-[12rem] whitespace-normal text-center rounded-md bg-foreground px-2 py-1 text-xs text-background shadow-md"
           >
             {label}
           </span>,

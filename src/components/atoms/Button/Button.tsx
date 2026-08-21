@@ -126,7 +126,7 @@ export function Button(props: ButtonProps) {
           left: tooltipCoords.left,
           transform: tooltipCoords.transform,
         }}
-        className="pointer-events-none z-50 whitespace-nowrap rounded-md bg-foreground px-2 py-1 text-xs font-normal text-background shadow-md"
+        className="pointer-events-none z-50 max-w-[12rem] whitespace-normal text-center rounded-md bg-foreground px-2 py-1 text-xs font-normal text-background shadow-md"
       >
         {ariaLabel}
       </span>,
