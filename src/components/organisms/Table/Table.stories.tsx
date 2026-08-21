@@ -8,6 +8,13 @@ interface User extends Record<string, unknown> {
   role: string
 }
 
+interface Order extends Record<string, unknown> {
+  id: string
+  customer: string
+  total: string
+  items: { product: string; quantity: number; unitPrice: string; subtotal: string }[]
+}
+
 const meta: Meta<typeof Table<User>> = {
   component: Table,
   title: 'Organisms/Table',
@@ -50,4 +57,61 @@ export const WithCustomRender: Story = {
     data,
     caption: 'List of users',
   },
+}
+
+const orderColumns: TableColumn<Order>[] = [
+  { key: 'id', header: 'Order' },
+  { key: 'customer', header: 'Customer' },
+  { key: 'total', header: 'Total' },
+]
+
+const orders: Order[] = [
+  {
+    id: '#1001',
+    customer: 'Ada Lovelace',
+    total: '$120.00',
+    items: [
+      { product: 'Notebook', quantity: 2, unitPrice: '$20.00', subtotal: '$40.00' },
+      { product: 'Pen set', quantity: 4, unitPrice: '$20.00', subtotal: '$80.00' },
+    ],
+  },
+  {
+    id: '#1002',
+    customer: 'Alan Turing',
+    total: '$45.00',
+    items: [{ product: 'Desk lamp', quantity: 1, unitPrice: '$45.00', subtotal: '$45.00' }],
+  },
+]
+
+export const ExpandableRows: Story = {
+  args: {
+    columns: orderColumns as unknown as TableColumn<User>[],
+    data: orders as unknown as User[],
+    caption: 'Orders',
+    renderExpandedRow: (row) => {
+      const order = row as unknown as Order
+      return (
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="text-left text-muted-foreground">
+              <th className="py-1 pr-4">Product</th>
+              <th className="py-1 pr-4">Qty</th>
+              <th className="py-1 pr-4">Unit price</th>
+              <th className="py-1">Subtotal</th>
+            </tr>
+          </thead>
+          <tbody>
+            {order.items.map((item) => (
+              <tr key={item.product}>
+                <td className="py-1 pr-4">{item.product}</td>
+                <td className="py-1 pr-4">{item.quantity}</td>
+                <td className="py-1 pr-4">{item.unitPrice}</td>
+                <td className="py-1">{item.subtotal}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )
+    },
+  } as unknown as Story['args'],
 }
