@@ -1,6 +1,7 @@
 import { useEffect, useId, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { cn } from '../../../utils/cn'
+import { useBodyScrollLock } from '../../../utils/useBodyScrollLock'
 import { Image } from '../../atoms/Image/Image'
 import type { ImageProps } from '../../atoms/Image/Image'
 import { Button } from '../../atoms/Button/Button'
@@ -36,6 +37,8 @@ export function ImageGallery({
 
   const goPrev = () => setSelectedIndex((i) => Math.max(0, i - 1))
   const goNext = () => setSelectedIndex((i) => Math.min(images.length - 1, i + 1))
+
+  useBodyScrollLock(zoomOpen)
 
   useEffect(() => {
     if (!zoomOpen) return

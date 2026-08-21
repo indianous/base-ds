@@ -2,6 +2,7 @@ import { useEffect, useRef, useId } from 'react'
 import { createPortal } from 'react-dom'
 import type { ReactNode } from 'react'
 import { cn } from '../../../utils/cn'
+import { useBodyScrollLock } from '../../../utils/useBodyScrollLock'
 import { Button } from '../../atoms/Button/Button'
 import { Icon } from '../../atoms/Icon/Icon'
 
@@ -15,10 +16,20 @@ interface DialogProps {
   className?: string
 }
 
-export function Dialog({ open, onClose, title, description, children, footer, className }: DialogProps) {
+export function Dialog({
+  open,
+  onClose,
+  title,
+  description,
+  children,
+  footer,
+  className,
+}: DialogProps) {
   const titleId = useId()
   const descId = useId()
   const dialogRef = useRef<HTMLDivElement>(null)
+
+  useBodyScrollLock(open)
 
   useEffect(() => {
     if (!open) return
@@ -38,40 +49,42 @@ export function Dialog({ open, onClose, title, description, children, footer, cl
   return createPortal(
     <div
       data-testid="dialog-backdrop"
-      className="fixed inset-0 z-50 flex items-center justify-center"
+      className="fixed inset-0 z-50 overflow-y-auto"
       onClick={onClose}
     >
       <div className="absolute inset-0 bg-overlay" aria-hidden="true" />
-      <div
-        ref={dialogRef}
-        role="dialog"
-        aria-modal={true}
-        {...(title ? { 'aria-labelledby': titleId } : {})}
-        {...(description ? { 'aria-describedby': descId } : {})}
-        tabIndex={-1}
-        onClick={(e) => e.stopPropagation()}
-        className={cn(
-          'relative z-10 bg-background rounded-lg shadow-lg p-6 max-w-md w-full mx-4',
-          className,
-        )}
-      >
-        <div className="flex items-start justify-between mb-4">
-          {title && (
-            <h2 id={titleId} className="text-lg font-semibold text-foreground">
-              {title}
-            </h2>
+      <div className="flex min-h-full items-center justify-center p-4">
+        <div
+          ref={dialogRef}
+          role="dialog"
+          aria-modal={true}
+          {...(title ? { 'aria-labelledby': titleId } : {})}
+          {...(description ? { 'aria-describedby': descId } : {})}
+          tabIndex={-1}
+          onClick={(e) => e.stopPropagation()}
+          className={cn(
+            'relative z-10 w-full max-w-md rounded-lg bg-background p-6 shadow-lg',
+            className,
           )}
-          <Button variant="ghost" size="sm" onClick={onClose} aria-label="Close dialog">
-            <Icon name="X" size="sm" />
-          </Button>
+        >
+          <div className="flex items-start justify-between mb-4">
+            {title && (
+              <h2 id={titleId} className="text-lg font-semibold text-foreground">
+                {title}
+              </h2>
+            )}
+            <Button variant="ghost" size="sm" onClick={onClose} aria-label="Close dialog">
+              <Icon name="X" size="sm" />
+            </Button>
+          </div>
+          {description && (
+            <p id={descId} className="text-sm text-muted-foreground mb-4">
+              {description}
+            </p>
+          )}
+          {children && <div className="mb-4">{children}</div>}
+          {footer && <div className="flex justify-end gap-2 mt-4">{footer}</div>}
         </div>
-        {description && (
-          <p id={descId} className="text-sm text-muted-foreground mb-4">
-            {description}
-          </p>
-        )}
-        {children && <div className="mb-4">{children}</div>}
-        {footer && <div className="flex justify-end gap-2 mt-4">{footer}</div>}
       </div>
     </div>,
     document.body,

@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, afterEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { axe } from 'jest-axe'
@@ -12,6 +12,29 @@ const images: GalleryImage[] = [
 ]
 
 describe('ImageGallery', () => {
+  afterEach(() => {
+    document.body.style.overflow = ''
+  })
+
+  it('does not lock body scroll when the zoom dialog is closed', () => {
+    render(<ImageGallery images={images} />)
+    expect(document.body.style.overflow).toBe('')
+  })
+
+  it('locks body scroll when the zoom dialog is open', async () => {
+    render(<ImageGallery images={images} />)
+    await userEvent.click(screen.getByRole('button', { name: /Zoom image/ }))
+    expect(document.body.style.overflow).toBe('hidden')
+  })
+
+  it('restores body scroll when the zoom dialog closes', async () => {
+    render(<ImageGallery images={images} />)
+    await userEvent.click(screen.getByRole('button', { name: /Zoom image/ }))
+    expect(document.body.style.overflow).toBe('hidden')
+    await userEvent.click(screen.getByRole('button', { name: 'Close zoom' }))
+    expect(document.body.style.overflow).toBe('')
+  })
+
   it('renders the first image as the main image by default', () => {
     render(<ImageGallery images={images} />)
     expect(screen.getAllByAltText('Shoe front view').length).toBeGreaterThan(0)

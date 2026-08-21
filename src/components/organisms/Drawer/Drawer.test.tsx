@@ -1,16 +1,27 @@
 import React from 'react'
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, afterEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { axe } from 'jest-axe'
 import { Drawer } from './Drawer'
 
-function DrawerWrapper({ open: init = false, side }: { open?: boolean; side?: 'left' | 'right' | 'top' | 'bottom' }) {
+function DrawerWrapper({
+  open: init = false,
+  side,
+}: {
+  open?: boolean
+  side?: 'left' | 'right' | 'top' | 'bottom'
+}) {
   const [open, setOpen] = React.useState(init)
   return (
     <>
       <button onClick={() => setOpen(true)}>Open</button>
-      <Drawer open={open} onClose={() => setOpen(false)} title="Test Drawer" {...(side ? { side } : {})}>
+      <Drawer
+        open={open}
+        onClose={() => setOpen(false)}
+        title="Test Drawer"
+        {...(side ? { side } : {})}
+      >
         <p>Drawer content</p>
       </Drawer>
     </>
@@ -18,6 +29,20 @@ function DrawerWrapper({ open: init = false, side }: { open?: boolean; side?: 'l
 }
 
 describe('Drawer', () => {
+  afterEach(() => {
+    document.body.style.overflow = ''
+  })
+
+  it('locks body scroll while open', () => {
+    render(<DrawerWrapper open={true} />)
+    expect(document.body.style.overflow).toBe('hidden')
+  })
+
+  it('does not lock body scroll when closed', () => {
+    render(<DrawerWrapper open={false} />)
+    expect(document.body.style.overflow).toBe('')
+  })
+
   it('does not render when open=false', () => {
     render(<DrawerWrapper open={false} />)
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()

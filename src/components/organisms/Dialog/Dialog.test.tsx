@@ -1,10 +1,33 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, afterEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { axe } from 'jest-axe'
 import { Dialog } from './Dialog'
 
 describe('Dialog', () => {
+  afterEach(() => {
+    document.body.style.overflow = ''
+  })
+
+  it('locks body scroll while open', () => {
+    render(<Dialog open={true} onClose={() => {}} />)
+    expect(document.body.style.overflow).toBe('hidden')
+  })
+
+  it('restores body scroll when closed', () => {
+    const { rerender } = render(<Dialog open={true} onClose={() => {}} />)
+    expect(document.body.style.overflow).toBe('hidden')
+    rerender(<Dialog open={false} onClose={() => {}} />)
+    expect(document.body.style.overflow).toBe('')
+  })
+
+  it('lets the backdrop scroll instead of capping the dialog height', () => {
+    render(<Dialog open={true} onClose={() => {}} />)
+    expect(screen.getByTestId('dialog-backdrop')).toHaveClass('overflow-y-auto')
+    const dialog = screen.getByRole('dialog')
+    expect(dialog.className).not.toMatch(/max-h-|overflow-y-auto/)
+  })
+
   it('does not render when open=false', () => {
     render(<Dialog open={false} onClose={() => {}} />)
     expect(screen.queryByRole('dialog')).toBeNull()
@@ -95,7 +118,12 @@ describe('Dialog', () => {
 
   it('has no accessibility violations when open', async () => {
     render(
-      <Dialog open={true} onClose={() => {}} title="Accessible Dialog" description="This is accessible">
+      <Dialog
+        open={true}
+        onClose={() => {}}
+        title="Accessible Dialog"
+        description="This is accessible"
+      >
         <p>Content</p>
       </Dialog>,
     )
