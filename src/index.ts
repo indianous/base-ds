@@ -91,6 +91,12 @@ export type { TabsProps, TabItem } from './components/molecules/Tabs/Tabs'
 export { TagsInput } from './components/molecules/TagsInput/TagsInput'
 export type { TagsInputProps } from './components/molecules/TagsInput/TagsInput'
 
+export { TransferList } from './components/molecules/TransferList/TransferList'
+export type {
+  TransferListProps,
+  TransferListOption,
+} from './components/molecules/TransferList/TransferList'
+
 export { Tooltip } from './components/molecules/Tooltip/Tooltip'
 export type { TooltipProps } from './components/molecules/Tooltip/Tooltip'
 
