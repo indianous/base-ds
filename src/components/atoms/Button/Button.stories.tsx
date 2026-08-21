@@ -28,13 +28,6 @@ export const AsLink: Story = {
 export const AsLinkDisabled: Story = {
   args: { as: 'a', href: 'https://example.com/docs', disabled: true, children: 'Go to docs' },
 }
-export const Brutalist: Story = { args: { children: 'Brutalist', variant: 'brutalist' } }
-export const BrutalistDisabled: Story = {
-  args: { children: 'Brutalist', variant: 'brutalist', disabled: true },
-}
-export const BrutalistAsLink: Story = {
-  args: { as: 'a', href: '#', variant: 'brutalist', children: 'Brutalist link' },
-}
 export const IconOnly: Story = {
   render: () => (
     <div className="flex items-center gap-3">
@@ -58,7 +51,6 @@ export const AllVariants: Story = {
       <Button variant="ghost">Ghost</Button>
       <Button variant="outline">Outline</Button>
       <Button variant="danger">Danger</Button>
-      <Button variant="brutalist">Brutalist</Button>
     </div>
   ),
 }

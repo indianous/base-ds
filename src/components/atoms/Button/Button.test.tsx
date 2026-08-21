@@ -217,61 +217,6 @@ describe('Button', () => {
     })
   })
 
-  describe('variant="brutalist"', () => {
-    it('applies bg-brutalist class', () => {
-      render(<Button variant="brutalist">Submit</Button>)
-      expect(screen.getByRole('button')).toHaveClass('bg-brutalist')
-    })
-
-    it('renders a decorative shadow element behind the button', () => {
-      const { container } = render(<Button variant="brutalist">Submit</Button>)
-      const shadow = container.querySelector('[aria-hidden="true"]')
-      expect(shadow).not.toBeNull()
-      expect(shadow).toHaveClass('bg-brutalist-border')
-    })
-
-    it('does not render a decorative shadow element for other variants', () => {
-      const { container } = render(<Button variant="primary">Submit</Button>)
-      expect(container.querySelector('[aria-hidden="true"]')).toBeNull()
-    })
-
-    it('applies the resting translate-offset classes', () => {
-      render(<Button variant="brutalist">Submit</Button>)
-      const button = screen.getByRole('button')
-      expect(button).toHaveClass('-translate-x-[var(--button-brutalist-offset)]')
-      expect(button).toHaveClass('-translate-y-[var(--button-brutalist-offset)]')
-    })
-
-    it('keeps the disabled state working', async () => {
-      const onClick = vi.fn()
-      render(
-        <Button variant="brutalist" disabled onClick={onClick}>
-          Submit
-        </Button>,
-      )
-      const button = screen.getByRole('button')
-      expect(button).toBeDisabled()
-      await userEvent.click(button)
-      expect(onClick).not.toHaveBeenCalled()
-    })
-
-    it('renders the shadow element when as="a" too', () => {
-      const { container } = render(
-        <Button as="a" href="/docs" variant="brutalist">
-          Docs
-        </Button>,
-      )
-      expect(screen.getByRole('link')).toBeInTheDocument()
-      expect(container.querySelector('[aria-hidden="true"]')).toHaveClass('bg-brutalist-border')
-    })
-
-    it('has no accessibility violations', async () => {
-      const { container } = render(<Button variant="brutalist">Submit</Button>)
-      const results = await axe(container)
-      expect(results).toHaveNoViolations()
-    })
-  })
-
   describe('iconOnly', () => {
     it('applies square h-8/w-8 classes for size="sm"', () => {
       render(

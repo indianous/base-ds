@@ -165,11 +165,6 @@
   --color-muted: var(--color-neutral-100);
   --color-muted-foreground: var(--color-neutral-500);
 
-  /* Brutalist (Button variant="brutalist") */
-  --color-brutalist: var(--color-amber-300);
-  --color-brutalist-foreground: var(--color-foreground);
-  --color-brutalist-border: var(--color-foreground);
-
   /* Surface */
   --color-border: var(--color-neutral-200);
   --color-input: var(--color-neutral-300);
@@ -313,13 +308,4 @@
   --border-1: 1px;
   --border-2: 2px;
   --border-4: 4px;
-
-  /* --------------------------------------------------------------------------
-     TOKENS DE COMPONENTE
-     Não fazem parte do pipeline gerado por src/tokens/*.json — são específicos
-     de um componente e não reaproveitáveis pela escala geral de design tokens.
-     -------------------------------------------------------------------------- */
-
-  /* Button variant="brutalist" — deslocamento do botão em repouso (ver Button.tsx) */
-  --button-brutalist-offset: 2px;
 }

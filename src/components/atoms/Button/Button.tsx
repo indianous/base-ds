@@ -2,7 +2,7 @@ import React from 'react'
 import { cn } from '../../../utils/cn'
 import { Spinner } from '../Spinner/Spinner'
 
-type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'outline' | 'danger' | 'brutalist'
+type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'outline' | 'danger'
 type ButtonSize = 'sm' | 'md' | 'lg'
 
 interface ButtonCommonProps {
@@ -32,10 +32,6 @@ const variantClasses: Record<ButtonVariant, string> = {
   ghost: 'bg-transparent text-foreground hover:bg-muted',
   outline: 'border border-border bg-transparent text-foreground hover:bg-muted',
   danger: 'bg-destructive text-destructive-foreground hover:bg-destructive-hover',
-  brutalist:
-    'relative z-10 bg-brutalist text-brutalist-foreground border-2 border-brutalist-border rounded-none font-bold ' +
-    '-translate-x-[var(--button-brutalist-offset)] -translate-y-[var(--button-brutalist-offset)] transition-transform ' +
-    'hover:translate-x-0 hover:translate-y-0 active:translate-x-0 active:translate-y-0 focus-visible:translate-x-0 focus-visible:translate-y-0',
 }
 
 const sizeClasses: Record<ButtonSize, string> = {
@@ -52,17 +48,6 @@ const iconSizeClasses: Record<ButtonSize, string> = {
 
 const baseClasses =
   'inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50'
-
-function withBrutalistShadow(variant: ButtonVariant, element: React.ReactElement) {
-  if (variant !== 'brutalist') return element
-
-  return (
-    <span className="relative inline-block">
-      <span aria-hidden="true" className="absolute inset-0 rounded-none bg-brutalist-border" />
-      {element}
-    </span>
-  )
-}
 
 export function Button(props: ButtonProps) {
   if (props.as === 'a') {
@@ -84,8 +69,7 @@ export function Button(props: ButtonProps) {
 
     const isDisabled = isLoading || disabled
 
-    return withBrutalistShadow(
-      variant,
+    return (
       <a
         href={href}
         aria-disabled={isDisabled ? 'true' : undefined}
@@ -110,7 +94,7 @@ export function Button(props: ButtonProps) {
         {isLoading ? <Spinner size="sm" aria-label="Loading" /> : leftIcon}
         {children}
         {!isLoading && rightIcon}
-      </a>,
+      </a>
     )
   }
 
@@ -128,8 +112,7 @@ export function Button(props: ButtonProps) {
     ...rest
   } = props
 
-  return withBrutalistShadow(
-    variant,
+  return (
     <button
       className={cn(
         baseClasses,
@@ -144,6 +127,6 @@ export function Button(props: ButtonProps) {
       {isLoading ? <Spinner size="sm" aria-label="Loading" /> : leftIcon}
       {children}
       {!isLoading && rightIcon}
-    </button>,
+    </button>
   )
 }
