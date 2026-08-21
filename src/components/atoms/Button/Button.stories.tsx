@@ -35,6 +35,21 @@ export const BrutalistDisabled: Story = {
 export const BrutalistAsLink: Story = {
   args: { as: 'a', href: '#', variant: 'brutalist', children: 'Brutalist link' },
 }
+export const IconOnly: Story = {
+  render: () => (
+    <div className="flex items-center gap-3">
+      <Button iconOnly size="sm" variant="ghost" aria-label="Search">
+        <Icon name="Search" size="sm" />
+      </Button>
+      <Button iconOnly size="md" variant="outline" aria-label="Search">
+        <Icon name="Search" size="sm" />
+      </Button>
+      <Button iconOnly size="lg" variant="primary" aria-label="Search">
+        <Icon name="Search" size="md" />
+      </Button>
+    </div>
+  ),
+}
 export const AllVariants: Story = {
   render: () => (
     <div className="flex gap-3 flex-wrap p-2">

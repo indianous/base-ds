@@ -66,22 +66,22 @@ describe('Button', () => {
 
   it('does not call onClick when button is disabled', async () => {
     const onClick = vi.fn()
-    render(<Button disabled onClick={onClick}>Click</Button>)
+    render(
+      <Button disabled onClick={onClick}>
+        Click
+      </Button>,
+    )
     await userEvent.click(screen.getByRole('button'))
     expect(onClick).not.toHaveBeenCalled()
   })
 
   it('renders leftIcon slot content', () => {
-    render(
-      <Button leftIcon={<span data-testid="left-icon">L</span>}>Text</Button>,
-    )
+    render(<Button leftIcon={<span data-testid="left-icon">L</span>}>Text</Button>)
     expect(screen.getByTestId('left-icon')).toBeInTheDocument()
   })
 
   it('renders rightIcon slot content', () => {
-    render(
-      <Button rightIcon={<span data-testid="right-icon">R</span>}>Text</Button>,
-    )
+    render(<Button rightIcon={<span data-testid="right-icon">R</span>}>Text</Button>)
     expect(screen.getByTestId('right-icon')).toBeInTheDocument()
   })
 
@@ -102,7 +102,11 @@ describe('Button', () => {
 
   it('does not call onClick when isLoading=true', async () => {
     const onClick = vi.fn()
-    render(<Button isLoading onClick={onClick}>Submit</Button>)
+    render(
+      <Button isLoading onClick={onClick}>
+        Submit
+      </Button>,
+    )
     await userEvent.click(screen.getByRole('button'))
     expect(onClick).not.toHaveBeenCalled()
   })
@@ -115,19 +119,31 @@ describe('Button', () => {
 
   describe('as="a"', () => {
     it('renders an anchor element instead of a button', () => {
-      render(<Button as="a" href="/docs">Docs</Button>)
+      render(
+        <Button as="a" href="/docs">
+          Docs
+        </Button>,
+      )
       const link = screen.getByRole('link')
       expect(link.tagName).toBe('A')
       expect(screen.queryByRole('button')).not.toBeInTheDocument()
     })
 
     it('propagates href to the anchor', () => {
-      render(<Button as="a" href="/docs">Docs</Button>)
+      render(
+        <Button as="a" href="/docs">
+          Docs
+        </Button>,
+      )
       expect(screen.getByRole('link')).toHaveAttribute('href', '/docs')
     })
 
     it('applies the same variant and size classes as the button mode', () => {
-      render(<Button as="a" href="/docs" variant="secondary" size="lg">Docs</Button>)
+      render(
+        <Button as="a" href="/docs" variant="secondary" size="lg">
+          Docs
+        </Button>,
+      )
       const link = screen.getByRole('link')
       expect(link).toHaveClass('bg-secondary')
       expect(link).toHaveClass('h-12')
@@ -135,14 +151,22 @@ describe('Button', () => {
 
     it('calls onClick when the link is not disabled', async () => {
       const onClick = vi.fn()
-      render(<Button as="a" href="/docs" onClick={onClick}>Docs</Button>)
+      render(
+        <Button as="a" href="/docs" onClick={onClick}>
+          Docs
+        </Button>,
+      )
       await userEvent.click(screen.getByRole('link'))
       expect(onClick).toHaveBeenCalledTimes(1)
     })
 
     it('sets aria-disabled and blocks onClick when disabled', async () => {
       const onClick = vi.fn()
-      render(<Button as="a" href="/docs" disabled onClick={onClick}>Docs</Button>)
+      render(
+        <Button as="a" href="/docs" disabled onClick={onClick}>
+          Docs
+        </Button>,
+      )
       const link = screen.getByRole('link')
       expect(link).toHaveAttribute('aria-disabled', 'true')
       expect(link).not.toHaveAttribute('disabled')
@@ -152,7 +176,11 @@ describe('Button', () => {
 
     it('sets aria-disabled and blocks onClick when isLoading', async () => {
       const onClick = vi.fn()
-      render(<Button as="a" href="/docs" isLoading onClick={onClick}>Docs</Button>)
+      render(
+        <Button as="a" href="/docs" isLoading onClick={onClick}>
+          Docs
+        </Button>,
+      )
       const link = screen.getByRole('link')
       expect(link).toHaveAttribute('aria-disabled', 'true')
       expect(link).toHaveAttribute('aria-busy', 'true')
@@ -161,17 +189,29 @@ describe('Button', () => {
     })
 
     it('shows Spinner when isLoading=true', () => {
-      render(<Button as="a" href="/docs" isLoading>Docs</Button>)
+      render(
+        <Button as="a" href="/docs" isLoading>
+          Docs
+        </Button>,
+      )
       expect(screen.getByRole('status')).toBeInTheDocument()
     })
 
     it('is not reachable by keyboard tab order when disabled', () => {
-      render(<Button as="a" href="/docs" disabled>Docs</Button>)
+      render(
+        <Button as="a" href="/docs" disabled>
+          Docs
+        </Button>,
+      )
       expect(screen.getByRole('link')).toHaveAttribute('tabIndex', '-1')
     })
 
     it('has no accessibility violations', async () => {
-      const { container } = render(<Button as="a" href="/docs">Docs</Button>)
+      const { container } = render(
+        <Button as="a" href="/docs">
+          Docs
+        </Button>,
+      )
       const results = await axe(container)
       expect(results).toHaveNoViolations()
     })
@@ -204,7 +244,11 @@ describe('Button', () => {
 
     it('keeps the disabled state working', async () => {
       const onClick = vi.fn()
-      render(<Button variant="brutalist" disabled onClick={onClick}>Submit</Button>)
+      render(
+        <Button variant="brutalist" disabled onClick={onClick}>
+          Submit
+        </Button>,
+      )
       const button = screen.getByRole('button')
       expect(button).toBeDisabled()
       await userEvent.click(button)
@@ -213,7 +257,9 @@ describe('Button', () => {
 
     it('renders the shadow element when as="a" too', () => {
       const { container } = render(
-        <Button as="a" href="/docs" variant="brutalist">Docs</Button>,
+        <Button as="a" href="/docs" variant="brutalist">
+          Docs
+        </Button>,
       )
       expect(screen.getByRole('link')).toBeInTheDocument()
       expect(container.querySelector('[aria-hidden="true"]')).toHaveClass('bg-brutalist-border')
@@ -221,6 +267,81 @@ describe('Button', () => {
 
     it('has no accessibility violations', async () => {
       const { container } = render(<Button variant="brutalist">Submit</Button>)
+      const results = await axe(container)
+      expect(results).toHaveNoViolations()
+    })
+  })
+
+  describe('iconOnly', () => {
+    it('applies square h-8/w-8 classes for size="sm"', () => {
+      render(
+        <Button iconOnly size="sm" aria-label="Remove">
+          <span data-testid="icon" />
+        </Button>,
+      )
+      const button = screen.getByRole('button')
+      expect(button).toHaveClass('h-8')
+      expect(button).toHaveClass('w-8')
+      expect(button).toHaveClass('p-0')
+    })
+
+    it('applies square h-10/w-10 classes for size="md" (default)', () => {
+      render(
+        <Button iconOnly aria-label="Remove">
+          <span data-testid="icon" />
+        </Button>,
+      )
+      const button = screen.getByRole('button')
+      expect(button).toHaveClass('h-10')
+      expect(button).toHaveClass('w-10')
+    })
+
+    it('applies square h-12/w-12 classes for size="lg"', () => {
+      render(
+        <Button iconOnly size="lg" aria-label="Remove">
+          <span data-testid="icon" />
+        </Button>,
+      )
+      const button = screen.getByRole('button')
+      expect(button).toHaveClass('h-12')
+      expect(button).toHaveClass('w-12')
+    })
+
+    it('does not apply the text-oriented horizontal padding', () => {
+      render(
+        <Button iconOnly aria-label="Remove">
+          <span data-testid="icon" />
+        </Button>,
+      )
+      expect(screen.getByRole('button')).not.toHaveClass('px-4')
+    })
+
+    it('works together with variant="ghost"', () => {
+      render(
+        <Button iconOnly variant="ghost" aria-label="Remove">
+          <span data-testid="icon" />
+        </Button>,
+      )
+      expect(screen.getByRole('button')).toHaveClass('bg-transparent')
+    })
+
+    it('applies square classes when as="a" too', () => {
+      render(
+        <Button as="a" href="/docs" iconOnly aria-label="Docs">
+          <span data-testid="icon" />
+        </Button>,
+      )
+      const link = screen.getByRole('link')
+      expect(link).toHaveClass('h-10')
+      expect(link).toHaveClass('w-10')
+    })
+
+    it('has no accessibility violations when given an aria-label', async () => {
+      const { container } = render(
+        <Button iconOnly aria-label="Remove item">
+          <span data-testid="icon" />
+        </Button>,
+      )
       const results = await axe(container)
       expect(results).toHaveNoViolations()
     })

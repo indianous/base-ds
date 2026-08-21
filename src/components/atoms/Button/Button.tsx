@@ -11,15 +11,18 @@ interface ButtonCommonProps {
   isLoading?: boolean
   leftIcon?: React.ReactNode
   rightIcon?: React.ReactNode
+  iconOnly?: boolean
 }
 
-type ButtonAsButton = ButtonCommonProps &
-  { as?: 'button' } &
-  Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, keyof ButtonCommonProps>
+type ButtonAsButton = ButtonCommonProps & { as?: 'button' } & Omit<
+    React.ButtonHTMLAttributes<HTMLButtonElement>,
+    keyof ButtonCommonProps
+  >
 
-type ButtonAsLink = ButtonCommonProps &
-  { as: 'a'; href: string; disabled?: boolean } &
-  Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, keyof ButtonCommonProps>
+type ButtonAsLink = ButtonCommonProps & { as: 'a'; href: string; disabled?: boolean } & Omit<
+    React.AnchorHTMLAttributes<HTMLAnchorElement>,
+    keyof ButtonCommonProps
+  >
 
 export type ButtonProps = ButtonAsButton | ButtonAsLink
 
@@ -39,6 +42,12 @@ const sizeClasses: Record<ButtonSize, string> = {
   sm: 'h-8 px-3 text-sm gap-1.5',
   md: 'h-10 px-4 text-base gap-2',
   lg: 'h-12 px-6 text-lg gap-2',
+}
+
+const iconSizeClasses: Record<ButtonSize, string> = {
+  sm: 'h-8 w-8 p-0',
+  md: 'h-10 w-10 p-0',
+  lg: 'h-12 w-12 p-0',
 }
 
 const baseClasses =
@@ -64,6 +73,7 @@ export function Button(props: ButtonProps) {
       isLoading = false,
       leftIcon,
       rightIcon,
+      iconOnly = false,
       children,
       className,
       href,
@@ -91,7 +101,7 @@ export function Button(props: ButtonProps) {
         className={cn(
           baseClasses,
           variantClasses[variant],
-          sizeClasses[size],
+          iconOnly ? iconSizeClasses[size] : sizeClasses[size],
           isDisabled && 'pointer-events-none opacity-50',
           className,
         )}
@@ -111,6 +121,7 @@ export function Button(props: ButtonProps) {
     isLoading = false,
     leftIcon,
     rightIcon,
+    iconOnly = false,
     children,
     className,
     disabled,
@@ -120,16 +131,17 @@ export function Button(props: ButtonProps) {
   return withBrutalistShadow(
     variant,
     <button
-      className={cn(baseClasses, variantClasses[variant], sizeClasses[size], className)}
+      className={cn(
+        baseClasses,
+        variantClasses[variant],
+        iconOnly ? iconSizeClasses[size] : sizeClasses[size],
+        className,
+      )}
       disabled={isLoading || disabled}
       aria-busy={isLoading ? 'true' : undefined}
       {...rest}
     >
-      {isLoading ? (
-        <Spinner size="sm" aria-label="Loading" />
-      ) : (
-        leftIcon
-      )}
+      {isLoading ? <Spinner size="sm" aria-label="Loading" /> : leftIcon}
       {children}
       {!isLoading && rightIcon}
     </button>,
