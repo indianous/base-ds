@@ -43,6 +43,9 @@ export { Spinner } from './components/atoms/Spinner/Spinner'
 
 export { Switch } from './components/atoms/Switch/Switch'
 
+export { Textarea } from './components/atoms/Textarea/Textarea'
+export type { TextareaProps } from './components/atoms/Textarea/Textarea'
+
 export { Heading } from './components/atoms/Typography/Heading'
 export type { HeadingProps } from './components/atoms/Typography/Heading'
 
@@ -53,7 +56,10 @@ export { Text } from './components/atoms/Typography/Text'
 export { Breadcrumb } from './components/molecules/Breadcrumb/Breadcrumb'
 
 export { DropdownMenu } from './components/molecules/DropdownMenu/DropdownMenu'
-export type { DropdownMenuProps, DropdownMenuItem } from './components/molecules/DropdownMenu/DropdownMenu'
+export type {
+  DropdownMenuProps,
+  DropdownMenuItem,
+} from './components/molecules/DropdownMenu/DropdownMenu'
 
 export { FileUpload } from './components/molecules/FileUpload/FileUpload'
 
@@ -96,13 +102,21 @@ export { Table } from './components/organisms/Table/Table'
 export type { TableColumn } from './components/organisms/Table/Table'
 
 export { Footer } from './components/organisms/Footer/Footer'
-export type { FooterProps, FooterColumn, FooterSocialLink } from './components/organisms/Footer/Footer'
+export type {
+  FooterProps,
+  FooterColumn,
+  FooterSocialLink,
+} from './components/organisms/Footer/Footer'
 
 export { Toast } from './components/organisms/Toast/Toast'
 export type { ToastProps, ToastVariant, ToastAction } from './components/organisms/Toast/Toast'
 
 export { ToastProvider } from './components/organisms/Toast/ToastProvider'
-export type { ToastContextValue, ToastOptions, ToastItem } from './components/organisms/Toast/ToastProvider'
+export type {
+  ToastContextValue,
+  ToastOptions,
+  ToastItem,
+} from './components/organisms/Toast/ToastProvider'
 
 export { ToastViewport } from './components/organisms/Toast/ToastViewport'
 

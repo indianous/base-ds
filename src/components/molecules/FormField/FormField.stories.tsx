@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { FormField } from './FormField'
 import { Input } from '../../atoms/Input/Input'
 import { Select } from '../../atoms/Select/Select'
+import { Textarea } from '../../atoms/Textarea/Textarea'
 
 const meta: Meta<typeof FormField> = {
   component: FormField,
@@ -33,11 +34,7 @@ export const WithHint: Story = {
 
 export const WithError: Story = {
   render: () => (
-    <FormField
-      label="Password"
-      id="password"
-      error="Password must be at least 8 characters"
-    >
+    <FormField label="Password" id="password" error="Password must be at least 8 characters">
       <Input id="password" type="password" state="error" />
     </FormField>
   ),
@@ -62,6 +59,14 @@ export const WithSelect: Story = {
         ]}
         placeholder="Select..."
       />
+    </FormField>
+  ),
+}
+
+export const WithTextarea: Story = {
+  render: () => (
+    <FormField label="Justificativa" id="justification" hint="Explique o motivo em poucas palavras">
+      <Textarea id="justification" placeholder="Digite a justificativa..." />
     </FormField>
   ),
 }
