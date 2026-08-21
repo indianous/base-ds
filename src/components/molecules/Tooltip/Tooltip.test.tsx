@@ -237,4 +237,56 @@ describe('Tooltip', () => {
     await userEvent.hover(screen.getByRole('button'))
     expect(await axe(container)).toHaveNoViolations()
   })
+
+  describe('extra props forwarding', () => {
+    it('forwards an onClick injected on Tooltip itself to the child', async () => {
+      const onClick = vi.fn()
+      render(
+        <Tooltip label="Menu" onClick={onClick}>
+          <button>Trigger</button>
+        </Tooltip>,
+      )
+      await userEvent.click(screen.getByRole('button'))
+      expect(onClick).toHaveBeenCalledTimes(1)
+    })
+
+    it('calls both the injected onClick and the child own onClick', async () => {
+      const injectedOnClick = vi.fn()
+      const childOnClick = vi.fn()
+      render(
+        <Tooltip label="Menu" onClick={injectedOnClick}>
+          <button onClick={childOnClick}>Trigger</button>
+        </Tooltip>,
+      )
+      await userEvent.click(screen.getByRole('button'))
+      expect(injectedOnClick).toHaveBeenCalledTimes(1)
+      expect(childOnClick).toHaveBeenCalledTimes(1)
+    })
+
+    it('forwards arbitrary aria/data attributes injected on Tooltip to the child', () => {
+      render(
+        <Tooltip label="Menu" aria-haspopup="menu" aria-expanded={true} data-state="open">
+          <button>Trigger</button>
+        </Tooltip>,
+      )
+      const button = screen.getByRole('button')
+      expect(button).toHaveAttribute('aria-haspopup', 'menu')
+      expect(button).toHaveAttribute('aria-expanded', 'true')
+      expect(button).toHaveAttribute('data-state', 'open')
+    })
+
+    it('still shows the tooltip and toggles the injected handler when composed like a DropdownMenu trigger', async () => {
+      const onClick = vi.fn()
+      render(
+        <Tooltip label="Abrir menu" onClick={onClick} aria-haspopup="menu" aria-expanded={false}>
+          <button aria-label="User menu">Avatar</button>
+        </Tooltip>,
+      )
+      const button = screen.getByRole('button', { name: 'User menu' })
+      await userEvent.click(button)
+      expect(onClick).toHaveBeenCalledTimes(1)
+      await userEvent.hover(button)
+      expect(screen.getByRole('tooltip')).toHaveTextContent('Abrir menu')
+    })
+  })
 })

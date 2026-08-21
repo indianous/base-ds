@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event'
 import { axe } from 'jest-axe'
 import { DropdownMenu, type DropdownMenuItem } from './DropdownMenu'
 import { Button } from '../../atoms/Button/Button'
+import { Tooltip } from '../Tooltip/Tooltip'
 
 const items: DropdownMenuItem[] = [
   { label: 'Edit', onClick: vi.fn() },
@@ -65,12 +66,7 @@ describe('DropdownMenu', () => {
 
   it('calls the item onClick and closes the menu when an item is selected', async () => {
     const onClick = vi.fn()
-    render(
-      <DropdownMenu
-        trigger={<Button>Options</Button>}
-        items={[{ label: 'Edit', onClick }]}
-      />,
-    )
+    render(<DropdownMenu trigger={<Button>Options</Button>} items={[{ label: 'Edit', onClick }]} />)
     await userEvent.click(screen.getByRole('button', { name: 'Options' }))
     await userEvent.click(screen.getByRole('menuitem', { name: 'Edit' }))
     expect(onClick).toHaveBeenCalledTimes(1)
@@ -92,10 +88,7 @@ describe('DropdownMenu', () => {
 
   it('renders an item with href as a real link', async () => {
     render(
-      <DropdownMenu
-        trigger={<Button>Options</Button>}
-        items={[{ label: 'Home', href: '/' }]}
-      />,
+      <DropdownMenu trigger={<Button>Options</Button>} items={[{ label: 'Home', href: '/' }]} />,
     )
     await userEvent.click(screen.getByRole('button', { name: 'Options' }))
     const menu = screen.getByRole('menu')
@@ -133,11 +126,7 @@ describe('DropdownMenu', () => {
   it('calls onOpenChange when opening and closing', async () => {
     const onOpenChange = vi.fn()
     render(
-      <DropdownMenu
-        trigger={<Button>Options</Button>}
-        items={items}
-        onOpenChange={onOpenChange}
-      />,
+      <DropdownMenu trigger={<Button>Options</Button>} items={items} onOpenChange={onOpenChange} />,
     )
     const trigger = screen.getByRole('button', { name: 'Options' })
     await userEvent.click(trigger)
@@ -151,5 +140,20 @@ describe('DropdownMenu', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Options' }))
     const results = await axe(container)
     expect(results).toHaveNoViolations()
+  })
+
+  it('opens when the trigger is wrapped in a Tooltip', async () => {
+    render(
+      <DropdownMenu
+        trigger={
+          <Tooltip label="User menu">
+            <Button aria-label="User menu">Avatar</Button>
+          </Tooltip>
+        }
+        items={items}
+      />,
+    )
+    await userEvent.click(screen.getByRole('button', { name: 'User menu' }))
+    expect(screen.getByRole('menu')).toBeInTheDocument()
   })
 })

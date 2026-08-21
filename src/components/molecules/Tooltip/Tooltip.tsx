@@ -29,9 +29,10 @@ export interface TooltipProps {
   position?: TooltipPosition
   children: ReactElement
   className?: string
+  [key: string]: unknown
 }
 
-export function Tooltip({ label, position = 'top', children, className }: TooltipProps) {
+export function Tooltip({ label, position = 'top', children, className, ...rest }: TooltipProps) {
   const [visible, setVisible] = useState(false)
   const [resolvedPosition, setResolvedPosition] = useState(position)
   const containerRef = useRef<HTMLSpanElement>(null)
@@ -68,21 +69,30 @@ export function Tooltip({ label, position = 'top', children, className }: Toolti
   const child = children as ReactElement<Record<string, unknown>>
 
   const triggerElement = cloneElement(child, {
+    ...rest,
     onMouseEnter: (e: ReactMouseEvent) => {
+      ;(rest.onMouseEnter as ((e: ReactMouseEvent) => void) | undefined)?.(e)
       ;(child.props.onMouseEnter as ((e: ReactMouseEvent) => void) | undefined)?.(e)
       show()
     },
     onMouseLeave: (e: ReactMouseEvent) => {
+      ;(rest.onMouseLeave as ((e: ReactMouseEvent) => void) | undefined)?.(e)
       ;(child.props.onMouseLeave as ((e: ReactMouseEvent) => void) | undefined)?.(e)
       hide()
     },
     onFocus: (e: ReactFocusEvent) => {
+      ;(rest.onFocus as ((e: ReactFocusEvent) => void) | undefined)?.(e)
       ;(child.props.onFocus as ((e: ReactFocusEvent) => void) | undefined)?.(e)
       show()
     },
     onBlur: (e: ReactFocusEvent) => {
+      ;(rest.onBlur as ((e: ReactFocusEvent) => void) | undefined)?.(e)
       ;(child.props.onBlur as ((e: ReactFocusEvent) => void) | undefined)?.(e)
       hide()
+    },
+    onClick: (e: ReactMouseEvent) => {
+      ;(rest.onClick as ((e: ReactMouseEvent) => void) | undefined)?.(e)
+      ;(child.props.onClick as ((e: ReactMouseEvent) => void) | undefined)?.(e)
     },
     'aria-describedby': visible ? tooltipId : undefined,
   })
