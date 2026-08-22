@@ -97,6 +97,48 @@ describe('Drawer', () => {
     expect(onClose).toHaveBeenCalledTimes(1)
   })
 
+  it('when two Drawers are stacked, Escape closes only the topmost one', async () => {
+    const user = userEvent.setup()
+    const onCloseOuter = vi.fn()
+    const onCloseInner = vi.fn()
+    const { rerender } = render(
+      <Drawer open={true} onClose={onCloseOuter} title="Outer">
+        <Drawer open={false} onClose={onCloseInner} title="Inner" />
+      </Drawer>,
+    )
+    rerender(
+      <Drawer open={true} onClose={onCloseOuter} title="Outer">
+        <Drawer open={true} onClose={onCloseInner} title="Inner" />
+      </Drawer>,
+    )
+    await user.keyboard('{Escape}')
+    expect(onCloseInner).toHaveBeenCalledOnce()
+    expect(onCloseOuter).not.toHaveBeenCalled()
+  })
+
+  it('closes the next drawer in the stack after the topmost is dismissed', async () => {
+    const user = userEvent.setup()
+    const onCloseOuter = vi.fn()
+    const onCloseInner = vi.fn()
+    const { rerender } = render(
+      <Drawer open={true} onClose={onCloseOuter} title="Outer">
+        <Drawer open={false} onClose={onCloseInner} title="Inner" />
+      </Drawer>,
+    )
+    rerender(
+      <Drawer open={true} onClose={onCloseOuter} title="Outer">
+        <Drawer open={true} onClose={onCloseInner} title="Inner" />
+      </Drawer>,
+    )
+    rerender(
+      <Drawer open={true} onClose={onCloseOuter} title="Outer">
+        <Drawer open={false} onClose={onCloseInner} title="Inner" />
+      </Drawer>,
+    )
+    await user.keyboard('{Escape}')
+    expect(onCloseOuter).toHaveBeenCalledOnce()
+  })
+
   it('calls onClose when backdrop is clicked', async () => {
     const user = userEvent.setup()
     const onClose = vi.fn()

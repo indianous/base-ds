@@ -52,3 +52,44 @@ function InteractiveDialog() {
 export const Interactive: Story = {
   render: () => <InteractiveDialog />,
 }
+
+function StackedDialogs() {
+  const [managerOpen, setManagerOpen] = useState(true)
+  const [confirmOpen, setConfirmOpen] = useState(false)
+  return (
+    <Dialog
+      open={managerOpen}
+      onClose={() => setManagerOpen(false)}
+      title="Manage banners"
+      description="Escape closes only the topmost dialog — try it with the confirmation open."
+      footer={
+        <Button variant="danger" size="sm" onClick={() => setConfirmOpen(true)}>
+          Delete banner
+        </Button>
+      }
+    >
+      <p>Homepage banner list goes here.</p>
+
+      <Dialog
+        open={confirmOpen}
+        onClose={() => setConfirmOpen(false)}
+        title="Delete banner?"
+        description="This action cannot be undone."
+        footer={
+          <>
+            <Button variant="ghost" size="sm" onClick={() => setConfirmOpen(false)}>
+              Cancel
+            </Button>
+            <Button variant="danger" size="sm" onClick={() => setConfirmOpen(false)}>
+              Confirm
+            </Button>
+          </>
+        }
+      />
+    </Dialog>
+  )
+}
+
+export const Stacked: Story = {
+  render: () => <StackedDialogs />,
+}

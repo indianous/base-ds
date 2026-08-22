@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom'
 import { cn } from '../../../utils/cn'
 import { computeDropdownCoords } from '../../../utils/dropdownPosition'
 import type { DropdownAlign, DropdownCoords } from '../../../utils/dropdownPosition'
+import { useStackedEscape } from '../../../utils/useStackedEscape'
 import { Badge } from '../../atoms/Badge/Badge'
 import { Button } from '../../atoms/Button/Button'
 import { Checkbox } from '../../atoms/Checkbox/Checkbox'
@@ -76,16 +77,11 @@ export function FilterDropdown({
       const insidePanel = panelRef.current?.contains(target)
       if (!insideTrigger && !insidePanel) setOpen(false)
     }
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') closeAndFocusTrigger()
-    }
     document.addEventListener('mousedown', handlePointerDown)
-    document.addEventListener('keydown', handleKeyDown)
-    return () => {
-      document.removeEventListener('mousedown', handlePointerDown)
-      document.removeEventListener('keydown', handleKeyDown)
-    }
+    return () => document.removeEventListener('mousedown', handlePointerDown)
   }, [open])
+
+  useStackedEscape(open, closeAndFocusTrigger)
 
   const toggleDraftOption = (optionValue: string) => {
     setDraft((prev) =>

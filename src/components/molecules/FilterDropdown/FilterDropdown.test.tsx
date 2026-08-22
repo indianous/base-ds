@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event'
 import { axe } from 'jest-axe'
 import { FilterDropdown } from './FilterDropdown'
 import type { FilterDropdownOption } from './FilterDropdown'
+import { Dialog } from '../../organisms/Dialog/Dialog'
 
 const options: FilterDropdownOption[] = [
   { value: 'pending', label: 'Pending' },
@@ -123,6 +124,24 @@ describe('FilterDropdown', () => {
     await userEvent.keyboard('{Escape}')
     expect(onApply).not.toHaveBeenCalled()
     expect(screen.queryAllByRole('checkbox')).toHaveLength(0)
+  })
+
+  it('when open inside an open Dialog, Escape closes only the panel first, not the Dialog', async () => {
+    const onCloseDialog = vi.fn()
+    render(
+      <Dialog open={true} onClose={onCloseDialog} title="Dialog">
+        <FilterDropdown label="Status" options={options} value={[]} onApply={vi.fn()} />
+      </Dialog>,
+    )
+    await userEvent.click(screen.getByRole('button', { name: 'Status' }))
+    expect(screen.getAllByRole('checkbox')).toHaveLength(3)
+
+    await userEvent.keyboard('{Escape}')
+    expect(screen.queryAllByRole('checkbox')).toHaveLength(0)
+    expect(onCloseDialog).not.toHaveBeenCalled()
+
+    await userEvent.keyboard('{Escape}')
+    expect(onCloseDialog).toHaveBeenCalledOnce()
   })
 
   it('returns focus to the trigger button on Escape', async () => {

@@ -2,6 +2,7 @@ import { useEffect, useId, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { cn } from '../../../utils/cn'
 import { useBodyScrollLock } from '../../../utils/useBodyScrollLock'
+import { useStackedEscape } from '../../../utils/useStackedEscape'
 import { Image } from '../../atoms/Image/Image'
 import type { ImageProps } from '../../atoms/Image/Image'
 import { Button } from '../../atoms/Button/Button'
@@ -43,7 +44,6 @@ export function ImageGallery({
   useEffect(() => {
     if (!zoomOpen) return
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setZoomOpen(false)
       if (e.key === 'ArrowLeft') goPrev()
       if (e.key === 'ArrowRight') goNext()
     }
@@ -51,6 +51,8 @@ export function ImageGallery({
     return () => document.removeEventListener('keydown', handleKeyDown)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [zoomOpen])
+
+  useStackedEscape(zoomOpen, () => setZoomOpen(false))
 
   if (!selected) return null
 

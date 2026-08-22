@@ -1,9 +1,10 @@
-import { describe, it, expect, afterEach } from 'vitest'
+import { describe, it, expect, afterEach, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { axe } from 'jest-axe'
 import { ImageGallery } from './ImageGallery'
 import type { GalleryImage } from './ImageGallery'
+import { Dialog } from '../Dialog/Dialog'
 
 const images: GalleryImage[] = [
   { src: '/shoe-1.jpg', alt: 'Shoe front view' },
@@ -108,6 +109,34 @@ describe('ImageGallery', () => {
     expect(screen.getByRole('dialog')).toBeInTheDocument()
     await userEvent.keyboard('{Escape}')
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  })
+
+  it('when the zoom overlay is open inside an open Dialog, Escape closes only the zoom first', async () => {
+    const onCloseDialog = vi.fn()
+    render(
+      <Dialog open={true} onClose={onCloseDialog} title="Dialog">
+        <ImageGallery images={images} />
+      </Dialog>,
+    )
+    await userEvent.click(screen.getAllByRole('button', { name: /Zoom image/ })[0])
+    expect(screen.getByRole('button', { name: 'Close zoom' })).toBeInTheDocument()
+
+    await userEvent.keyboard('{Escape}')
+    expect(screen.queryByRole('button', { name: 'Close zoom' })).not.toBeInTheDocument()
+    expect(onCloseDialog).not.toHaveBeenCalled()
+
+    await userEvent.keyboard('{Escape}')
+    expect(onCloseDialog).toHaveBeenCalledOnce()
+  })
+
+  it('still navigates images with ArrowLeft/ArrowRight while the zoom overlay is open (unaffected by the Escape split)', async () => {
+    render(<ImageGallery images={images} />)
+    await userEvent.click(screen.getByRole('button', { name: /Zoom image/ }))
+    const dialog = screen.getByRole('dialog')
+    await userEvent.keyboard('{ArrowRight}')
+    expect(dialog).toHaveTextContent('Shoe side view')
+    await userEvent.keyboard('{ArrowLeft}')
+    expect(dialog).toHaveTextContent('Shoe front view')
   })
 
   it('closes the zoomed dialog via the close button', async () => {

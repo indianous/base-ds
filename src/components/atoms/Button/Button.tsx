@@ -4,6 +4,7 @@ import type { ReactElement } from 'react'
 import { cn } from '../../../utils/cn'
 import { computeTooltipCoords } from '../../../utils/tooltipPosition'
 import type { TooltipCoords, TooltipSide } from '../../../utils/tooltipPosition'
+import { useStackedEscape } from '../../../utils/useStackedEscape'
 import { Spinner } from '../Spinner/Spinner'
 
 type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'outline' | 'danger'
@@ -103,14 +104,7 @@ export function Button(props: ButtonProps) {
     }
   }, [showTooltip, tooltipVisible, tooltipPosition])
 
-  useEffect(() => {
-    if (!showTooltip || !tooltipVisible) return
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setTooltipVisible(false)
-    }
-    document.addEventListener('keydown', handleKeyDown)
-    return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [showTooltip, tooltipVisible])
+  useStackedEscape(showTooltip && tooltipVisible, () => setTooltipVisible(false))
 
   const tooltipBubble =
     showTooltip &&

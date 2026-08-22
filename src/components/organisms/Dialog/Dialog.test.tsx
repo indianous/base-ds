@@ -85,6 +85,51 @@ describe('Dialog', () => {
     expect(onClose).toHaveBeenCalledOnce()
   })
 
+  it('when two Dialogs are stacked, Escape closes only the topmost one', async () => {
+    const user = userEvent.setup()
+    const onCloseOuter = vi.fn()
+    const onCloseInner = vi.fn()
+    // The inner (confirmation) dialog opens after the outer one is already
+    // mounted, in a separate commit — matching how stacking happens in
+    // practice (a user action opens the second dialog on top of the first).
+    const { rerender } = render(
+      <Dialog open={true} onClose={onCloseOuter} title="Outer">
+        <Dialog open={false} onClose={onCloseInner} title="Inner" />
+      </Dialog>,
+    )
+    rerender(
+      <Dialog open={true} onClose={onCloseOuter} title="Outer">
+        <Dialog open={true} onClose={onCloseInner} title="Inner" />
+      </Dialog>,
+    )
+    await user.keyboard('{Escape}')
+    expect(onCloseInner).toHaveBeenCalledOnce()
+    expect(onCloseOuter).not.toHaveBeenCalled()
+  })
+
+  it('closes the next dialog in the stack after the topmost is dismissed', async () => {
+    const user = userEvent.setup()
+    const onCloseOuter = vi.fn()
+    const onCloseInner = vi.fn()
+    const { rerender } = render(
+      <Dialog open={true} onClose={onCloseOuter} title="Outer">
+        <Dialog open={false} onClose={onCloseInner} title="Inner" />
+      </Dialog>,
+    )
+    rerender(
+      <Dialog open={true} onClose={onCloseOuter} title="Outer">
+        <Dialog open={true} onClose={onCloseInner} title="Inner" />
+      </Dialog>,
+    )
+    rerender(
+      <Dialog open={true} onClose={onCloseOuter} title="Outer">
+        <Dialog open={false} onClose={onCloseInner} title="Inner" />
+      </Dialog>,
+    )
+    await user.keyboard('{Escape}')
+    expect(onCloseOuter).toHaveBeenCalledOnce()
+  })
+
   it('calls onClose when backdrop (overlay) is clicked', async () => {
     const user = userEvent.setup()
     const onClose = vi.fn()

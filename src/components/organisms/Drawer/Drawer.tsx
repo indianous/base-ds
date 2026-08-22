@@ -1,8 +1,9 @@
-import { useEffect, useId } from 'react'
+import { useId } from 'react'
 import { createPortal } from 'react-dom'
 import type { ReactNode } from 'react'
 import { cn } from '../../../utils/cn'
 import { useBodyScrollLock } from '../../../utils/useBodyScrollLock'
+import { useStackedEscape } from '../../../utils/useStackedEscape'
 import { Button } from '../../atoms/Button/Button'
 import { Icon } from '../../atoms/Icon/Icon'
 
@@ -38,14 +39,7 @@ export function Drawer({
 
   useBodyScrollLock(open)
 
-  useEffect(() => {
-    if (!open) return
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose()
-    }
-    document.addEventListener('keydown', handler)
-    return () => document.removeEventListener('keydown', handler)
-  }, [open, onClose])
+  useStackedEscape(open, onClose)
 
   if (!open) return null
 

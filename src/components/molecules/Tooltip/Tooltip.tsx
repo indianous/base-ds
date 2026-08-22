@@ -8,6 +8,7 @@ import type {
 import { cn } from '../../../utils/cn'
 import { computeTooltipCoords } from '../../../utils/tooltipPosition'
 import type { TooltipCoords, TooltipSide } from '../../../utils/tooltipPosition'
+import { useStackedEscape } from '../../../utils/useStackedEscape'
 
 const VIEWPORT_MARGIN = 40
 
@@ -62,14 +63,7 @@ export function Tooltip({ label, position = 'top', children, className, ...rest 
     }
   }, [visible, position])
 
-  useEffect(() => {
-    if (!visible) return
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') hide()
-    }
-    document.addEventListener('keydown', handleKeyDown)
-    return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [visible])
+  useStackedEscape(visible, hide)
 
   const child = children as ReactElement<Record<string, unknown>>
 

@@ -3,6 +3,7 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { axe } from 'jest-axe'
 import { Button } from './Button'
+import { Dialog } from '../../organisms/Dialog/Dialog'
 
 describe('Button', () => {
   it('renders a button element', () => {
@@ -376,6 +377,26 @@ describe('Button', () => {
       expect(screen.getByRole('tooltip')).toBeInTheDocument()
       await userEvent.keyboard('{Escape}')
       expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
+    })
+
+    it('when shown inside an open Dialog, Escape hides only the tooltip first, not the Dialog', async () => {
+      const onCloseDialog = vi.fn()
+      render(
+        <Dialog open={true} onClose={onCloseDialog} title="Dialog">
+          <Button iconOnly aria-label="Remove">
+            <span data-testid="icon" />
+          </Button>
+        </Dialog>,
+      )
+      await userEvent.hover(screen.getByRole('button', { name: 'Remove' }))
+      expect(screen.getByRole('tooltip')).toBeInTheDocument()
+
+      await userEvent.keyboard('{Escape}')
+      expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
+      expect(onCloseDialog).not.toHaveBeenCalled()
+
+      await userEvent.keyboard('{Escape}')
+      expect(onCloseDialog).toHaveBeenCalledOnce()
     })
 
     it('associates the button with the tooltip via aria-describedby', async () => {

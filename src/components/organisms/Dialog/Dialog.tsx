@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom'
 import type { ReactNode } from 'react'
 import { cn } from '../../../utils/cn'
 import { useBodyScrollLock } from '../../../utils/useBodyScrollLock'
+import { useStackedEscape } from '../../../utils/useStackedEscape'
 import { Button } from '../../atoms/Button/Button'
 import { Icon } from '../../atoms/Icon/Icon'
 
@@ -31,14 +32,7 @@ export function Dialog({
 
   useBodyScrollLock(open)
 
-  useEffect(() => {
-    if (!open) return
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose()
-    }
-    document.addEventListener('keydown', handler)
-    return () => document.removeEventListener('keydown', handler)
-  }, [open, onClose])
+  useStackedEscape(open, onClose)
 
   useEffect(() => {
     if (open) dialogRef.current?.focus()
