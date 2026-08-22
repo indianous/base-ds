@@ -63,6 +63,12 @@ export type {
 
 export { FileUpload } from './components/molecules/FileUpload/FileUpload'
 
+export { FilterDropdown } from './components/molecules/FilterDropdown/FilterDropdown'
+export type {
+  FilterDropdownProps,
+  FilterDropdownOption,
+} from './components/molecules/FilterDropdown/FilterDropdown'
+
 export { FormField } from './components/molecules/FormField/FormField'
 export type { FormFieldProps } from './components/molecules/FormField/FormField'
 

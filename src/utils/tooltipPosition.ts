@@ -6,6 +6,8 @@ export interface TooltipCoords {
   transform: string
 }
 
+export const VIEWPORT_MARGIN = 40
+
 const GAP = 6
 
 export function computeTooltipCoords(rect: DOMRect, side: TooltipSide): TooltipCoords {
