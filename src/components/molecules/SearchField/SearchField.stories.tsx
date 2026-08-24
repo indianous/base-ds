@@ -31,3 +31,22 @@ export const WithDefaultValue: Story = {
     defaultValue: 'typescript',
   },
 }
+
+export const Localized: Story = {
+  args: {
+    onSearch: (v) => console.log('Buscar:', v),
+    id: 'products-search',
+    label: 'Buscar produtos',
+    buttonLabel: 'Buscar',
+    placeholder: 'Buscar por nome...',
+  },
+}
+
+export const IconOnlyButton: Story = {
+  args: {
+    onSearch: (v) => console.log('Buscar:', v),
+    buttonLabel: 'Buscar',
+    buttonIconOnly: true,
+    placeholder: 'Buscar por nome...',
+  },
+}

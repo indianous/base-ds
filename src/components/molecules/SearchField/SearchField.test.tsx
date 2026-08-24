@@ -58,8 +58,55 @@ describe('SearchField', () => {
   })
 
   it('has no accessibility violations', async () => {
+    const { container } = render(<SearchField onSearch={vi.fn()} placeholder="Search..." />)
+    expect(await axe(container)).toHaveNoViolations()
+  })
+
+  it('uses the provided id on the underlying input', () => {
+    render(<SearchField onSearch={vi.fn()} id="products-search" />)
+    expect(screen.getByRole('textbox')).toHaveAttribute('id', 'products-search')
+  })
+
+  it('generates unique input ids when id is not provided, avoiding collisions between instances', () => {
+    render(
+      <>
+        <SearchField onSearch={vi.fn()} />
+        <SearchField onSearch={vi.fn()} />
+      </>,
+    )
+    const [first, second] = screen.getAllByRole('textbox')
+    expect(first.id).toBeTruthy()
+    expect(second.id).toBeTruthy()
+    expect(first.id).not.toBe(second.id)
+  })
+
+  it('uses the provided label as the accessible name of the input', () => {
+    render(<SearchField onSearch={vi.fn()} label="Buscar produtos" />)
+    expect(screen.getByRole('textbox', { name: 'Buscar produtos' })).toBeInTheDocument()
+  })
+
+  it('uses the provided buttonLabel as visible text and accessible name of the button', () => {
+    render(<SearchField onSearch={vi.fn()} buttonLabel="Buscar" />)
+    const button = screen.getByRole('button', { name: 'Buscar' })
+    expect(button).toBeInTheDocument()
+    expect(screen.getByText('Buscar')).toBeInTheDocument()
+  })
+
+  it('does not render buttonLabel as visible text when buttonIconOnly is true, but keeps it as the accessible name', () => {
+    render(<SearchField onSearch={vi.fn()} buttonLabel="Buscar" buttonIconOnly />)
+    expect(screen.getByRole('button', { name: 'Buscar' })).toBeInTheDocument()
+    expect(screen.queryByText('Buscar')).not.toBeInTheDocument()
+  })
+
+  it('has no accessibility violations with custom id, label, buttonLabel and buttonIconOnly', async () => {
     const { container } = render(
-      <SearchField onSearch={vi.fn()} placeholder="Search..." />,
+      <SearchField
+        onSearch={vi.fn()}
+        id="products-search"
+        label="Buscar produtos"
+        buttonLabel="Buscar"
+        buttonIconOnly
+      />,
     )
     expect(await axe(container)).toHaveNoViolations()
   })
