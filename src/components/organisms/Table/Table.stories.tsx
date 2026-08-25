@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { Table } from './Table'
 import type { TableColumn } from './Table'
+import { Checkbox } from '../../atoms/Checkbox/Checkbox'
 
 interface User extends Record<string, unknown> {
   name: string
@@ -53,6 +54,23 @@ export const WithCustomRender: Story = {
         header: 'Actions',
         render: () => <button className="text-sm text-primary">Edit</button>,
       },
+    ],
+    data,
+    caption: 'List of users',
+  },
+}
+
+export const WithSelectAllHeader: Story = {
+  args: {
+    columns: [
+      {
+        key: 'select',
+        header: <Checkbox id="select-all" label="Select all" aria-label="Select all rows" />,
+        render: (_row, rowIndex) => (
+          <Checkbox id={`select-${rowIndex}`} aria-label={`Select row ${rowIndex + 1}`} />
+        ),
+      },
+      ...columns,
     ],
     data,
     caption: 'List of users',

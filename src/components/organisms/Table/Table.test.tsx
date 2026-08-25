@@ -59,6 +59,15 @@ describe('Table', () => {
     expect(screen.getByText('BOB')).toBeInTheDocument()
   })
 
+  it('renders a non-string ReactNode as the column header', () => {
+    const columnsWithNodeHeader: TableColumn<User>[] = [
+      { key: 'name', header: <span data-testid="select-all">Select all</span> },
+      { key: 'email', header: 'Email' },
+    ]
+    render(<Table columns={columnsWithNodeHeader} data={data} />)
+    expect(screen.getByTestId('select-all')).toBeInTheDocument()
+  })
+
   it('renders sortable column header as a button', () => {
     const sortableColumns: TableColumn<User>[] = [
       { key: 'name', header: 'Name', sortable: true },

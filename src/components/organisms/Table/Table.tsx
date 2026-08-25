@@ -6,7 +6,7 @@ import { Icon } from '../../atoms/Icon/Icon'
 
 export interface TableColumn<T> {
   key: string
-  header: string
+  header: ReactNode
   render?: (row: T, rowIndex: number) => ReactNode
   sortable?: boolean
 }
