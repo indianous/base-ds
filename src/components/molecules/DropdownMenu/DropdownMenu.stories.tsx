@@ -67,6 +67,24 @@ export const WithDisabledItem: Story = {
   },
 }
 
+export const Positions: Story = {
+  render: () => (
+    <div className="grid grid-cols-2 gap-16 p-16">
+      {(['top', 'bottom', 'left', 'right'] as const).map((position) => (
+        <DropdownMenu
+          key={position}
+          trigger={<Button>{position}</Button>}
+          position={position}
+          items={[
+            { label: 'Edit', onClick: () => {} },
+            { label: 'Duplicate', onClick: () => {} },
+          ]}
+        />
+      ))}
+    </div>
+  ),
+}
+
 export const AlignEnd: Story = {
   render: () => (
     <div className="flex justify-end">

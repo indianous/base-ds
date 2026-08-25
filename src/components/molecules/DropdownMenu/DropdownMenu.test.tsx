@@ -142,6 +142,40 @@ describe('DropdownMenu', () => {
     expect(results).toHaveNoViolations()
   })
 
+  it('opens below the trigger by default', async () => {
+    render(<DropdownMenu trigger={<Button>Options</Button>} items={items} />)
+    await userEvent.click(screen.getByRole('button', { name: 'Options' }))
+    expect(screen.getByRole('menu')).toHaveClass('top-full')
+  })
+
+  it('opens above the trigger when position="top" is set', async () => {
+    render(<DropdownMenu trigger={<Button>Options</Button>} items={items} position="top" />)
+    await userEvent.click(screen.getByRole('button', { name: 'Options' }))
+    const menu = screen.getByRole('menu')
+    expect(menu).toHaveClass('bottom-full')
+    expect(menu).not.toHaveClass('top-full')
+  })
+
+  it('opens to the left of the trigger when position="left" is set', async () => {
+    render(<DropdownMenu trigger={<Button>Options</Button>} items={items} position="left" />)
+    await userEvent.click(screen.getByRole('button', { name: 'Options' }))
+    expect(screen.getByRole('menu')).toHaveClass('right-full')
+  })
+
+  it('opens to the right of the trigger when position="right" is set', async () => {
+    render(<DropdownMenu trigger={<Button>Options</Button>} items={items} position="right" />)
+    await userEvent.click(screen.getByRole('button', { name: 'Options' }))
+    expect(screen.getByRole('menu')).toHaveClass('left-full')
+  })
+
+  it('aligns vertically with align="end" when position is left or right', async () => {
+    render(
+      <DropdownMenu trigger={<Button>Options</Button>} items={items} position="left" align="end" />,
+    )
+    await userEvent.click(screen.getByRole('button', { name: 'Options' }))
+    expect(screen.getByRole('menu')).toHaveClass('bottom-0')
+  })
+
   it('opens when the trigger is wrapped in a Tooltip', async () => {
     render(
       <DropdownMenu

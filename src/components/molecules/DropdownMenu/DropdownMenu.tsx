@@ -2,6 +2,7 @@ import { cloneElement, useEffect, useId, useRef, useState } from 'react'
 import type { KeyboardEvent as ReactKeyboardEvent, ReactElement, ReactNode } from 'react'
 import { cn } from '../../../utils/cn'
 import { Button } from '../../atoms/Button/Button'
+import type { TooltipSide } from '../../../utils/tooltipPosition'
 
 export type DropdownMenuItem =
   | { type: 'separator' }
@@ -19,8 +20,16 @@ export interface DropdownMenuProps {
   trigger: ReactElement
   items: DropdownMenuItem[]
   align?: 'start' | 'end'
+  position?: TooltipSide
   onOpenChange?: (open: boolean) => void
   className?: string
+}
+
+const sideClass: Record<TooltipSide, string> = {
+  top: 'bottom-full mb-1',
+  bottom: 'top-full mt-1',
+  left: 'right-full mr-1',
+  right: 'left-full ml-1',
 }
 
 function getMenuItemElements(menu: HTMLElement | null): HTMLElement[] {
@@ -28,7 +37,14 @@ function getMenuItemElements(menu: HTMLElement | null): HTMLElement[] {
   return Array.from(menu.querySelectorAll<HTMLElement>('[role="menuitem"]'))
 }
 
-export function DropdownMenu({ trigger, items, align = 'start', onOpenChange, className }: DropdownMenuProps) {
+export function DropdownMenu({
+  trigger,
+  items,
+  align = 'start',
+  position = 'bottom',
+  onOpenChange,
+  className,
+}: DropdownMenuProps) {
   const [open, setOpen] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
   const menuRef = useRef<HTMLDivElement>(null)
@@ -98,7 +114,8 @@ export function DropdownMenu({ trigger, items, align = 'start', onOpenChange, cl
     'aria-expanded': open,
     ...(open ? { 'aria-controls': menuId } : {}),
     onClick: (e: React.MouseEvent) => {
-      const onTriggerClick = triggerAsClonable.props.onClick as ((e: React.MouseEvent) => void) | undefined
+      const onTriggerClick = triggerAsClonable.props.onClick as
+        ((e: React.MouseEvent) => void) | undefined
       onTriggerClick?.(e)
       setOpenState(!open)
     },
@@ -116,8 +133,15 @@ export function DropdownMenu({ trigger, items, align = 'start', onOpenChange, cl
           tabIndex={-1}
           onKeyDown={handleMenuKeyDown}
           className={cn(
-            'absolute top-full z-20 mt-1 min-w-[10rem] rounded-md border border-border bg-background py-1 shadow-md',
-            align === 'end' ? 'right-0' : 'left-0',
+            'absolute z-20 min-w-[10rem] rounded-md border border-border bg-background py-1 shadow-md',
+            sideClass[position],
+            position === 'top' || position === 'bottom'
+              ? align === 'end'
+                ? 'right-0'
+                : 'left-0'
+              : align === 'end'
+                ? 'bottom-0'
+                : 'top-0',
           )}
         >
           {items.map((item, index) => {
