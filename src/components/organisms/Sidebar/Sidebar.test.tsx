@@ -127,13 +127,20 @@ describe('Sidebar', () => {
     })
 
     it('preserves the className already set on the provided element', () => {
-      const items = [{ label: 'Orders', asChild: <a href="/orders" aria-label="Orders" className="custom-link" /> }]
+      const items = [
+        {
+          label: 'Orders',
+          asChild: <a href="/orders" aria-label="Orders" className="custom-link" />,
+        },
+      ]
       render(<Sidebar items={items} />)
       expect(screen.getByRole('link', { name: 'Orders' })).toHaveClass('custom-link')
     })
 
     it('applies aria-current="page" when active', () => {
-      const items = [{ label: 'Orders', active: true, asChild: <a href="/orders" aria-label="Orders" /> }]
+      const items = [
+        { label: 'Orders', active: true, asChild: <a href="/orders" aria-label="Orders" /> },
+      ]
       render(<Sidebar items={items} />)
       expect(screen.getByRole('link', { name: 'Orders' })).toHaveAttribute('aria-current', 'page')
     })
@@ -164,6 +171,82 @@ describe('Sidebar', () => {
     it('has no accessibility violations', async () => {
       const items = [{ label: 'Orders', asChild: <a href="/orders" aria-label="Orders" /> }]
       const { container } = render(<Sidebar items={items} />)
+      expect(await axe(container)).toHaveNoViolations()
+    })
+  })
+
+  describe('group', () => {
+    it('renders a group header before the first item of a group', () => {
+      const items = [
+        { label: 'Orders', group: 'Sales', href: '/orders' },
+        { label: 'Shipping', group: 'Sales', href: '/shipping' },
+      ]
+      render(<Sidebar items={items} />)
+      expect(screen.getByText('Sales')).toBeInTheDocument()
+    })
+
+    it('renders a single header for consecutive items sharing the same group', () => {
+      const items = [
+        { label: 'Orders', group: 'Sales', href: '/orders' },
+        { label: 'Shipping', group: 'Sales', href: '/shipping' },
+      ]
+      render(<Sidebar items={items} />)
+      expect(screen.getAllByText('Sales')).toHaveLength(1)
+    })
+
+    it('renders no header for items without a group', () => {
+      const items = [
+        { label: 'Home', href: '/' },
+        { label: 'Settings', href: '/settings' },
+      ]
+      render(<Sidebar items={items} />)
+      expect(screen.queryByText('Home')?.closest('li')?.previousElementSibling).toBeNull()
+    })
+
+    it('still renders the following group header when an ungrouped item sits between two groups', () => {
+      const items = [
+        { label: 'Orders', group: 'Sales', href: '/orders' },
+        { label: 'External link', href: 'https://example.com' },
+        { label: 'Products', group: 'Catalog', href: '/products' },
+      ]
+      render(<Sidebar items={items} />)
+      expect(screen.getByText('Sales')).toBeInTheDocument()
+      expect(screen.getByText('Catalog')).toBeInTheDocument()
+    })
+
+    it('renders two separate headers for non-contiguous blocks sharing the same group name', () => {
+      const items = [
+        { label: 'Orders', group: 'Sales', href: '/orders' },
+        { label: 'Products', group: 'Catalog', href: '/products' },
+        { label: 'Shipping', group: 'Sales', href: '/shipping' },
+      ]
+      render(<Sidebar items={items} />)
+      expect(screen.getAllByText('Sales')).toHaveLength(2)
+    })
+
+    it('applies sr-only to the group header text when collapsed', () => {
+      const items = [{ label: 'Orders', group: 'Sales', href: '/orders' }]
+      render(<Sidebar items={items} collapsed />)
+      expect(screen.getByText('Sales')).toHaveClass('sr-only')
+    })
+
+    it('has no accessibility violations with grouped items', async () => {
+      const items = [
+        { label: 'Orders', group: 'Sales', href: '/orders' },
+        { label: 'Shipping', group: 'Sales', href: '/shipping' },
+        { label: 'Products', group: 'Catalog', href: '/products' },
+        { label: 'External link', href: 'https://example.com' },
+      ]
+      const { container } = render(<Sidebar items={items} />)
+      expect(await axe(container)).toHaveNoViolations()
+    })
+
+    it('has no accessibility violations with grouped items when collapsed', async () => {
+      const items = [
+        { label: 'Orders', group: 'Sales', href: '/orders' },
+        { label: 'Products', group: 'Catalog', href: '/products' },
+      ]
+      const { container } = render(<Sidebar items={items} collapsed />)
       expect(await axe(container)).toHaveNoViolations()
     })
   })

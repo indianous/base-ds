@@ -37,6 +37,36 @@ export const WithFooter: Story = {
   },
 }
 
+const groupedItems = [
+  {
+    label: 'Orders',
+    group: 'Sales',
+    icon: <Icon name="ClipboardList" size="sm" />,
+    href: '/orders',
+    active: true,
+  },
+  { label: 'Shipping', group: 'Sales', icon: <Icon name="Truck" size="sm" />, href: '/shipping' },
+  {
+    label: 'Products',
+    group: 'Catalog',
+    icon: <Icon name="Package" size="sm" />,
+    href: '/products',
+  },
+  {
+    label: 'External link',
+    icon: <Icon name="ExternalLink" size="sm" />,
+    href: 'https://example.com',
+  },
+]
+
+export const Grouped: Story = {
+  args: { items: groupedItems },
+}
+
+export const GroupedCollapsed: Story = {
+  args: { items: groupedItems, collapsed: true },
+}
+
 export const AsChild: Story = {
   args: {
     items: [

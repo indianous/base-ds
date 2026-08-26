@@ -11,6 +11,25 @@ interface SidebarItem {
   href?: string
   onClick?: () => void
   asChild?: ReactElement
+  group?: string
+}
+
+type SidebarRow =
+  { type: 'header'; group: string; key: string } | { type: 'item'; item: SidebarItem; key: string }
+
+function buildRows(items: SidebarItem[]): SidebarRow[] {
+  const rows: SidebarRow[] = []
+  let previousGroup: string | undefined
+
+  items.forEach((item, index) => {
+    if (item.group !== undefined && item.group !== previousGroup) {
+      rows.push({ type: 'header', group: item.group, key: `group-${index}` })
+    }
+    rows.push({ type: 'item', item, key: String(index) })
+    previousGroup = item.group
+  })
+
+  return rows
 }
 
 interface SidebarProps {
@@ -54,7 +73,23 @@ export function Sidebar({ items, collapsed, onCollapse, footer, className }: Sid
 
       {/* eslint-disable-next-line jsx-a11y/no-redundant-roles -- Tailwind Preflight sets list-style:none on ul, which strips the implicit list role for Safari/VoiceOver; role="list" restores it. */}
       <ul role="list" className="flex flex-col gap-1 p-2">
-        {items.map((item, index) => {
+        {buildRows(items).map((row) => {
+          if (row.type === 'header') {
+            return (
+              <li key={row.key}>
+                <span
+                  className={cn(
+                    'block px-2 pb-1 text-xs font-semibold uppercase text-muted-foreground',
+                    isCollapsed && 'sr-only',
+                  )}
+                >
+                  {row.group}
+                </span>
+              </li>
+            )
+          }
+
+          const item = row.item
           const itemContent = (
             <>
               {item.icon}
@@ -76,7 +111,7 @@ export function Sidebar({ items, collapsed, onCollapse, footer, className }: Sid
           const activeProps = item.active ? { 'aria-current': 'page' as const } : {}
 
           return (
-            <li key={index}>
+            <li key={row.key}>
               {item.asChild ? (
                 <Button
                   asChild
