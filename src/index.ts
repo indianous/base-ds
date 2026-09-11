@@ -112,6 +112,9 @@ export { Card } from './components/organisms/Card/Card'
 
 export { Carousel } from './components/organisms/Carousel/Carousel'
 
+export { KanbanBoard } from './components/organisms/KanbanBoard/KanbanBoard'
+export type { KanbanBoardProps, KanbanColumn } from './components/organisms/KanbanBoard/KanbanBoard'
+
 // ── Charts (Organisms/Charts) ──────────────────────────────────────────────
 export { BarChart } from './components/organisms/Charts/BarChart'
 export type { BarChartProps, BarChartDatum } from './components/organisms/Charts/BarChart'
