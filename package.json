@@ -12,7 +12,8 @@
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
-    "./styles": "./dist/styles/theme.css"
+    "./styles": "./dist/styles/theme.css",
+    "./styles/v4": "./dist/styles/theme-v4.css"
   },
   "files": [
     "dist"

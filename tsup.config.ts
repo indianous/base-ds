@@ -27,7 +27,8 @@ export default defineConfig({
   async onSuccess() {
     mkdirSync(join('dist', 'styles'), { recursive: true })
     copyFileSync(join('src', 'styles', 'theme.css'), join('dist', 'styles', 'theme.css'))
-    console.log('CSS copied to dist/styles/theme.css')
+    copyFileSync(join('src', 'styles', 'theme-v4.css'), join('dist', 'styles', 'theme-v4.css'))
+    console.log('CSS copied to dist/styles/theme.css and dist/styles/theme-v4.css')
 
     // esbuild refuses to preserve a "use client" directive when bundling to a
     // single file (it only keeps per-chunk directives with code splitting on),
