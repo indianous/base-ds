@@ -112,6 +112,21 @@ export { Card } from './components/organisms/Card/Card'
 
 export { Carousel } from './components/organisms/Carousel/Carousel'
 
+export { ConversationList } from './components/organisms/ConversationList/ConversationList'
+export type {
+  ConversationListProps,
+  ConversationListItem,
+} from './components/organisms/ConversationList/ConversationList'
+
+export { ConversationThread } from './components/organisms/ConversationThread/ConversationThread'
+export type {
+  ConversationThreadProps,
+  ConversationMessage,
+  MessageDirection,
+  MessageStatus,
+  MessageMediaType,
+} from './components/organisms/ConversationThread/ConversationThread'
+
 export { KanbanBoard } from './components/organisms/KanbanBoard/KanbanBoard'
 export type { KanbanBoardProps, KanbanColumn } from './components/organisms/KanbanBoard/KanbanBoard'
 
