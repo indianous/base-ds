@@ -106,7 +106,7 @@ export const ExpandableRows: Story = {
     columns: orderColumns as unknown as TableColumn<User>[],
     data: orders as unknown as User[],
     caption: 'Orders',
-    renderExpandedRow: (row) => {
+    renderExpandedRow: (row: User) => {
       const order = row as unknown as Order
       return (
         <table className="w-full text-sm">
@@ -131,5 +131,5 @@ export const ExpandableRows: Story = {
         </table>
       )
     },
-  } as unknown as Story['args'],
+  } as unknown as NonNullable<Story['args']>,
 }

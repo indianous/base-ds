@@ -74,7 +74,9 @@ describe('SearchField', () => {
         <SearchField onSearch={vi.fn()} />
       </>,
     )
-    const [first, second] = screen.getAllByRole('textbox')
+    const inputs = screen.getAllByRole('textbox')
+    expect(inputs).toHaveLength(2)
+    const [first, second] = inputs as [HTMLElement, HTMLElement]
     expect(first.id).toBeTruthy()
     expect(second.id).toBeTruthy()
     expect(first.id).not.toBe(second.id)

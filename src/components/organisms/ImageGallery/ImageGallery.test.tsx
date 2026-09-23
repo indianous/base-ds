@@ -93,7 +93,7 @@ describe('ImageGallery', () => {
   })
 
   it('does not render arrows for a single image', () => {
-    render(<ImageGallery images={[images[0]]} />)
+    render(<ImageGallery images={[images[0]!]} />)
     expect(screen.queryByRole('button', { name: 'Next image' })).not.toBeInTheDocument()
   })
 
@@ -118,7 +118,7 @@ describe('ImageGallery', () => {
         <ImageGallery images={images} />
       </Dialog>,
     )
-    await userEvent.click(screen.getAllByRole('button', { name: /Zoom image/ })[0])
+    await userEvent.click(screen.getAllByRole('button', { name: /Zoom image/ })[0]!)
     expect(screen.getByRole('button', { name: 'Close zoom' })).toBeInTheDocument()
 
     await userEvent.keyboard('{Escape}')
@@ -150,7 +150,7 @@ describe('ImageGallery', () => {
     render(<ImageGallery images={images} />)
     await userEvent.click(screen.getByRole('button', { name: /Zoom image/ }))
     const dialog = screen.getByRole('dialog')
-    await userEvent.click(screen.getAllByRole('button', { name: 'Next image' })[0])
+    await userEvent.click(screen.getAllByRole('button', { name: 'Next image' })[0]!)
     expect(dialog).toHaveTextContent('Shoe side view')
   })
 

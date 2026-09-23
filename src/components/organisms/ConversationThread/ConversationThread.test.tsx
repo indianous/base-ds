@@ -63,7 +63,8 @@ describe('ConversationThread', () => {
     ]
     const { container } = render(<ConversationThread messages={messages} onSend={() => {}} />)
     const icons = container.querySelectorAll('.lucide-check-check')
-    expect(icons[0].className).not.toBe(icons[1].className)
+    expect(icons).toHaveLength(2)
+    expect(icons[0]!.className).not.toBe(icons[1]!.className)
   })
 
   it('does not render a status icon for inbound messages', () => {

@@ -35,9 +35,9 @@ describe('TransferList', () => {
   it('renders options already in value in the selected column', () => {
     render(<TransferList options={options} value={['write']} onChange={vi.fn()} />)
     const listboxes = screen.getAllByRole('listbox')
-    expect(within(listboxes[0]).getAllByRole('option')).toHaveLength(2)
-    expect(within(listboxes[1]).getAllByRole('option')).toHaveLength(1)
-    expect(within(listboxes[1]).getByText('Write')).toBeInTheDocument()
+    expect(within(listboxes[0]!).getAllByRole('option')).toHaveLength(2)
+    expect(within(listboxes[1]!).getAllByRole('option')).toHaveLength(1)
+    expect(within(listboxes[1]!).getByText('Write')).toBeInTheDocument()
   })
 
   it('uses custom column labels', () => {
@@ -114,7 +114,7 @@ describe('TransferList', () => {
     render(<TransferList options={options} value={[]} onChange={vi.fn()} />)
     const user = userEvent.setup()
     await user.click(screen.getByText('Read'))
-    const listbox = screen.getAllByRole('listbox')[0]
+    const listbox = screen.getAllByRole('listbox')[0]!
     listbox.focus()
     await user.keyboard('{ArrowDown}')
     expect(screen.getByText('Write').closest('[role="option"]')).toHaveAttribute(
@@ -127,7 +127,7 @@ describe('TransferList', () => {
     render(<TransferList options={options} value={[]} onChange={vi.fn()} />)
     const user = userEvent.setup()
     await user.click(screen.getByText('Delete'))
-    const listbox = screen.getAllByRole('listbox')[0]
+    const listbox = screen.getAllByRole('listbox')[0]!
     listbox.focus()
     await user.keyboard('{ArrowUp}')
     expect(screen.getByText('Write').closest('[role="option"]')).toHaveAttribute(

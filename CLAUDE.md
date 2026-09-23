@@ -12,6 +12,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `npm run build` — tsup build to `dist/`
 - `npm run pack:local` — build + `npm pack` into `.pack/indianous-base-ds-<version>.tgz`, for testing unpublished changes in a consumer app (see README)
 - `npm run lint` — ESLint, `--max-warnings 0` (any warning fails)
+- `npm run typecheck` — `tsc -b` over `tsconfig.app.json` (all of `src/`, including tests and stories) and `tsconfig.node.json` (`vite.config.ts`). The build's `tsconfig.build.json` excludes tests/stories and Vitest doesn't type-check, so this is the only thing that catches type errors there.
 - `npm run lint:fix` / `npm run format` / `npm run format:check` — ESLint autofix / Prettier write / Prettier check
 - `npm test` — Vitest `unit` project only (jsdom). Does **not** run Storybook interaction tests.
 - `npm run test:stories` — Vitest `storybook` project (Playwright/Chromium browser mode) — required to exercise Storybook interaction tests
@@ -68,5 +69,5 @@ Semantic color values exist twice — hex in `src/tokens/colors.json` and `var(-
 - Commit messages are written in Portuguese, matching existing history — keep doing so.
 - Every delivery that changes public behavior bumps `version` in `package.json` (SemVer; while `0.x`, a change requiring consumer adjustments bumps the minor, anything else the patch) and adds a `CHANGELOG.md` entry (Portuguese, Keep a Changelog, with an "Ajustes necessários nos apps" section when relevant) in the same commit, then gets a `v<version>` git tag.
 - `README.md` (Portuguese) is the consumer-facing usage guide and ships inside the tarball — keep install/usage instructions there, not here.
-- Publishing: pushing a `v*` tag triggers `.github/workflows/publish.yml`, which checks the tag matches `package.json`'s version, runs lint, unit tests and `test:stories`, builds (`prepublishOnly`) and publishes to GitHub Packages (`publishConfig` pins the registry). A published version can't be republished — the tag is the release.
-- That publish workflow is the only CI; nothing runs on push/PR, so run lint, `npm test`, `npm run test:stories` and build locally before considering work done.
+- Publishing: pushing a `v*` tag triggers `.github/workflows/publish.yml`, which checks the tag matches `package.json`'s version, runs lint, typecheck, unit tests and `test:stories`, builds (`prepublishOnly`) and publishes to GitHub Packages (`publishConfig` pins the registry). A published version can't be republished — the tag is the release.
+- That publish workflow is the only CI; nothing runs on push/PR, so run lint, typecheck, `npm test`, `npm run test:stories` and build locally before considering work done.

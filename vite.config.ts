@@ -21,6 +21,7 @@ export default defineConfig({
     },
   },
   test: {
+    passWithNoTests: true,
     projects: [
       {
         extends: true,
@@ -30,7 +31,6 @@ export default defineConfig({
           setupFiles: ['./src/setupTests.ts'],
           globals: true,
           include: ['src/**/*.test.{ts,tsx}'],
-          passWithNoTests: true,
         },
       },
       {
@@ -44,7 +44,6 @@ export default defineConfig({
             provider: playwright({}),
             instances: [{ browser: 'chromium' }],
           },
-          passWithNoTests: true,
         },
       },
     ],

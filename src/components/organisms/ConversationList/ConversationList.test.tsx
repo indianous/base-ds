@@ -40,10 +40,8 @@ describe('ConversationList', () => {
   })
 
   it('hides the unread indicator when unreadCount is 0 or undefined', () => {
-    const items: ConversationListItem[] = [
-      { ...conversations[1], unreadCount: 0 },
-      conversations[1],
-    ]
+    const withoutUnread = conversations[1]!
+    const items: ConversationListItem[] = [{ ...withoutUnread, unreadCount: 0 }, withoutUnread]
     render(<ConversationList conversations={items} onSelectConversation={() => {}} />)
     expect(screen.queryByText('0')).not.toBeInTheDocument()
   })

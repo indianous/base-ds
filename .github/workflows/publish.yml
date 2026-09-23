@@ -35,6 +35,8 @@ jobs:
 
       - run: npm run lint
 
+      - run: npm run typecheck
+
       - run: npm test
 
       # Stories rodam no Chromium via Playwright, com checagem de acessibilidade (axe).

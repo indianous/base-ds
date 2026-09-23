@@ -168,7 +168,7 @@ describe('computeCardMove', () => {
 
   it('moves a card to another column at a given index', () => {
     const columns = threeCardColumn()
-    columns[1].cards = [{ id: 'lead-4', name: 'Diego' }]
+    columns[1]!.cards = [{ id: 'lead-4', name: 'Diego' }]
 
     const result = computeCardMove(columns, 'lead-2', 'new', 'contacted', 0)
 

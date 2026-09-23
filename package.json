@@ -32,6 +32,7 @@
     "pack:local": "npm run build && mkdir -p .pack && npm pack --pack-destination .pack",
     "prepublishOnly": "npm run build",
     "lint": "eslint src --max-warnings 0",
+    "typecheck": "tsc -b",
     "test": "vitest run --project=unit --passWithNoTests",
     "test:watch": "vitest --project=unit",
     "test:ui": "vitest --ui --project=unit",

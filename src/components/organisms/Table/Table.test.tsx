@@ -135,7 +135,7 @@ describe('Table', () => {
     it('shows the detail row after clicking the toggle, and hides it again on second click', async () => {
       const user = userEvent.setup()
       render(<Table columns={columns} data={data} renderExpandedRow={renderExpandedRow} />)
-      const toggle = screen.getAllByRole('button', { name: /Expand row/i })[0]
+      const toggle = screen.getAllByRole('button', { name: /Expand row/i })[0]!
       await user.click(toggle)
       expect(screen.getByText('Details for Alice')).toBeInTheDocument()
 
@@ -147,7 +147,7 @@ describe('Table', () => {
     it('toggles aria-expanded on the button', async () => {
       const user = userEvent.setup()
       render(<Table columns={columns} data={data} renderExpandedRow={renderExpandedRow} />)
-      const toggle = screen.getAllByRole('button', { name: /Expand row/i })[0]
+      const toggle = screen.getAllByRole('button', { name: /Expand row/i })[0]!
       expect(toggle).toHaveAttribute('aria-expanded', 'false')
       await user.click(toggle)
       expect(toggle).toHaveAttribute('aria-expanded', 'true')
@@ -156,7 +156,7 @@ describe('Table', () => {
     it('associates the toggle with the detail row via aria-controls', async () => {
       const user = userEvent.setup()
       render(<Table columns={columns} data={data} renderExpandedRow={renderExpandedRow} />)
-      const toggle = screen.getAllByRole('button', { name: /Expand row/i })[0]
+      const toggle = screen.getAllByRole('button', { name: /Expand row/i })[0]!
       await user.click(toggle)
       const controlsId = toggle.getAttribute('aria-controls')
       expect(controlsId).toBeTruthy()
@@ -167,7 +167,7 @@ describe('Table', () => {
     it('sets colSpan on the detail cell to account for the extra toggle column', async () => {
       const user = userEvent.setup()
       render(<Table columns={columns} data={data} renderExpandedRow={renderExpandedRow} />)
-      const toggle = screen.getAllByRole('button', { name: /Expand row/i })[0]
+      const toggle = screen.getAllByRole('button', { name: /Expand row/i })[0]!
       await user.click(toggle)
       const detailCell = screen.getByText('Details for Alice').closest('td')
       expect(detailCell).toHaveAttribute('colspan', String(columns.length + 1))
@@ -184,7 +184,7 @@ describe('Table', () => {
       const { container } = render(
         <Table columns={columns} data={data} renderExpandedRow={renderExpandedRow} />,
       )
-      await user.click(screen.getAllByRole('button', { name: /Expand row/i })[0])
+      await user.click(screen.getAllByRole('button', { name: /Expand row/i })[0]!)
       expect(await axe(container)).toHaveNoViolations()
     })
   })
