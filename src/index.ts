@@ -56,6 +56,9 @@ export { Text } from './components/atoms/Typography/Text'
 
 // ── Molecules ────────────────────────────────────────────────────────────────
 
+export { Alert } from './components/molecules/Alert/Alert'
+export type { AlertProps, AlertVariant, AlertLayout } from './components/molecules/Alert/Alert'
+
 export { Breadcrumb } from './components/molecules/Breadcrumb/Breadcrumb'
 
 export { DropdownMenu } from './components/molecules/DropdownMenu/DropdownMenu'

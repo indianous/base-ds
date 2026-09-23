@@ -6,6 +6,23 @@ Todas as mudanças relevantes do base-ds são registradas aqui. O formato segue 
 mudança que exige ajuste nos apps sobe o _minor_ (`0.1.0 → 0.2.0`); correções e componentes
 novos sem impacto sobem o _patch_.
 
+## [0.4.2] - 2026-09-23
+
+### Adicionado
+
+- `Alert`: aviso fixo que faz parte do layout, como uma faixa no topo da página
+  (`layout="full"`) ou um bloco dentro do conteúdo (`layout="inline"`, o padrão)
+  ([#45](https://github.com/indianous/base-ds/issues/45)).
+  - Variantes `info` (padrão), `success`, `warning`, `danger` e `neutral`.
+  - `title`, descrição em `children` e `actions` (uma ou mais `Button`, inclusive
+    `Button as="a"`). As ações ficam abaixo do texto no celular e à direita a partir de `sm`.
+  - Ícone padrão por variante, trocado com `icon` ou removido com `icon={null}`.
+  - Botão de fechar quando há `onDismiss`, com o `aria-label` definido por `dismissLabel` (padrão
+    `'Dismiss'`).
+  - `role="status"` em `info`, `success` e `neutral` e `role="alert"` em `warning` e `danger`.
+    Passar `role` e `aria-label` substitui o padrão, por exemplo
+    `role="region" aria-label="…"`.
+
 ## [0.4.1] - 2026-09-23
 
 ### Alterado
@@ -122,6 +139,7 @@ publicação ([#41](https://github.com/indianous/base-ds/issues/41)).
 - Versão inicial: todos os componentes, tokens e o suporte a Tailwind v4 entregues até a
   [#37](https://github.com/indianous/base-ds/issues/37).
 
+[0.4.2]: https://github.com/indianous/base-ds/compare/v0.4.1...v0.4.2
 [0.4.1]: https://github.com/indianous/base-ds/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/indianous/base-ds/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/indianous/base-ds/compare/v0.2.1...v0.3.0
