@@ -1,3 +1,8 @@
 dist
 node_modules
 storybook-static
+
+# Pasta local do Claude Code (não versionada)
+.claude
+# Gerado pelo npm
+package-lock.json

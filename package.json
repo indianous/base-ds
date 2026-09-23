@@ -41,8 +41,8 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "lint:fix": "eslint src --fix",
-    "format": "prettier --write src",
-    "format:check": "prettier --check src"
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "peerDependencies": {
     "react": "^18 || ^19",
