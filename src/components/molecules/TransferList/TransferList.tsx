@@ -43,9 +43,10 @@ function ListboxColumn({
   disabled,
 }: ListboxColumnProps) {
   const titleId = `${id}-title`
+  const isEmpty = items.length === 0
 
   const handleKeyDown = (e: ReactKeyboardEvent<HTMLDivElement>) => {
-    if (disabled || items.length === 0) return
+    if (disabled || isEmpty) return
     const currentIndex = items.findIndex((item) => item.value === highlighted)
 
     if (e.key === 'ArrowDown') {
@@ -65,16 +66,23 @@ function ListboxColumn({
         {title}
       </span>
       <div
-        role="listbox"
+        // An empty listbox is invalid ARIA (it requires option children), so an empty
+        // column is announced as a plain labelled group.
+        {...(isEmpty
+          ? { role: 'group' }
+          : {
+              role: 'listbox',
+              tabIndex: disabled ? -1 : 0,
+              onKeyDown: handleKeyDown,
+              'aria-disabled': disabled || undefined,
+            })}
         aria-labelledby={titleId}
-        tabIndex={disabled ? -1 : 0}
-        onKeyDown={handleKeyDown}
         className={cn(
           'flex h-56 flex-col gap-0.5 overflow-y-auto rounded-md border border-input p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
           disabled && 'pointer-events-none opacity-50',
         )}
       >
-        {items.length === 0 && (
+        {isEmpty && (
           <div className="flex flex-1 items-center justify-center text-sm text-muted-foreground">
             Empty
           </div>
@@ -86,6 +94,7 @@ function ListboxColumn({
               key={item.value}
               role="option"
               aria-selected={isHighlighted}
+              aria-disabled={disabled || undefined}
               tabIndex={-1}
               onClick={() => onHighlight(item.value)}
               onDoubleClick={() => onMove(item.value)}

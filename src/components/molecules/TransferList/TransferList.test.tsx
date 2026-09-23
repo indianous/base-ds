@@ -15,8 +15,21 @@ describe('TransferList', () => {
   it('renders all options in the available column when value is empty', () => {
     render(<TransferList options={options} value={[]} onChange={vi.fn()} />)
     const listboxes = screen.getAllByRole('listbox')
-    expect(within(listboxes[0]).getAllByRole('option')).toHaveLength(3)
-    expect(within(listboxes[1]).queryAllByRole('option')).toHaveLength(0)
+    expect(listboxes).toHaveLength(1)
+    expect(within(listboxes[0] as HTMLElement).getAllByRole('option')).toHaveLength(3)
+  })
+
+  it('renders an empty column as a labelled group instead of an empty listbox', () => {
+    render(<TransferList options={options} value={[]} onChange={vi.fn()} />)
+    const emptyColumn = screen.getByRole('group', { name: 'Selected' })
+    expect(within(emptyColumn).getByText('Empty')).toBeInTheDocument()
+    expect(emptyColumn).not.toHaveAttribute('tabindex')
+    expect(screen.queryByRole('listbox', { name: 'Selected' })).not.toBeInTheDocument()
+  })
+
+  it('has no accessibility violations with an empty column', async () => {
+    const { container } = render(<TransferList options={options} value={[]} onChange={vi.fn()} />)
+    expect(await axe(container)).toHaveNoViolations()
   })
 
   it('renders options already in value in the selected column', () => {
@@ -126,6 +139,23 @@ describe('TransferList', () => {
   it('disables all interaction when disabled is true', () => {
     render(<TransferList options={options} value={[]} onChange={vi.fn()} disabled />)
     screen.getAllByRole('button').forEach((button) => expect(button).toBeDisabled())
+  })
+
+  it('marks the listboxes and their options as aria-disabled when disabled', () => {
+    render(<TransferList options={options} value={['write']} onChange={vi.fn()} disabled />)
+    screen
+      .getAllByRole('listbox')
+      .forEach((listbox) => expect(listbox).toHaveAttribute('aria-disabled', 'true'))
+    screen
+      .getAllByRole('option')
+      .forEach((option) => expect(option).toHaveAttribute('aria-disabled', 'true'))
+  })
+
+  it('does not set aria-disabled when enabled', () => {
+    render(<TransferList options={options} value={['write']} onChange={vi.fn()} />)
+    screen
+      .getAllByRole('listbox')
+      .forEach((listbox) => expect(listbox).not.toHaveAttribute('aria-disabled'))
   })
 
   it('has no accessibility violations', async () => {

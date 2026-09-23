@@ -114,7 +114,11 @@ export function ConversationThread({
         onScroll={handleScroll}
         role="log"
         aria-label="Conversation messages"
-        className="flex flex-1 min-h-0 flex-col gap-2 overflow-y-auto p-4"
+        // Focusable so keyboard users can scroll the history, which has no focusable children
+        // (axe: scrollable-region-focusable).
+        // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- a scrollable region must be reachable by keyboard
+        tabIndex={0}
+        className="flex flex-1 min-h-0 flex-col gap-2 overflow-y-auto p-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       >
         {messages.map((message) => {
           const isOutbound = message.direction === 'OUTBOUND'
@@ -132,7 +136,7 @@ export function ConversationThread({
               >
                 <p>{message.content}</p>
                 {message.mediaUrl !== undefined && message.mediaType !== undefined && (
-                  <div className="mt-1 flex items-center gap-1 text-xs opacity-80">
+                  <div className="mt-1 flex items-center gap-1 text-xs">
                     <Icon name={mediaIconMap[message.mediaType]} size="sm" />
                     <span>{mediaLabelMap[message.mediaType]}</span>
                   </div>

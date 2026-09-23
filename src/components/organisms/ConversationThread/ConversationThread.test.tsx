@@ -200,4 +200,27 @@ describe('ConversationThread', () => {
     const results = await axe(container)
     expect(results).toHaveNoViolations()
   })
+
+  it('keeps the message history keyboard-scrollable', () => {
+    render(<ConversationThread messages={baseMessages} onSend={() => {}} />)
+    expect(screen.getByRole('log', { name: 'Conversation messages' })).toHaveAttribute(
+      'tabindex',
+      '0',
+    )
+  })
+
+  it('renders the media indicator at full opacity so it keeps text contrast', () => {
+    const messages: ConversationMessage[] = [
+      {
+        id: '1',
+        direction: 'OUTBOUND',
+        content: 'Photo',
+        timestamp: '10:00',
+        mediaUrl: 'https://example.com/photo.png',
+        mediaType: 'image',
+      },
+    ]
+    render(<ConversationThread messages={messages} onSend={() => {}} />)
+    expect(screen.getByText('Image').parentElement).not.toHaveClass('opacity-80')
+  })
 })

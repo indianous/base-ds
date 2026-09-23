@@ -3,7 +3,10 @@ import { cn } from '../../../utils/cn'
 import { Button } from '../../atoms/Button/Button'
 import { Input } from '../../atoms/Input/Input'
 
-interface NumberInputProps {
+interface NumberInputProps extends Pick<
+  React.AriaAttributes,
+  'aria-label' | 'aria-labelledby' | 'aria-describedby' | 'aria-invalid'
+> {
   id: string
   value?: number
   defaultValue?: number
@@ -25,6 +28,7 @@ export function NumberInput({
   disabled = false,
   onChange,
   className,
+  ...ariaProps
 }: NumberInputProps) {
   const [internalValue, setInternalValue] = useState<number>(value ?? defaultValue ?? 0)
   const [prevValue, setPrevValue] = useState(value)
@@ -84,6 +88,7 @@ export function NumberInput({
       </Button>
       <Input
         id={id}
+        {...ariaProps}
         type="number"
         value={internalValue}
         onChange={handleInputChange}

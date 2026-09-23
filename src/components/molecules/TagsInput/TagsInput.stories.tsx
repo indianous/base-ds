@@ -1,10 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react'
+import { FormField } from '../FormField/FormField'
 import { TagsInput } from './TagsInput'
 
 const meta: Meta<typeof TagsInput> = {
   component: TagsInput,
   title: 'Molecules/TagsInput',
   tags: ['autodocs'],
+  args: { 'aria-label': 'Tags' },
 }
 
 export default meta
@@ -35,4 +37,13 @@ export const MaxTags: Story = {
 
 export const Disabled: Story = {
   args: { id: 'tags-dis', value: ['React'], disabled: true },
+}
+
+export const InFormField: Story = {
+  render: (args) => (
+    <FormField id="tags-field" label="Tags" hint="Press Enter or comma to add a tag">
+      <TagsInput {...args} aria-label={undefined} />
+    </FormField>
+  ),
+  args: { id: 'tags-field', value: ['React'], onChange: () => {} },
 }

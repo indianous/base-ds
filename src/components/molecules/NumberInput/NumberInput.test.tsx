@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { axe } from 'jest-axe'
+import { FormField } from '../FormField/FormField'
 import { NumberInput } from './NumberInput'
 
 describe('NumberInput', () => {
@@ -81,6 +82,44 @@ describe('NumberInput', () => {
         <label htmlFor="qty">Quantity</label>
         <NumberInput id="qty" />
       </div>,
+    )
+    expect(await axe(container)).toHaveNoViolations()
+  })
+
+  it('forwards aria-label to the input', () => {
+    render(<NumberInput id="qty" aria-label="Quantity" />)
+    expect(screen.getByRole('spinbutton', { name: 'Quantity' })).toBeInTheDocument()
+  })
+
+  it('forwards aria-labelledby to the input', () => {
+    render(
+      <>
+        <span id="qty-label">Quantity</span>
+        <NumberInput id="qty" aria-labelledby="qty-label" />
+      </>,
+    )
+    expect(screen.getByRole('spinbutton', { name: 'Quantity' })).toBeInTheDocument()
+  })
+
+  it('forwards aria-describedby and aria-invalid from FormField', () => {
+    render(
+      <FormField id="qty" label="Quantity" error="This field is required">
+        <NumberInput id="qty" />
+      </FormField>,
+    )
+    const input = screen.getByRole('spinbutton', { name: 'Quantity' })
+    expect(input).toHaveAccessibleDescription('This field is required')
+    expect(input).toHaveAttribute('aria-invalid', 'true')
+  })
+
+  it('has no accessibility violations inside a FormField with a hint', async () => {
+    const { container } = render(
+      <FormField id="qty" label="Quantity" hint="Helpful hint">
+        <NumberInput id="qty" />
+      </FormField>,
+    )
+    expect(screen.getByRole('spinbutton', { name: 'Quantity' })).toHaveAccessibleDescription(
+      'Helpful hint',
     )
     expect(await axe(container)).toHaveNoViolations()
   })

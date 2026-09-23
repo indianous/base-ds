@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
+import { FormField } from '../FormField/FormField'
 import { MultiSelect } from './MultiSelect'
 import type { MultiSelectOption, MultiSelectProps } from './MultiSelect'
 
@@ -7,6 +8,7 @@ const meta: Meta<typeof MultiSelect> = {
   component: MultiSelect,
   title: 'Molecules/MultiSelect',
   tags: ['autodocs'],
+  args: { 'aria-label': 'Categories' },
 }
 export default meta
 
@@ -56,5 +58,19 @@ export const Disabled: Story = {
     value: ['books'],
     onChange: () => {},
     disabled: true,
+  },
+}
+
+export const InFormField: Story = {
+  render: (args) => (
+    <FormField id="categories-field" label="Categories" hint="Pick at least one category">
+      <ControlledMultiSelect {...args} aria-label={undefined} />
+    </FormField>
+  ),
+  args: {
+    id: 'categories-field',
+    options: categoryOptions,
+    value: ['books'],
+    onChange: () => {},
   },
 }

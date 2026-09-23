@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef, useState } from 'react'
-import type { KeyboardEvent as ReactKeyboardEvent } from 'react'
+import type { AriaAttributes, KeyboardEvent as ReactKeyboardEvent } from 'react'
 import { cn } from '../../../utils/cn'
 import { Badge } from '../../atoms/Badge/Badge'
 import { Icon } from '../../atoms/Icon/Icon'
@@ -9,7 +9,10 @@ export interface MultiSelectOption {
   label: string
 }
 
-export interface MultiSelectProps {
+export interface MultiSelectProps extends Pick<
+  AriaAttributes,
+  'aria-label' | 'aria-labelledby' | 'aria-describedby' | 'aria-invalid'
+> {
   id: string
   options: MultiSelectOption[]
   value: string[]
@@ -27,6 +30,7 @@ export function MultiSelect({
   placeholder,
   disabled = false,
   className,
+  ...ariaProps
 }: MultiSelectProps) {
   const [open, setOpen] = useState(false)
   const [filter, setFilter] = useState('')
@@ -110,6 +114,7 @@ export function MultiSelect({
   return (
     <div ref={containerRef} className={cn('relative w-full', className)}>
       <div
+        aria-disabled={disabled || undefined}
         className={cn(
           'flex flex-wrap items-center gap-2 rounded-md border border-input bg-background p-2 focus-within:ring-2 focus-within:ring-ring min-h-[42px]',
           disabled && 'opacity-50 cursor-not-allowed',
@@ -132,6 +137,7 @@ export function MultiSelect({
         <input
           ref={inputRef}
           id={id}
+          {...ariaProps}
           role="combobox"
           type="text"
           value={filter}

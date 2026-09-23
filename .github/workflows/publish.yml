@@ -35,8 +35,11 @@ jobs:
 
       - run: npm run lint
 
-      # test:stories (Storybook + Playwright) fica de fora até a issue #41 ser resolvida.
       - run: npm test
+
+      # Stories rodam no Chromium via Playwright, com checagem de acessibilidade (axe).
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:stories
 
       # prepublishOnly roda o build antes de publicar.
       - run: npm publish

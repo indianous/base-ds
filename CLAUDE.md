@@ -33,6 +33,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Never hardcode colors, spacing, shadows, radii, or typography values in a component. Tokens live in `src/tokens/*.json`, are exposed as CSS custom properties in `src/styles/theme.css`, and are mapped to Tailwind utilities in `tailwind.config.js` (e.g. `bg-primary` → `var(--...)`). Use the Tailwind utility classes, not literal values.
 
+Semantic color values exist twice — hex in `src/tokens/colors.json` and `var(--primitive)` in `src/styles/theme.css` — and must stay in sync. `src/tokens/contrast.test.ts` (unit project) enforces that sync and WCAG AA (4.5:1) for every foreground/background token pair; changing a semantic color means that test must keep passing.
+
 ## Project structure
 
 - `src/components/{atoms,molecules,organisms}/<Component>/` — each component folder holds `Component.tsx`, `Component.stories.tsx`, and `Component.test.tsx` together.
@@ -44,6 +46,8 @@ Never hardcode colors, spacing, shadows, radii, or typography values in a compon
 
 - Two Vitest projects: `unit` (jsdom, default `npm test`) and `storybook` (Playwright/Chromium, `npm run test:stories`) — `npm test` alone doesn't cover Storybook interaction tests.
 - Interactive components should include an accessibility assertion via `jest-axe` (`toHaveNoViolations`, wired in `src/setupTests.ts`).
+- `jest-axe` in jsdom can't measure color contrast. Contrast (and every other axe rule) is checked per story by the Storybook a11y addon (`a11y: { test: 'error' }` in `.storybook/preview.tsx`), so `npm run test:stories` must pass with zero failures before work is done — it also gates publishing.
+- Form controls must forward `aria-label`/`aria-labelledby`/`aria-describedby`/`aria-invalid` to the actual input: `FormField` injects the last two via `cloneElement`. Stories rendering a control on its own give it an `aria-label`.
 - Write `it`/`describe` descriptions in English, even though commit messages are in Portuguese.
 
 ## Workflow
@@ -64,5 +68,5 @@ Never hardcode colors, spacing, shadows, radii, or typography values in a compon
 - Commit messages are written in Portuguese, matching existing history — keep doing so.
 - Every delivery that changes public behavior bumps `version` in `package.json` (SemVer; while `0.x`, a change requiring consumer adjustments bumps the minor, anything else the patch) and adds a `CHANGELOG.md` entry (Portuguese, Keep a Changelog, with an "Ajustes necessários nos apps" section when relevant) in the same commit, then gets a `v<version>` git tag.
 - `README.md` (Portuguese) is the consumer-facing usage guide and ships inside the tarball — keep install/usage instructions there, not here.
-- Publishing: pushing a `v*` tag triggers `.github/workflows/publish.yml`, which checks the tag matches `package.json`'s version, runs lint + unit tests, builds (`prepublishOnly`) and publishes to GitHub Packages (`publishConfig` pins the registry). A published version can't be republished — the tag is the release. `test:stories` isn't in the workflow until issue #41 is fixed.
-- That publish workflow is the only CI; nothing runs on push/PR, so run lint/test/build locally before considering work done.
+- Publishing: pushing a `v*` tag triggers `.github/workflows/publish.yml`, which checks the tag matches `package.json`'s version, runs lint, unit tests and `test:stories`, builds (`prepublishOnly`) and publishes to GitHub Packages (`publishConfig` pins the registry). A published version can't be republished — the tag is the release.
+- That publish workflow is the only CI; nothing runs on push/PR, so run lint, `npm test`, `npm run test:stories` and build locally before considering work done.

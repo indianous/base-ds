@@ -1,10 +1,13 @@
 import { useState } from 'react'
-import type { KeyboardEvent, ChangeEvent } from 'react'
+import type { AriaAttributes, KeyboardEvent, ChangeEvent } from 'react'
 import { cn } from '../../../utils/cn'
 import { Badge } from '../../atoms/Badge/Badge'
 import { Icon } from '../../atoms/Icon/Icon'
 
-export interface TagsInputProps {
+export interface TagsInputProps extends Pick<
+  AriaAttributes,
+  'aria-label' | 'aria-labelledby' | 'aria-describedby' | 'aria-invalid'
+> {
   id: string
   value?: string[]
   onChange?: (tags: string[]) => void
@@ -22,6 +25,7 @@ export function TagsInput({
   disabled = false,
   maxTags,
   className,
+  ...ariaProps
 }: TagsInputProps) {
   const [tags, setTags] = useState<string[]>(value ?? [])
   const [inputValue, setInputValue] = useState('')
@@ -85,6 +89,7 @@ export function TagsInput({
       ))}
       <input
         id={id}
+        {...ariaProps}
         type="text"
         value={inputValue}
         onChange={handleChange}

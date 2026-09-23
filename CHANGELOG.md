@@ -6,6 +6,46 @@ Todas as mudanças relevantes do base-ds são registradas aqui. O formato segue 
 mudança que exige ajuste nos apps sobe o _minor_ (`0.1.0 → 0.2.0`); correções e componentes
 novos sem impacto sobem o _patch_.
 
+## [0.4.0] - 2026-09-23
+
+Todas as stories passam na checagem de acessibilidade do Storybook (axe), agora obrigatória na
+publicação ([#41](https://github.com/indianous/base-ds/issues/41)).
+
+### Alterado
+
+- Tokens de cor ajustados para contraste WCAG AA (4.5:1) em texto:
+
+  | Token                      | Antes                 | Depois                |
+  | -------------------------- | --------------------- | --------------------- |
+  | `--color-muted-foreground` | neutral-500 `#6b7280` | neutral-600 `#4b5563` |
+  | `--color-success`          | green-600 `#16a34a`   | green-700 `#15803d`   |
+  | `--color-success-hover`    | green-700 `#15803d`   | green-800 `#166534`   |
+  | `--color-warning`          | amber-600 `#d97706`   | amber-700 `#b45309`   |
+  | `--color-warning-hover`    | amber-700 `#b45309`   | amber-800 `#92400e`   |
+  | `--color-info`             | sky-600 `#0284c7`     | sky-700 `#0369a1`     |
+  | `--color-info-hover`       | sky-700 `#0369a1`     | sky-800 `#075985`     |
+
+- `TransferList`: coluna vazia é anunciada como `group` (antes, `listbox` sem opções); com
+  `disabled`, listas e opções recebem `aria-disabled`.
+- `MultiSelect`: com `disabled`, a área dos valores selecionados recebe `aria-disabled`.
+- `ConversationThread`: a área de mensagens recebe foco pelo teclado para rolagem; o indicador de
+  anexo deixa de ter opacidade reduzida.
+
+### Corrigido
+
+- `NumberInput`, `TagsInput` e `MultiSelect` repassam `aria-label`, `aria-labelledby`,
+  `aria-describedby` e `aria-invalid` ao input. Antes, dentro de um `FormField`, a dica e a
+  mensagem de erro não eram anunciadas por leitores de tela.
+
+### Ajustes necessários nos apps
+
+- Conferir visualmente as telas: todo texto secundário (`text-muted-foreground`) fica mais
+  escuro, e badges/fundos de `success`, `warning` e `info` ficam um tom mais escuros.
+- `NumberInput`, `TagsInput` e `MultiSelect` usados sem `FormField` e sem label visível devem
+  receber `aria-label`.
+- Atualizar com `npm install base-ds@npm:@indianous/base-ds@^0.4.0` (o `^0.3.0` não traz esta
+  versão sozinho).
+
 ## [0.3.0] - 2026-09-23
 
 ### Alterado
@@ -68,6 +108,7 @@ novos sem impacto sobem o _patch_.
 - Versão inicial: todos os componentes, tokens e o suporte a Tailwind v4 entregues até a
   [#37](https://github.com/indianous/base-ds/issues/37).
 
+[0.4.0]: https://github.com/indianous/base-ds/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/indianous/base-ds/compare/v0.2.1...v0.3.0
 [0.2.1]: https://github.com/indianous/base-ds/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/indianous/base-ds/compare/v0.1.0...v0.2.0

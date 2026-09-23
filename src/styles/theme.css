@@ -129,17 +129,17 @@
   --color-secondary-border: var(--color-violet-300);
 
   /* Success */
-  --color-success: var(--color-green-600);
+  --color-success: var(--color-green-700);
   --color-success-foreground: var(--color-neutral-0);
-  --color-success-hover: var(--color-green-700);
+  --color-success-hover: var(--color-green-800);
   --color-success-muted: var(--color-green-100);
   --color-success-muted-fg: var(--color-green-700);
   --color-success-border: var(--color-green-300);
 
   /* Warning */
-  --color-warning: var(--color-amber-600);
+  --color-warning: var(--color-amber-700);
   --color-warning-foreground: var(--color-neutral-0);
-  --color-warning-hover: var(--color-amber-700);
+  --color-warning-hover: var(--color-amber-800);
   --color-warning-muted: var(--color-amber-100);
   --color-warning-muted-fg: var(--color-amber-700);
   --color-warning-border: var(--color-amber-300);
@@ -154,16 +154,16 @@
   --color-destructive-border: var(--color-red-300);
 
   /* Info */
-  --color-info: var(--color-sky-600);
+  --color-info: var(--color-sky-700);
   --color-info-foreground: var(--color-neutral-0);
-  --color-info-hover: var(--color-sky-700);
+  --color-info-hover: var(--color-sky-800);
   --color-info-muted: var(--color-sky-100);
   --color-info-muted-fg: var(--color-sky-700);
   --color-info-border: var(--color-sky-300);
 
   /* Muted */
   --color-muted: var(--color-neutral-100);
-  --color-muted-foreground: var(--color-neutral-500);
+  --color-muted-foreground: var(--color-neutral-600);
 
   /* Surface */
   --color-border: var(--color-neutral-200);

@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { axe } from 'jest-axe'
+import { FormField } from '../FormField/FormField'
 import { MultiSelect } from './MultiSelect'
 import type { MultiSelectOption } from './MultiSelect'
 
@@ -128,6 +129,87 @@ describe('MultiSelect', () => {
         <label htmlFor="categories">Categories</label>
         <MultiSelect id="categories" options={options} value={['books']} onChange={vi.fn()} />
       </>,
+    )
+    expect(await axe(container)).toHaveNoViolations()
+  })
+
+  it('forwards aria-label to the input', () => {
+    render(
+      <MultiSelect
+        id="categories"
+        options={options}
+        value={[]}
+        onChange={() => {}}
+        aria-label="Categories"
+      />,
+    )
+    expect(screen.getByRole('combobox', { name: 'Categories' })).toBeInTheDocument()
+  })
+
+  it('forwards aria-labelledby to the input', () => {
+    render(
+      <>
+        <span id="categories-label">Categories</span>
+        <MultiSelect
+          id="categories"
+          options={options}
+          value={[]}
+          onChange={() => {}}
+          aria-labelledby="categories-label"
+        />
+      </>,
+    )
+    expect(screen.getByRole('combobox', { name: 'Categories' })).toBeInTheDocument()
+  })
+
+  it('forwards aria-describedby and aria-invalid from FormField', () => {
+    render(
+      <FormField id="categories" label="Categories" error="This field is required">
+        <MultiSelect id="categories" options={options} value={[]} onChange={() => {}} />
+      </FormField>,
+    )
+    const input = screen.getByRole('combobox', { name: 'Categories' })
+    expect(input).toHaveAccessibleDescription('This field is required')
+    expect(input).toHaveAttribute('aria-invalid', 'true')
+  })
+
+  it('has no accessibility violations inside a FormField with a hint', async () => {
+    const { container } = render(
+      <FormField id="categories" label="Categories" hint="Helpful hint">
+        <MultiSelect id="categories" options={options} value={[]} onChange={() => {}} />
+      </FormField>,
+    )
+    expect(screen.getByRole('combobox', { name: 'Categories' })).toHaveAccessibleDescription(
+      'Helpful hint',
+    )
+    expect(await axe(container)).toHaveNoViolations()
+  })
+
+  it('marks the selected-values area as aria-disabled when disabled', () => {
+    render(
+      <MultiSelect
+        id="categories"
+        options={options}
+        value={['books']}
+        onChange={() => {}}
+        disabled
+        aria-label="Categories"
+      />,
+    )
+    const area = screen.getByRole('combobox', { name: 'Categories' }).parentElement
+    expect(area).toHaveAttribute('aria-disabled', 'true')
+  })
+
+  it('has no accessibility violations when disabled with selected values', async () => {
+    const { container } = render(
+      <MultiSelect
+        id="categories"
+        options={options}
+        value={['books']}
+        onChange={() => {}}
+        disabled
+        aria-label="Categories"
+      />,
     )
     expect(await axe(container)).toHaveNoViolations()
   })

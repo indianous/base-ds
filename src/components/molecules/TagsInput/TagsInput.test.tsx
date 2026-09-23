@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { axe } from 'jest-axe'
+import { FormField } from '../FormField/FormField'
 import { TagsInput } from './TagsInput'
 
 describe('TagsInput', () => {
@@ -52,9 +53,7 @@ describe('TagsInput', () => {
 
   it('removes the last tag when Backspace is pressed in an empty input', async () => {
     const user = userEvent.setup()
-    render(
-      <TagsInput id="tags" value={['React', 'TypeScript']} onChange={() => {}} />,
-    )
+    render(<TagsInput id="tags" value={['React', 'TypeScript']} onChange={() => {}} />)
     const input = screen.getByRole('textbox')
     await user.type(input, '{backspace}')
     expect(screen.queryByText('TypeScript')).not.toBeInTheDocument()
@@ -63,9 +62,7 @@ describe('TagsInput', () => {
 
   it('does not add more tags than maxTags allows', async () => {
     const user = userEvent.setup()
-    render(
-      <TagsInput id="tags" value={['React', 'Vue']} maxTags={2} onChange={() => {}} />,
-    )
+    render(<TagsInput id="tags" value={['React', 'Vue']} maxTags={2} onChange={() => {}} />)
     const input = screen.getByRole('textbox')
     await user.type(input, 'Angular{Enter}')
     expect(screen.queryByText('Angular')).not.toBeInTheDocument()
@@ -89,9 +86,7 @@ describe('TagsInput', () => {
   it('calls onChange with updated tags when a tag is removed', async () => {
     const user = userEvent.setup()
     const onChange = vi.fn()
-    render(
-      <TagsInput id="tags" value={['React', 'TypeScript']} onChange={onChange} />,
-    )
+    render(<TagsInput id="tags" value={['React', 'TypeScript']} onChange={onChange} />)
     await user.click(screen.getByRole('button', { name: 'Remove React' }))
     expect(onChange).toHaveBeenCalledWith(['TypeScript'])
   })
@@ -108,6 +103,44 @@ describe('TagsInput', () => {
         <label htmlFor="tags">Tags</label>
         <TagsInput id="tags" value={['React']} />
       </>,
+    )
+    expect(await axe(container)).toHaveNoViolations()
+  })
+
+  it('forwards aria-label to the input', () => {
+    render(<TagsInput id="tags" aria-label="Tags" />)
+    expect(screen.getByRole('textbox', { name: 'Tags' })).toBeInTheDocument()
+  })
+
+  it('forwards aria-labelledby to the input', () => {
+    render(
+      <>
+        <span id="tags-label">Tags</span>
+        <TagsInput id="tags" aria-labelledby="tags-label" />
+      </>,
+    )
+    expect(screen.getByRole('textbox', { name: 'Tags' })).toBeInTheDocument()
+  })
+
+  it('forwards aria-describedby and aria-invalid from FormField', () => {
+    render(
+      <FormField id="tags" label="Tags" error="This field is required">
+        <TagsInput id="tags" />
+      </FormField>,
+    )
+    const input = screen.getByRole('textbox', { name: 'Tags' })
+    expect(input).toHaveAccessibleDescription('This field is required')
+    expect(input).toHaveAttribute('aria-invalid', 'true')
+  })
+
+  it('has no accessibility violations inside a FormField with a hint', async () => {
+    const { container } = render(
+      <FormField id="tags" label="Tags" hint="Helpful hint">
+        <TagsInput id="tags" />
+      </FormField>,
+    )
+    expect(screen.getByRole('textbox', { name: 'Tags' })).toHaveAccessibleDescription(
+      'Helpful hint',
     )
     expect(await axe(container)).toHaveNoViolations()
   })
