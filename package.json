@@ -1,7 +1,7 @@
 {
   "name": "base-ds",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -16,12 +16,14 @@
     "./styles/v4": "./dist/styles/theme-v4.css"
   },
   "files": [
-    "dist"
+    "dist",
+    "CHANGELOG.md"
   ],
   "scripts": {
     "dev": "vite",
     "build": "tsup",
     "build:watch": "tsup --watch",
+    "pack:local": "npm run build && mkdir -p .pack && npm pack --pack-destination .pack",
     "lint": "eslint src --max-warnings 0",
     "test": "vitest run --project=unit --passWithNoTests",
     "test:watch": "vitest --project=unit",
@@ -44,8 +46,6 @@
     "@dnd-kit/utilities": "^3.2.2",
     "clsx": "^2.1.1",
     "lucide-react": "^1.23.0",
-    "react": "^18 || ^19",
-    "react-dom": "^18 || ^19",
     "tailwind-merge": "^3.6.0"
   },
   "devDependencies": {
@@ -80,6 +80,8 @@
     "postcss": "^8.5.16",
     "prettier": "^3.9.4",
     "qrcode": "^1.5.4",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
     "storybook": "^10.4.6",
     "tailwindcss": "^3.4.19",
     "tsup": "^8.5.1",

@@ -10,6 +10,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - `npm run dev` — Vite dev server
 - `npm run build` — tsup build to `dist/`
+- `npm run pack:local` — build + `npm pack` into `.pack/base-ds-<version>.tgz`, the tarball consumer apps install (see README)
 - `npm run lint` — ESLint, `--max-warnings 0` (any warning fails)
 - `npm run lint:fix` / `npm run format` / `npm run format:check` — ESLint autofix / Prettier write / Prettier check
 - `npm test` — Vitest `unit` project only (jsdom). Does **not** run Storybook interaction tests.
@@ -55,9 +56,12 @@ Never hardcode colors, spacing, shadows, radii, or typography values in a compon
 
 - `tsup.config.ts` sets `platform: 'browser'` deliberately — without it, esbuild pulls in Node-targeted code from dependencies (e.g. `qrcode`'s `fs`/`pngjs` path) and breaks SSR for consumers like Next.js.
 - `'use client'` is prepended to `dist/index.js`/`dist/index.cjs` via a post-build string step, not an esbuild banner — esbuild drops directives when bundling to a single file without code-splitting. Every component is client-only.
+- `react`/`react-dom` must stay **only** in `peerDependencies` (+ `devDependencies` for local dev), never in `dependencies` — `src/package.test.ts` guards this. Consumers must install the packed tarball, not `file:../base-ds`: a symlink makes the bundle (and `lucide-react`) resolve React from this repo's `node_modules`, giving two React instances (`Invalid hook call`, issue #38).
 - The package has two entry points: `.` (JS/TS) and `./styles` (→ `dist/styles/theme.css`) — consumers import the CSS separately.
 
 ## Other conventions
 
 - Commit messages are written in Portuguese, matching existing history — keep doing so.
+- Every delivery that changes public behavior bumps `version` in `package.json` (SemVer; while `0.x`, a change requiring consumer adjustments bumps the minor, anything else the patch) and adds a `CHANGELOG.md` entry (Portuguese, Keep a Changelog, with an "Ajustes necessários nos apps" section when relevant) in the same commit, then gets a `v<version>` git tag.
+- `README.md` (Portuguese) is the consumer-facing usage guide and ships inside the tarball — keep install/usage instructions there, not here.
 - No CI is configured; lint/test/build aren't automatically enforced anywhere — run them locally before considering work done.
