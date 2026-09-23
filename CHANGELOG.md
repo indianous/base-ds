@@ -6,6 +6,19 @@ Todas as mudanças relevantes do base-ds são registradas aqui. O formato segue 
 mudança que exige ajuste nos apps sobe o _minor_ (`0.1.0 → 0.2.0`); correções e componentes
 novos sem impacto sobem o _patch_.
 
+## [0.2.1] - 2026-09-23
+
+### Adicionado
+
+- Componente de layout `Container`: centraliza o conteúdo com largura máxima (`width`), gutter
+  horizontal e padding vertical (`spacing`), renderizando `<div>` por padrão, sem landmark
+  ([#39](https://github.com/indianous/base-ds/issues/39)).
+
+### Ajustes necessários nos apps
+
+- Nenhum obrigatório. Opcional: trocar os wrappers de página feitos à mão (e o `PageContainer`
+  local do ecommerce) pelo `Container`, removendo `<main>` aninhados no `<main>` do shell.
+
 ## [0.2.0] - 2026-09-23
 
 ### Alterado
@@ -32,5 +45,6 @@ novos sem impacto sobem o _patch_.
 - Versão inicial: todos os componentes, tokens e o suporte a Tailwind v4 entregues até a
   [#37](https://github.com/indianous/base-ds/issues/37).
 
+[0.2.1]: https://github.com/indianous/base-ds/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/indianous/base-ds/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/indianous/base-ds/releases/tag/v0.1.0

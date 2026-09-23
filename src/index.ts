@@ -21,6 +21,9 @@ export type { ButtonProps } from './components/atoms/Button/Button'
 export { Checkbox } from './components/atoms/Checkbox/Checkbox'
 export type { CheckboxProps } from './components/atoms/Checkbox/Checkbox'
 
+export { Container } from './components/atoms/Container/Container'
+export type { ContainerProps } from './components/atoms/Container/Container'
+
 export { Icon } from './components/atoms/Icon/Icon'
 
 export { Image } from './components/atoms/Image/Image'
