@@ -1,0 +1,44 @@
+# Publica @indianous/base-ds no GitHub Packages quando uma tag v* é enviada.
+# Fluxo de release: subir a versão no package.json + entrada no CHANGELOG.md,
+# commit, `git tag v<versão>` e `git push origin v<versão>`.
+name: Publicar pacote
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          registry-url: https://npm.pkg.github.com
+          scope: '@indianous'
+
+      - run: npm ci
+
+      - name: Conferir se a tag bate com a versão do package.json
+        run: |
+          version="v$(node -p "require('./package.json').version")"
+          if [ "$version" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::A tag $GITHUB_REF_NAME não bate com a versão do package.json ($version)"
+            exit 1
+          fi
+
+      - run: npm run lint
+
+      # test:stories (Storybook + Playwright) fica de fora até a issue #41 ser resolvida.
+      - run: npm test
+
+      # prepublishOnly roda o build antes de publicar.
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

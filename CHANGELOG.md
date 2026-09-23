@@ -6,6 +6,29 @@ Todas as mudanças relevantes do base-ds são registradas aqui. O formato segue 
 mudança que exige ajuste nos apps sobe o _minor_ (`0.1.0 → 0.2.0`); correções e componentes
 novos sem impacto sobem o _patch_.
 
+## [0.3.0] - 2026-09-23
+
+### Alterado
+
+- O pacote passa a se chamar `@indianous/base-ds` e é publicado no GitHub Packages
+  (`https://npm.pkg.github.com`) a cada tag `v*`, pelo workflow `.github/workflows/publish.yml`
+  ([#40](https://github.com/indianous/base-ds/issues/40)). Esta é a primeira versão publicada no
+  registry.
+- `npm run pack:local` passa a gerar `.pack/indianous-base-ds-<versão>.tgz` e fica para testar
+  mudanças ainda não publicadas.
+
+### Ajustes necessários nos apps
+
+- Criar um token clássico do GitHub com `read:packages` e exportá-lo como
+  `GITHUB_PACKAGES_TOKEN`.
+- Adicionar ao `.npmrc` do app:
+  `@indianous:registry=https://npm.pkg.github.com` e
+  `//npm.pkg.github.com/:_authToken=${GITHUB_PACKAGES_TOKEN}`.
+- Trocar a dependência do tarball pelo alias:
+  `npm install base-ds@npm:@indianous/base-ds@^0.3.0`. Os imports (`from 'base-ds'`,
+  `'base-ds/styles'`) não mudam.
+- Atualizar no `CLAUDE.md` do app o trecho do base-ds (novo texto no README).
+
 ## [0.2.1] - 2026-09-23
 
 ### Adicionado
@@ -45,6 +68,7 @@ novos sem impacto sobem o _patch_.
 - Versão inicial: todos os componentes, tokens e o suporte a Tailwind v4 entregues até a
   [#37](https://github.com/indianous/base-ds/issues/37).
 
+[0.3.0]: https://github.com/indianous/base-ds/compare/v0.2.1...v0.3.0
 [0.2.1]: https://github.com/indianous/base-ds/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/indianous/base-ds/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/indianous/base-ds/releases/tag/v0.1.0
