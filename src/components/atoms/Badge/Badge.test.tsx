@@ -59,6 +59,18 @@ describe('Badge', () => {
     expect(screen.getByText('Label')).toHaveClass('custom-class')
   })
 
+  it('does not wrap text by default (whitespace-nowrap)', () => {
+    render(<Badge>Casa e Jardim</Badge>)
+    expect(screen.getByText('Casa e Jardim')).toHaveClass('whitespace-nowrap')
+  })
+
+  it('lets className override the no-wrap behavior', () => {
+    render(<Badge className="whitespace-normal">Casa e Jardim</Badge>)
+    const badge = screen.getByText('Casa e Jardim')
+    expect(badge).toHaveClass('whitespace-normal')
+    expect(badge).not.toHaveClass('whitespace-nowrap')
+  })
+
   it('has no accessibility violations', async () => {
     const { container } = render(<Badge>Status</Badge>)
     expect(await axe(container)).toHaveNoViolations()

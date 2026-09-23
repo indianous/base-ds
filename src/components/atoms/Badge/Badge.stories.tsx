@@ -29,3 +29,11 @@ export const AllVariants: Story = {
     </div>
   ),
 }
+
+export const LongTextInNarrowContainer: Story = {
+  render: () => (
+    <div className="w-16">
+      <Badge variant="primary">Casa e Jardim</Badge>
+    </div>
+  ),
+}

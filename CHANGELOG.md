@@ -6,6 +6,20 @@ Todas as mudanças relevantes do base-ds são registradas aqui. O formato segue 
 mudança que exige ajuste nos apps sobe o _minor_ (`0.1.0 → 0.2.0`); correções e componentes
 novos sem impacto sobem o _patch_.
 
+## [0.4.1] - 2026-09-23
+
+### Alterado
+
+- `Badge` não quebra mais linha dentro da pílula: a classe base inclui `whitespace-nowrap`
+  ([#46](https://github.com/indianous/base-ds/issues/46)). Para voltar ao comportamento anterior,
+  passe `className="whitespace-normal"`. Nos chips do `MultiSelect` e do `TagsInput`, um texto
+  muito longo também deixa de quebrar e pode passar da largura do campo.
+
+### Ajustes necessários nos apps
+
+- Nenhum é obrigatório. O `className="whitespace-nowrap"` usado como workaround nos `Badge` pode
+  ser removido.
+
 ## [0.4.0] - 2026-09-23
 
 Todas as stories passam na checagem de acessibilidade do Storybook (axe), agora obrigatória na
@@ -108,6 +122,7 @@ publicação ([#41](https://github.com/indianous/base-ds/issues/41)).
 - Versão inicial: todos os componentes, tokens e o suporte a Tailwind v4 entregues até a
   [#37](https://github.com/indianous/base-ds/issues/37).
 
+[0.4.1]: https://github.com/indianous/base-ds/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/indianous/base-ds/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/indianous/base-ds/compare/v0.2.1...v0.3.0
 [0.2.1]: https://github.com/indianous/base-ds/compare/v0.2.0...v0.2.1
