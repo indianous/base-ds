@@ -23,7 +23,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Code style
 
-- Prettier-enforced (`npm run format:check` gates publishing): no semicolons, single quotes, trailing commas, 2-space indent, 100-char width. This includes `src/tokens/*.json` — don't hand-align values in columns.
+- Prettier-enforced (`npm run format:check` gates publishing): no semicolons, single quotes, trailing commas, 2-space indent, 100-char width. This includes `src/tokens/*.json` — don't hand-align values in columns. Formatting-only commits go in `.git-blame-ignore-revs` (enable locally with `git config blame.ignoreRevsFile .git-blame-ignore-revs`).
 - Functional components with named exports — no default exports, no `React.FC`.
 - Type-only imports use `import type { ... }`.
 - `@typescript-eslint/no-explicit-any` is an error under `src/**` (relaxed in test files).
