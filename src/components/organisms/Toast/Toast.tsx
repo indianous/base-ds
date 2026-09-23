@@ -35,7 +35,14 @@ const iconColorMap: Record<ToastVariant, string> = {
   info: 'text-info',
 }
 
-export function Toast({ variant = 'default', title, description, action, onDismiss, className }: ToastProps) {
+export function Toast({
+  variant = 'default',
+  title,
+  description,
+  action,
+  onDismiss,
+  className,
+}: ToastProps) {
   const isDestructive = variant === 'destructive'
 
   return (
@@ -46,7 +53,11 @@ export function Toast({ variant = 'default', title, description, action, onDismi
         className,
       )}
     >
-      <Icon name={iconMap[variant]} size="md" className={cn('mt-0.5 flex-shrink-0', iconColorMap[variant])} />
+      <Icon
+        name={iconMap[variant]}
+        size="md"
+        className={cn('mt-0.5 flex-shrink-0', iconColorMap[variant])}
+      />
 
       <div className="flex-1 min-w-0">
         {title !== undefined && <p className="text-sm font-semibold text-foreground">{title}</p>}

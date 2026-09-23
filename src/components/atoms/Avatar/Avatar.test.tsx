@@ -67,9 +67,7 @@ describe('Avatar', () => {
   })
 
   it('has no accessibility violations (with src and alt)', async () => {
-    const { container } = render(
-      <Avatar src="https://example.com/photo.jpg" alt="John Doe" />,
-    )
+    const { container } = render(<Avatar src="https://example.com/photo.jpg" alt="John Doe" />)
     const results = await axe(container)
     expect(results).toHaveNoViolations()
   })

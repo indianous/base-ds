@@ -13,13 +13,7 @@ interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
 const toCSS = (val?: string | number): string | undefined =>
   val !== undefined ? (typeof val === 'number' ? `${val}px` : val) : undefined
 
-export function Skeleton({
-  variant = 'rect',
-  width,
-  height,
-  className,
-  ...rest
-}: SkeletonProps) {
+export function Skeleton({ variant = 'rect', width, height, className, ...rest }: SkeletonProps) {
   const variantClass = variant === 'circle' ? 'rounded-full' : 'rounded-md'
 
   const inlineStyle: React.CSSProperties = {

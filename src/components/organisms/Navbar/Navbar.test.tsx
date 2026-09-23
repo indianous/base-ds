@@ -63,18 +63,21 @@ describe('Navbar', () => {
     // Rendered once in the desktop actions block and once in the mobile actions
     // block (each toggled by CSS at a different breakpoint), same pattern already
     // used for logo/search/items across the desktop row and the mobile drawer.
-    render(<Navbar actions={[<button key="login" data-testid="action-btn">Login</button>]} />)
+    render(
+      <Navbar
+        actions={[
+          <button key="login" data-testid="action-btn">
+            Login
+          </button>,
+        ]}
+      />,
+    )
     expect(screen.getAllByTestId('action-btn')).toHaveLength(2)
   })
 
   it('renders multiple actions from the actions array', () => {
     render(
-      <Navbar
-        actions={[
-          <button key="a">Notifications</button>,
-          <button key="b">Login</button>,
-        ]}
-      />,
+      <Navbar actions={[<button key="a">Notifications</button>, <button key="b">Login</button>]} />,
     )
     expect(screen.getByRole('button', { name: 'Notifications' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Login' })).toBeInTheDocument()
@@ -137,17 +140,19 @@ describe('Navbar', () => {
 
     it('places nav items after the search slot in the document, moving them to a second row', () => {
       const items: NavItem[] = [{ label: 'Home', href: '/' }]
-      render(<Navbar search={<input aria-label="Search" data-testid="search-slot" />} items={items} />)
+      render(
+        <Navbar search={<input aria-label="Search" data-testid="search-slot" />} items={items} />,
+      )
       const searchSlot = screen.getByTestId('search-slot')
       const homeLink = screen.getByText('Home')
-      expect(searchSlot.compareDocumentPosition(homeLink) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+      expect(
+        searchSlot.compareDocumentPosition(homeLink) & Node.DOCUMENT_POSITION_FOLLOWING,
+      ).toBeTruthy()
     })
 
     it('has no accessibility violations with search and items', async () => {
       const items: NavItem[] = [{ label: 'Home', href: '/' }]
-      const { container } = render(
-        <Navbar search={<input aria-label="Search" />} items={items} />,
-      )
+      const { container } = render(<Navbar search={<input aria-label="Search" />} items={items} />)
       expect(await axe(container)).toHaveNoViolations()
     })
   })
@@ -164,7 +169,9 @@ describe('Navbar', () => {
 
     it('does not render a mobile toggle button when there are no items or search', () => {
       render(<Navbar logo={<span>Brand</span>} />)
-      expect(screen.queryByRole('button', { name: /open navigation menu/i })).not.toBeInTheDocument()
+      expect(
+        screen.queryByRole('button', { name: /open navigation menu/i }),
+      ).not.toBeInTheDocument()
     })
 
     it('renders a mobile toggle button when items are provided', () => {
@@ -195,7 +202,9 @@ describe('Navbar', () => {
     })
 
     it('renders the search slot inside the mobile drawer', async () => {
-      render(<Navbar items={items} search={<input aria-label="Search" data-testid="search-slot" />} />)
+      render(
+        <Navbar items={items} search={<input aria-label="Search" data-testid="search-slot" />} />,
+      )
       await userEvent.click(screen.getByRole('button', { name: /open navigation menu/i }))
       const dialog = screen.getByRole('dialog')
       expect(within(dialog).getByTestId('search-slot')).toBeInTheDocument()
@@ -231,21 +240,27 @@ describe('Navbar', () => {
 
     it('renders a settings/gear button when there is more than 1 action', () => {
       render(
-        <Navbar actions={[<button key="a">Notifications</button>, <button key="b">Login</button>]} />,
+        <Navbar
+          actions={[<button key="a">Notifications</button>, <button key="b">Login</button>]}
+        />,
       )
       expect(screen.getByRole('button', { name: /more actions/i })).toBeInTheDocument()
     })
 
     it('does not duplicate the action buttons themselves when there is more than 1 action', () => {
       render(
-        <Navbar actions={[<button key="a">Notifications</button>, <button key="b">Login</button>]} />,
+        <Navbar
+          actions={[<button key="a">Notifications</button>, <button key="b">Login</button>]}
+        />,
       )
       expect(screen.getAllByRole('button', { name: 'Notifications' })).toHaveLength(1)
     })
 
     it('opens a right-side drawer listing the actions when the gear button is clicked', async () => {
       render(
-        <Navbar actions={[<button key="a">Notifications</button>, <button key="b">Login</button>]} />,
+        <Navbar
+          actions={[<button key="a">Notifications</button>, <button key="b">Login</button>]}
+        />,
       )
       await userEvent.click(screen.getByRole('button', { name: /more actions/i }))
       const dialog = screen.getByRole('dialog')
@@ -255,7 +270,9 @@ describe('Navbar', () => {
 
     it('opens the actions drawer on the right side', async () => {
       render(
-        <Navbar actions={[<button key="a">Notifications</button>, <button key="b">Login</button>]} />,
+        <Navbar
+          actions={[<button key="a">Notifications</button>, <button key="b">Login</button>]}
+        />,
       )
       await userEvent.click(screen.getByRole('button', { name: /more actions/i }))
       expect(screen.getByRole('dialog').className).toMatch(/right-0/)
@@ -263,7 +280,9 @@ describe('Navbar', () => {
 
     it('closes the actions drawer when its close button is clicked', async () => {
       render(
-        <Navbar actions={[<button key="a">Notifications</button>, <button key="b">Login</button>]} />,
+        <Navbar
+          actions={[<button key="a">Notifications</button>, <button key="b">Login</button>]}
+        />,
       )
       await userEvent.click(screen.getByRole('button', { name: /more actions/i }))
       expect(screen.getByRole('dialog')).toBeInTheDocument()
@@ -273,7 +292,9 @@ describe('Navbar', () => {
 
     it('has no accessibility violations with the actions drawer open', async () => {
       const { container } = render(
-        <Navbar actions={[<button key="a">Notifications</button>, <button key="b">Login</button>]} />,
+        <Navbar
+          actions={[<button key="a">Notifications</button>, <button key="b">Login</button>]}
+        />,
       )
       await userEvent.click(screen.getByRole('button', { name: /more actions/i }))
       expect(await axe(container)).toHaveNoViolations()

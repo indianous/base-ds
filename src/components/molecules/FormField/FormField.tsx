@@ -12,7 +12,15 @@ export interface FormFieldProps {
   children: React.ReactNode
 }
 
-export function FormField({ label, id, error, hint, required, className, children }: FormFieldProps) {
+export function FormField({
+  label,
+  id,
+  error,
+  hint,
+  required,
+  className,
+  children,
+}: FormFieldProps) {
   const hintId = hint ? `${id}-hint` : undefined
   const errorId = error ? `${id}-error` : undefined
 

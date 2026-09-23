@@ -18,7 +18,7 @@ const sizeClasses: Record<InputSize, string> = {
 
 const stateClasses: Record<InputState, string> = {
   default: 'border border-input focus:ring-2 focus:ring-ring',
-  error:   'border border-destructive focus:ring-2 focus:ring-destructive',
+  error: 'border border-destructive focus:ring-2 focus:ring-destructive',
   success: 'border border-success focus:ring-2 focus:ring-success',
 }
 

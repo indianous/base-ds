@@ -38,5 +38,9 @@ export function Heading({
   const classes = cn('text-foreground', SIZE_MAP[size], WEIGHT_MAP[weight], className)
   const Tag = as as React.ElementType
 
-  return <Tag className={classes} {...rest}>{children}</Tag>
+  return (
+    <Tag className={classes} {...rest}>
+      {children}
+    </Tag>
+  )
 }

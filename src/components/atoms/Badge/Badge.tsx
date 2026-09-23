@@ -16,8 +16,8 @@ const variantClasses: Record<BadgeVariant, string> = {
   primary: 'bg-primary text-primary-foreground',
   success: 'bg-success text-success-foreground',
   warning: 'bg-warning text-warning-foreground',
-  danger:  'bg-destructive text-destructive-foreground',
-  info:    'bg-info text-info-foreground',
+  danger: 'bg-destructive text-destructive-foreground',
+  info: 'bg-info text-info-foreground',
 }
 
 const sizeClasses: Record<BadgeSize, string> = {
@@ -25,12 +25,7 @@ const sizeClasses: Record<BadgeSize, string> = {
   md: 'text-sm px-3 py-1 rounded-full',
 }
 
-export function Badge({
-  variant = 'default',
-  size = 'md',
-  className,
-  children,
-}: BadgeProps) {
+export function Badge({ variant = 'default', size = 'md', className, children }: BadgeProps) {
   return (
     <span
       className={cn(

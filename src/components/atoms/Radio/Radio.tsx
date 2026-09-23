@@ -21,10 +21,7 @@ export function Radio({ id, label, value, className, ...props }: RadioProps) {
         {...props}
       />
       {label && (
-        <label
-          htmlFor={id}
-          className="text-sm text-foreground cursor-pointer select-none"
-        >
+        <label htmlFor={id} className="text-sm text-foreground cursor-pointer select-none">
           {label}
         </label>
       )}

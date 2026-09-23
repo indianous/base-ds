@@ -99,9 +99,7 @@ export function FileUpload({
           onDrop={handleDrop}
           className={cn(
             'border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors',
-            isDragging
-              ? 'border-primary bg-primary/10'
-              : 'border-border',
+            isDragging ? 'border-primary bg-primary/10' : 'border-border',
             disabled && 'opacity-50 pointer-events-none cursor-not-allowed',
           )}
         >
@@ -113,11 +111,7 @@ export function FileUpload({
           </div>
         </div>
       ) : (
-        <Button
-          variant="outline"
-          onClick={() => inputRef.current?.click()}
-          disabled={disabled}
-        >
+        <Button variant="outline" onClick={() => inputRef.current?.click()} disabled={disabled}>
           Select files
         </Button>
       )}

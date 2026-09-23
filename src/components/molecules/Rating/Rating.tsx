@@ -30,11 +30,7 @@ export function Rating({
   const [hovered, setHovered] = useState<number>(0)
 
   return (
-    <div
-      role="radiogroup"
-      aria-label="Rating"
-      className={cn('flex flex-row', className)}
-    >
+    <div role="radiogroup" aria-label="Rating" className={cn('flex flex-row', className)}>
       {Array.from({ length: max }, (_, index) => {
         const i = index + 1
         const isFilled = (hovered || value) >= i

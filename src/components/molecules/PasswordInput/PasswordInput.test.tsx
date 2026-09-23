@@ -61,9 +61,7 @@ describe('PasswordInput', () => {
   })
 
   it('has no accessibility violations', async () => {
-    const { container } = render(
-      <PasswordInput id="pwd" aria-label="Password" />,
-    )
+    const { container } = render(<PasswordInput id="pwd" aria-label="Password" />)
     expect(await axe(container)).toHaveNoViolations()
   })
 })

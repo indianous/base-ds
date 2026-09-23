@@ -71,10 +71,7 @@ describe('Breadcrumb', () => {
   it('calls onClick when a button item is clicked', async () => {
     const user = userEvent.setup()
     const handleClick = vi.fn()
-    const clickItems = [
-      { label: 'Dashboard', onClick: handleClick },
-      { label: 'Profile' },
-    ]
+    const clickItems = [{ label: 'Dashboard', onClick: handleClick }, { label: 'Profile' }]
     render(<Breadcrumb items={clickItems} />)
     await user.click(screen.getByRole('button', { name: 'Dashboard' }))
     expect(handleClick).toHaveBeenCalledTimes(1)

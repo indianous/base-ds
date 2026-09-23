@@ -178,7 +178,9 @@ export function Navbar({ logo, items, actions, search, sticky, className }: Navb
 
           <div className="flex flex-1 items-center justify-end gap-2">
             <div className="hidden md:flex items-center gap-2">
-              {actions?.map((action, index) => <div key={index}>{action}</div>)}
+              {actions?.map((action, index) => (
+                <div key={index}>{action}</div>
+              ))}
             </div>
 
             <div className="flex md:hidden items-center">
@@ -212,7 +214,12 @@ export function Navbar({ logo, items, actions, search, sticky, className }: Navb
       </nav>
 
       {showMobileToggle && (
-        <Drawer open={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} side="left" title="Menu">
+        <Drawer
+          open={isMobileMenuOpen}
+          onClose={() => setIsMobileMenuOpen(false)}
+          side="left"
+          title="Menu"
+        >
           <div className="flex flex-col gap-4">
             {hasSearch && <div>{search}</div>}
 
@@ -237,7 +244,9 @@ export function Navbar({ logo, items, actions, search, sticky, className }: Navb
           title="Actions"
         >
           <div className="flex flex-col gap-2">
-            {actions!.map((action, index) => <div key={index}>{action}</div>)}
+            {actions!.map((action, index) => (
+              <div key={index}>{action}</div>
+            ))}
           </div>
         </Drawer>
       )}

@@ -100,7 +100,7 @@ app e acompanha exatamente a versão instalada. Seções:
   - Aviso explícito: **não** usar `npm install ../base-ds` / `file:../base-ds`
     (symlink). Explicar em 2–3 frases que o symlink faz o app carregar o React
     do `node_modules` de desenvolvimento do base-ds, causando `Invalid hook
-    call` (com link para a issue #38).
+call` (com link para a issue #38).
   - Se o app já usava o workaround de symlink manual em
     `base-ds/node_modules/{react,react-dom}`, removê-lo.
 - **Estilos:** o CSS é importado à parte (`base-ds/styles` para Tailwind v3,
@@ -131,8 +131,8 @@ instalação dele no consumidor do scratchpad (item 2 da verificação end-to-en
 Hoje o pacote está parado em `0.1.0`, então não dá para saber se um app está
 desatualizado. A partir desta issue:
 
-- **SemVer para 0.x:** mudança que exige ajuste nos apps sobe o *minor*
-  (`0.1.0 → 0.2.0`); correção ou componente novo sem impacto sobe o *patch*.
+- **SemVer para 0.x:** mudança que exige ajuste nos apps sobe o _minor_
+  (`0.1.0 → 0.2.0`); correção ou componente novo sem impacto sobe o _patch_.
   Esta issue muda como os apps instalam o pacote, então vai para **`0.2.0`**.
 - **Nome do tarball com versão:** o `npm pack` já gera
   `base-ds-<versão>.tgz`, então o `package.json` de cada app mostra qual versão

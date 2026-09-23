@@ -39,13 +39,13 @@ export function Switch({
         className={cn(
           'relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50',
           checked ? 'bg-primary' : 'bg-muted',
-          className
+          className,
         )}
       >
         <span
           className={cn(
             'inline-block h-4 w-4 rounded-full bg-white shadow-sm transition-transform',
-            checked ? 'translate-x-6' : 'translate-x-1'
+            checked ? 'translate-x-6' : 'translate-x-1',
           )}
         />
       </button>

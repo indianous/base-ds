@@ -11,11 +11,7 @@ interface PaginationProps {
   className?: string
 }
 
-function getPageRange(
-  current: number,
-  total: number,
-  siblings: number,
-): (number | '...')[] {
+function getPageRange(current: number, total: number, siblings: number): (number | '...')[] {
   const range: (number | '...')[] = []
   const left = Math.max(2, current - siblings)
   const right = Math.min(total - 1, current + siblings)

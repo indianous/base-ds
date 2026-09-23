@@ -41,7 +41,11 @@ export const Default: Story = {
   args: {
     logo,
     items,
-    actions: [<Button key="sign-in" size="sm">Sign in</Button>],
+    actions: [
+      <Button key="sign-in" size="sm">
+        Sign in
+      </Button>,
+    ],
   },
 }
 
@@ -49,7 +53,11 @@ export const Sticky: Story = {
   args: {
     logo,
     items,
-    actions: [<Button key="sign-in" size="sm">Sign in</Button>],
+    actions: [
+      <Button key="sign-in" size="sm">
+        Sign in
+      </Button>,
+    ],
     sticky: true,
   },
 }
@@ -71,7 +79,11 @@ export const WithDropdownItem: Story = {
   args: {
     logo,
     items: itemsWithDropdown,
-    actions: [<Button key="sign-in" size="sm">Sign in</Button>],
+    actions: [
+      <Button key="sign-in" size="sm">
+        Sign in
+      </Button>,
+    ],
   },
 }
 
@@ -83,8 +95,12 @@ export const WithMultipleActions: Story = {
       <Button key="github" variant="ghost" size="sm" leftIcon={<Icon name="GitBranch" size="sm" />}>
         GitHub
       </Button>,
-      <Button key="sign-in" variant="outline" size="sm">Sign in</Button>,
-      <Button key="cta" size="sm">Get Started</Button>,
+      <Button key="sign-in" variant="outline" size="sm">
+        Sign in
+      </Button>,
+      <Button key="cta" size="sm">
+        Get Started
+      </Button>,
     ],
   },
 }
@@ -94,7 +110,11 @@ export const WithSearch: Story = {
     logo,
     items,
     search: <SearchField placeholder="Search..." onSearch={() => {}} />,
-    actions: [<Button key="sign-in" size="sm">Sign in</Button>],
+    actions: [
+      <Button key="sign-in" size="sm">
+        Sign in
+      </Button>,
+    ],
   },
 }
 
@@ -106,7 +126,11 @@ export const MobileDrawer: Story = {
     logo,
     items: itemsWithDropdown,
     search: <SearchField placeholder="Search..." onSearch={() => {}} />,
-    actions: [<Button key="sign-in" size="sm">Sign in</Button>],
+    actions: [
+      <Button key="sign-in" size="sm">
+        Sign in
+      </Button>,
+    ],
   },
   render: (args) => (
     <div className="max-w-sm border border-border rounded-lg overflow-hidden">
@@ -123,11 +147,20 @@ export const MobileActionsDrawer: Story = {
     logo,
     items,
     actions: [
-      <Button key="notifications" variant="ghost" size="sm" leftIcon={<Icon name="Bell" size="sm" />}>
+      <Button
+        key="notifications"
+        variant="ghost"
+        size="sm"
+        leftIcon={<Icon name="Bell" size="sm" />}
+      >
         Notifications
       </Button>,
-      <Button key="sign-in" variant="outline" size="sm">Sign in</Button>,
-      <Button key="cta" size="sm">Get Started</Button>,
+      <Button key="sign-in" variant="outline" size="sm">
+        Sign in
+      </Button>,
+      <Button key="cta" size="sm">
+        Get Started
+      </Button>,
     ],
   },
   render: (args) => (

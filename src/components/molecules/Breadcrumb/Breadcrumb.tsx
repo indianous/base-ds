@@ -49,11 +49,7 @@ export function Breadcrumb({ items, separator, className }: BreadcrumbProps) {
                   {item.label}
                 </button>
               )}
-              {!isLast && (
-                <span aria-hidden="true">
-                  {separator ?? defaultSeparator}
-                </span>
-              )}
+              {!isLast && <span aria-hidden="true">{separator ?? defaultSeparator}</span>}
             </li>
           )
         })}

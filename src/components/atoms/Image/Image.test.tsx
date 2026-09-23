@@ -40,26 +40,14 @@ describe('Image', () => {
   })
 
   it('renders fallback node when image fails to load', () => {
-    render(
-      <Image
-        src="/broken.jpg"
-        alt="Broken image"
-        fallback={<span>Error</span>}
-      />,
-    )
+    render(<Image src="/broken.jpg" alt="Broken image" fallback={<span>Error</span>} />)
     const img = screen.getByRole('img')
     fireEvent.error(img)
     expect(screen.getByText('Error')).toBeInTheDocument()
   })
 
   it('does not render fallback when image loads successfully', () => {
-    render(
-      <Image
-        src="/photo.jpg"
-        alt="A photo"
-        fallback={<span>Error</span>}
-      />,
-    )
+    render(<Image src="/photo.jpg" alt="A photo" fallback={<span>Error</span>} />)
     expect(screen.queryByText('Error')).not.toBeInTheDocument()
   })
 

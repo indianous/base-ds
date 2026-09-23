@@ -4,11 +4,7 @@ import userEvent from '@testing-library/user-event'
 import { axe } from 'jest-axe'
 import { Carousel } from './Carousel'
 
-const slides = [
-  <div key="1">Slide 1</div>,
-  <div key="2">Slide 2</div>,
-  <div key="3">Slide 3</div>,
-]
+const slides = [<div key="1">Slide 1</div>, <div key="2">Slide 2</div>, <div key="3">Slide 3</div>]
 
 describe('Carousel', () => {
   it('renders the first slide by default', () => {

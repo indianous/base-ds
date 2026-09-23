@@ -11,7 +11,9 @@ type Story = StoryObj<typeof Icon>
 
 export const Default: Story = { args: { name: 'Search', size: 'md' } }
 export const Decorative: Story = { args: { name: 'Star', size: 'lg' } }
-export const Meaningful: Story = { args: { name: 'AlertCircle', size: 'md', 'aria-label': 'Warning' } }
+export const Meaningful: Story = {
+  args: { name: 'AlertCircle', size: 'md', 'aria-label': 'Warning' },
+}
 export const AllSizes: Story = {
   render: () => (
     <div className="flex items-center gap-4">

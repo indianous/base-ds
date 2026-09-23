@@ -83,10 +83,7 @@ export function Carousel({
               onClick={() => setCurrent(i)}
               aria-label={`Go to slide ${i + 1}`}
               aria-current={i === current ? 'true' : 'false'}
-              className={cn(
-                'w-2 h-2 rounded-full',
-                i === current ? 'bg-primary' : 'bg-muted',
-              )}
+              className={cn('w-2 h-2 rounded-full', i === current ? 'bg-primary' : 'bg-muted')}
             />
           ))}
         </div>

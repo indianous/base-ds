@@ -17,7 +17,7 @@ export interface SelectProps extends Omit<React.SelectHTMLAttributes<HTMLSelectE
 
 const stateClasses: Record<SelectState, string> = {
   default: 'border-input focus:ring-ring',
-  error:   'border-destructive focus:ring-destructive',
+  error: 'border-destructive focus:ring-destructive',
   success: 'border-success focus:ring-success',
 }
 

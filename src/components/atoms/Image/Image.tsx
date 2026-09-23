@@ -30,16 +30,12 @@ export function Image({
         ? 'aspect-video'
         : undefined
 
-  const aspectStyle =
-    aspectRatio === 'portrait' ? { aspectRatio: '3/4' } : undefined
+  const aspectStyle = aspectRatio === 'portrait' ? { aspectRatio: '3/4' } : undefined
 
   const fitClass = objectFit === 'contain' ? 'object-contain' : 'object-cover'
 
   return (
-    <div
-      className={cn('relative overflow-hidden', aspectClass, className)}
-      style={aspectStyle}
-    >
+    <div className={cn('relative overflow-hidden', aspectClass, className)} style={aspectStyle}>
       <img
         src={src}
         alt={alt}

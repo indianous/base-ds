@@ -55,7 +55,11 @@ describe('Footer', () => {
   it('renders social links with accessible labels', () => {
     const socialLinks = [
       { icon: <span data-testid="icon-github" />, href: 'https://github.com/x', label: 'GitHub' },
-      { icon: <span data-testid="icon-twitter" />, href: 'https://twitter.com/x', label: 'Twitter' },
+      {
+        icon: <span data-testid="icon-twitter" />,
+        href: 'https://twitter.com/x',
+        label: 'Twitter',
+      },
     ]
     render(<Footer socialLinks={socialLinks} />)
 

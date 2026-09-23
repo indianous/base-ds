@@ -10,11 +10,7 @@ export function PasswordInput({ className, ...props }: PasswordInputProps) {
 
   return (
     <div className={cn('relative w-full', className)}>
-      <Input
-        type={showPassword ? 'text' : 'password'}
-        className="pr-10"
-        {...props}
-      />
+      <Input type={showPassword ? 'text' : 'password'} className="pr-10" {...props} />
       <button
         type="button"
         aria-label={showPassword ? 'Hide password' : 'Show password'}

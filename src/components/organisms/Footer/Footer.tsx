@@ -24,12 +24,7 @@ export function Footer({ logo, columns, socialLinks, copyright, className }: Foo
   const year = new Date().getFullYear()
 
   return (
-    <footer
-      className={cn(
-        'border-t border-border bg-background px-4 py-8',
-        className,
-      )}
-    >
+    <footer className={cn('border-t border-border bg-background px-4 py-8', className)}>
       <div className="flex flex-col gap-8">
         {(logo !== undefined || (columns !== undefined && columns.length > 0)) && (
           <div className="grid grid-cols-1 gap-8 md:grid-cols-4">

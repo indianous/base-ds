@@ -11,8 +11,12 @@ export default meta
 type Story = StoryObj<typeof Radio>
 
 export const Default: Story = { args: { id: 'radio-a', value: 'a', label: 'Option A' } }
-export const Selected: Story = { args: { id: 'radio-b', value: 'b', label: 'Option B', checked: true, onChange: () => {} } }
-export const Disabled: Story = { args: { id: 'radio-c', value: 'c', label: 'Disabled option', disabled: true } }
+export const Selected: Story = {
+  args: { id: 'radio-b', value: 'b', label: 'Option B', checked: true, onChange: () => {} },
+}
+export const Disabled: Story = {
+  args: { id: 'radio-c', value: 'c', label: 'Disabled option', disabled: true },
+}
 export const RadioGroup: Story = {
   render: () => (
     <fieldset className="space-y-2">
