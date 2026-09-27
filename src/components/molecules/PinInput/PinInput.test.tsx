@@ -1,7 +1,8 @@
 import { describe, it, expect, vi } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { axe } from 'jest-axe'
+import { FormField } from '../FormField/FormField'
 import { PinInput } from './PinInput'
 
 describe('PinInput', () => {
@@ -88,6 +89,66 @@ describe('PinInput', () => {
     inputs.forEach((input) => {
       expect(input).toBeDisabled()
     })
+  })
+
+  it('uses groupLabel as the group aria-label', () => {
+    render(<PinInput groupLabel="Código de verificação" />)
+    expect(screen.getByRole('group', { name: 'Código de verificação' })).toBeInTheDocument()
+  })
+
+  it('uses digitLabel for each input aria-label', () => {
+    render(<PinInput length={6} digitLabel={(n) => `Dígito ${n}`} />)
+    const inputs = screen.getAllByRole('textbox')
+    inputs.forEach((input, i) => {
+      expect(input).toHaveAttribute('aria-label', `Dígito ${i + 1}`)
+    })
+  })
+
+  it('applies autoComplete only to the first input', () => {
+    render(<PinInput autoComplete="one-time-code" />)
+    const [first, ...rest] = screen.getAllByRole('textbox')
+    expect(first).toHaveAttribute('autocomplete', 'one-time-code')
+    rest.forEach((input) => expect(input).not.toHaveAttribute('autocomplete'))
+  })
+
+  it('applies id only to the first input', () => {
+    const { container } = render(<PinInput id="mfa-code" />)
+    expect(container.querySelectorAll('#mfa-code')).toHaveLength(1)
+    expect(screen.getAllByRole('textbox')[0]).toHaveAttribute('id', 'mfa-code')
+  })
+
+  it('forwards aria-describedby and aria-invalid to every input', () => {
+    render(<PinInput aria-describedby="code-error" aria-invalid="true" />)
+    screen.getAllByRole('textbox').forEach((input) => {
+      expect(input).toHaveAttribute('aria-describedby', 'code-error')
+      expect(input).toHaveAttribute('aria-invalid', 'true')
+    })
+  })
+
+  it('distributes a multi-digit value set on an empty input (autofill)', () => {
+    const onComplete = vi.fn()
+    render(<PinInput length={6} autoComplete="one-time-code" onComplete={onComplete} />)
+    const inputs = screen.getAllByRole('textbox') as HTMLInputElement[]
+    fireEvent.change(inputs[0]!, { target: { value: '123456' } })
+    expect(inputs.map((input) => input.value)).toEqual(['1', '2', '3', '4', '5', '6'])
+    expect(onComplete).toHaveBeenCalledWith('123456')
+  })
+
+  it('integrates with FormField: label focuses the first input and error is linked', async () => {
+    const user = userEvent.setup()
+    const { container } = render(
+      <FormField label="Código" id="mfa-code" error="Código inválido">
+        <PinInput groupLabel="Código" />
+      </FormField>,
+    )
+    await user.click(screen.getByText('Código', { selector: 'label' }))
+    const inputs = screen.getAllByRole('textbox')
+    expect(document.activeElement).toBe(inputs[0])
+    inputs.forEach((input) => {
+      expect(input).toHaveAttribute('aria-describedby', 'mfa-code-error')
+      expect(input).toHaveAttribute('aria-invalid', 'true')
+    })
+    expect(await axe(container)).toHaveNoViolations()
   })
 
   it('has no accessibility violations', async () => {

@@ -6,6 +6,31 @@ Todas as mudanças relevantes do base-ds são registradas aqui. O formato segue 
 mudança que exige ajuste nos apps sobe o _minor_ (`0.1.0 → 0.2.0`); correções e componentes
 novos sem impacto sobem o _patch_.
 
+## [0.4.4] - 2026-09-26
+
+### Adicionado
+
+- `PinInput`: props para uso em apps localizados e em formulários
+  ([#48](https://github.com/indianous/base-ds/issues/48)).
+  - `groupLabel` e `digitLabel(n)` definem o `aria-label` do grupo e de cada campo (padrões
+    `'PIN input'` e `` n => `PIN digit ${n}` ``).
+  - `autoComplete`, aplicado só no primeiro campo. Com `autoComplete="one-time-code"`, o sistema e
+    os gerenciadores de senha oferecem o preenchimento automático do código.
+  - `id`, aplicado só no primeiro campo, e `aria-describedby`/`aria-invalid`, repassados a todos os
+    campos. Dentro de um `FormField`, clicar no rótulo foca o primeiro dígito, e o erro fica
+    associado aos campos.
+
+### Corrigido
+
+- `PinInput`: um código inteiro preenchido de uma vez no primeiro campo (preenchimento automático)
+  passa a ser distribuído entre os campos, em vez de ficar só o último dígito.
+
+### Ajustes necessários nos apps
+
+- Nenhum é obrigatório. Os apps podem passar os rótulos em português e
+  `autoComplete="one-time-code"`. Dentro de um `FormField`, passe como `groupLabel` o mesmo texto do
+  rótulo: o nome de cada campo vem do `digitLabel`, que tem prioridade sobre o `<label>`.
+
 ## [0.4.3] - 2026-09-26
 
 ### Adicionado
@@ -154,6 +179,7 @@ publicação ([#41](https://github.com/indianous/base-ds/issues/41)).
 - Versão inicial: todos os componentes, tokens e o suporte a Tailwind v4 entregues até a
   [#37](https://github.com/indianous/base-ds/issues/37).
 
+[0.4.4]: https://github.com/indianous/base-ds/compare/v0.4.3...v0.4.4
 [0.4.3]: https://github.com/indianous/base-ds/compare/v0.4.2...v0.4.3
 [0.4.2]: https://github.com/indianous/base-ds/compare/v0.4.1...v0.4.2
 [0.4.1]: https://github.com/indianous/base-ds/compare/v0.4.0...v0.4.1

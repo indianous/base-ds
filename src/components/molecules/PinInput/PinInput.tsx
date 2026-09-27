@@ -9,7 +9,19 @@ export interface PinInputProps {
   disabled?: boolean
   mask?: boolean
   className?: string
+  /** `aria-label` of the group. */
+  groupLabel?: string
+  /** `aria-label` of each input, from its 1-based position. */
+  digitLabel?: (n: number) => string
+  /** Applied to the first input only, e.g. `'one-time-code'`. */
+  autoComplete?: string
+  /** `id` of the first input, so a `FormField` label points to it. */
+  id?: string
+  'aria-describedby'?: string
+  'aria-invalid'?: boolean | 'true' | 'false'
 }
+
+const defaultDigitLabel = (n: number) => `PIN digit ${n}`
 
 export function PinInput({
   length = 4,
@@ -19,6 +31,12 @@ export function PinInput({
   disabled = false,
   mask = false,
   className,
+  groupLabel = 'PIN input',
+  digitLabel = defaultDigitLabel,
+  autoComplete,
+  id,
+  'aria-describedby': ariaDescribedBy,
+  'aria-invalid': ariaInvalid,
 }: PinInputProps) {
   const [values, setValues] = useState<string[]>(() => {
     if (value !== undefined) {
@@ -46,10 +64,39 @@ export function PinInput({
     }
   }
 
+  // Fills consecutive slots from `index` with `digits` (paste or autofill)
+  const fillFrom = (index: number, digits: string) => {
+    const next = [...values]
+    let lastFilled = index
+    for (let i = 0; i < digits.length && index + i < length; i++) {
+      next[index + i] = digits[i] ?? ''
+      lastFilled = index + i
+    }
+    setValues(next)
+
+    const joined = next.join('')
+    onChange?.(joined)
+
+    if (next.every((v) => v !== '')) {
+      onComplete?.(joined)
+    }
+
+    // Focus the slot after the last filled, or the last slot
+    const focusTarget = Math.min(lastFilled + 1, length - 1)
+    focusInput(focusTarget)
+  }
+
   const handleChange = (index: number, e: ChangeEvent<HTMLInputElement>) => {
-    const raw = e.target.value
-    // Accept only alphanumeric — use the last character typed
-    const char = raw.replace(/[^0-9]/g, '').slice(-1)
+    const digits = e.target.value.replace(/[^0-9]/g, '')
+
+    // A whole code set at once on an empty slot (autofill) is spread across the slots
+    if (digits.length > 1 && values[index] === '') {
+      fillFrom(index, digits)
+      return
+    }
+
+    // Otherwise keep only the last digit typed
+    const char = digits.slice(-1)
 
     const next = [...values]
     next[index] = char
@@ -95,29 +142,11 @@ export function PinInput({
     e.preventDefault()
     const pasted = e.clipboardData.getData('text').replace(/[^0-9]/g, '')
     if (!pasted) return
-
-    const next = [...values]
-    let lastFilled = index
-    for (let i = 0; i < pasted.length && index + i < length; i++) {
-      next[index + i] = pasted[i] ?? ''
-      lastFilled = index + i
-    }
-    setValues(next)
-
-    const joined = next.join('')
-    onChange?.(joined)
-
-    if (next.every((v) => v !== '')) {
-      onComplete?.(joined)
-    }
-
-    // Focus the slot after the last filled, or the last slot
-    const focusTarget = Math.min(lastFilled + 1, length - 1)
-    focusInput(focusTarget)
+    fillFrom(index, pasted)
   }
 
   return (
-    <div role="group" aria-label="PIN input" className={cn('flex flex-row gap-2', className)}>
+    <div role="group" aria-label={groupLabel} className={cn('flex flex-row gap-2', className)}>
       {Array.from({ length }, (_, i) => (
         <input
           key={i}
@@ -126,10 +155,14 @@ export function PinInput({
           }}
           type={mask ? 'password' : 'text'}
           inputMode="numeric"
-          maxLength={1}
+          maxLength={i === 0 && autoComplete ? length : 1}
           value={values[i]}
           disabled={disabled}
-          aria-label={`PIN digit ${i + 1}`}
+          id={i === 0 ? id : undefined}
+          autoComplete={i === 0 ? autoComplete : undefined}
+          aria-label={digitLabel(i + 1)}
+          aria-describedby={ariaDescribedBy}
+          aria-invalid={ariaInvalid}
           onChange={(e) => handleChange(i, e)}
           onKeyDown={(e) => handleKeyDown(i, e)}
           onPaste={(e) => handlePaste(i, e)}
