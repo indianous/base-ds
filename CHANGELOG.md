@@ -6,6 +6,21 @@ Todas as mudanças relevantes do base-ds são registradas aqui. O formato segue 
 mudança que exige ajuste nos apps sobe o _minor_ (`0.1.0 → 0.2.0`); correções e componentes
 novos sem impacto sobem o _patch_.
 
+## [0.4.3] - 2026-09-26
+
+### Adicionado
+
+- `PasswordInput`: props `showLabel` e `hideLabel` para o `aria-label` do botão de mostrar/ocultar a
+  senha, com os padrões `'Show password'` e `'Hide password'`
+  ([#47](https://github.com/indianous/base-ds/issues/47)). O tipo `PasswordInputProps` passa a ser
+  exportado.
+
+### Ajustes necessários nos apps
+
+- Nenhum é obrigatório. Os apps podem passar os rótulos em português
+  (`showLabel="Mostrar senha" hideLabel="Ocultar senha"`) e trocar nos testes a busca por
+  `/show password/i`.
+
 ## [0.4.2] - 2026-09-23
 
 ### Adicionado
@@ -139,6 +154,7 @@ publicação ([#41](https://github.com/indianous/base-ds/issues/41)).
 - Versão inicial: todos os componentes, tokens e o suporte a Tailwind v4 entregues até a
   [#37](https://github.com/indianous/base-ds/issues/37).
 
+[0.4.3]: https://github.com/indianous/base-ds/compare/v0.4.2...v0.4.3
 [0.4.2]: https://github.com/indianous/base-ds/compare/v0.4.1...v0.4.2
 [0.4.1]: https://github.com/indianous/base-ds/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/indianous/base-ds/compare/v0.3.0...v0.4.0

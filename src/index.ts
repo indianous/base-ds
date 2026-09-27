@@ -89,6 +89,7 @@ export { NumberInput } from './components/molecules/NumberInput/NumberInput'
 export { Pagination } from './components/molecules/Pagination/Pagination'
 
 export { PasswordInput } from './components/molecules/PasswordInput/PasswordInput'
+export type { PasswordInputProps } from './components/molecules/PasswordInput/PasswordInput'
 
 export { PinInput } from './components/molecules/PinInput/PinInput'
 export type { PinInputProps } from './components/molecules/PinInput/PinInput'

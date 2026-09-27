@@ -22,3 +22,13 @@ export const WithError: Story = {
 export const Disabled: Story = {
   args: { id: 'pwd-dis', placeholder: 'Disabled', disabled: true },
 }
+
+export const CustomLabels: Story = {
+  args: {
+    id: 'pwd-pt',
+    'aria-label': 'Senha',
+    placeholder: 'Digite sua senha',
+    showLabel: 'Mostrar senha',
+    hideLabel: 'Ocultar senha',
+  },
+}

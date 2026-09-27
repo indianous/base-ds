@@ -50,6 +50,27 @@ describe('PasswordInput', () => {
     expect(screen.getByRole('button')).toHaveAttribute('aria-label', 'Show password')
   })
 
+  it('uses showLabel as the toggle aria-label while the password is hidden', () => {
+    render(<PasswordInput id="pwd" showLabel="Mostrar senha" />)
+    expect(screen.getByRole('button', { name: 'Mostrar senha' })).toBeInTheDocument()
+  })
+
+  it('uses hideLabel as the toggle aria-label while the password is visible', async () => {
+    const user = userEvent.setup()
+    render(<PasswordInput id="pwd" hideLabel="Ocultar senha" />)
+    await user.click(screen.getByRole('button'))
+    expect(screen.getByRole('button', { name: 'Ocultar senha' })).toBeInTheDocument()
+  })
+
+  it('does not forward showLabel/hideLabel to the input', () => {
+    const { container } = render(
+      <PasswordInput id="pwd" showLabel="Mostrar senha" hideLabel="Ocultar senha" />,
+    )
+    const input = container.querySelector('input')
+    expect(input).not.toHaveAttribute('showlabel')
+    expect(input).not.toHaveAttribute('hidelabel')
+  })
+
   it('forwards placeholder to input', () => {
     render(<PasswordInput id="pwd" placeholder="Enter your password" />)
     expect(screen.getByPlaceholderText('Enter your password')).toBeInTheDocument()
