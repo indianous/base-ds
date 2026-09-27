@@ -169,7 +169,7 @@ export type {
 } from './components/organisms/ImageGallery/ImageGallery'
 
 export { Navbar } from './components/organisms/Navbar/Navbar'
-export type { NavbarProps, NavItem } from './components/organisms/Navbar/Navbar'
+export type { NavbarLogoAlign, NavbarProps, NavItem } from './components/organisms/Navbar/Navbar'
 
 export { Sidebar } from './components/organisms/Sidebar/Sidebar'
 

@@ -169,3 +169,23 @@ export const MobileActionsDrawer: Story = {
     </div>
   ),
 }
+
+export const CenteredLogo: Story = {
+  args: {
+    logo,
+    logoAlign: 'center',
+  },
+}
+
+export const CenteredLogoWithItems: Story = {
+  args: {
+    logo,
+    items,
+    actions: [
+      <Button key="sign-in" size="sm">
+        Sign in
+      </Button>,
+    ],
+    logoAlign: 'center',
+  },
+}

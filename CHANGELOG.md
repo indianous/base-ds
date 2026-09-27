@@ -6,6 +6,20 @@ Todas as mudanças relevantes do base-ds são registradas aqui. O formato segue 
 mudança que exige ajuste nos apps sobe o _minor_ (`0.1.0 → 0.2.0`); correções e componentes
 novos sem impacto sobem o _patch_.
 
+## [0.4.6] - 2026-09-26
+
+### Adicionado
+
+- `Navbar`: prop `logoAlign` (`'start'`, o padrão, ou `'center'`) para a posição do logo a partir de
+  `md` ([#50](https://github.com/indianous/base-ds/issues/50)). Com `'center'`, o logo fica no
+  centro da barra em todas as larguras. Se houver itens ou busca, eles vão para a coluna da esquerda
+  a partir de `md`, e as ações continuam à direita. O tipo `NavbarLogoAlign` passa a ser exportado.
+
+### Ajustes necessários nos apps
+
+- Nenhum é obrigatório. Nas telas de conta, o `<header>` nativo usado como workaround pode voltar a
+  ser `<Navbar logo={…} logoAlign="center" />`.
+
 ## [0.4.5] - 2026-09-26
 
 ### Adicionado
@@ -194,6 +208,7 @@ publicação ([#41](https://github.com/indianous/base-ds/issues/41)).
 - Versão inicial: todos os componentes, tokens e o suporte a Tailwind v4 entregues até a
   [#37](https://github.com/indianous/base-ds/issues/37).
 
+[0.4.6]: https://github.com/indianous/base-ds/compare/v0.4.5...v0.4.6
 [0.4.5]: https://github.com/indianous/base-ds/compare/v0.4.4...v0.4.5
 [0.4.4]: https://github.com/indianous/base-ds/compare/v0.4.3...v0.4.4
 [0.4.3]: https://github.com/indianous/base-ds/compare/v0.4.2...v0.4.3

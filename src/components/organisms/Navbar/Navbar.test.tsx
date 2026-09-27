@@ -301,3 +301,52 @@ describe('Navbar', () => {
     })
   })
 })
+
+describe('Navbar logoAlign', () => {
+  const items: NavItem[] = [
+    { label: 'Home', href: '/' },
+    { label: 'About', href: '/about' },
+  ]
+  // The logo is wrapped in a flex-shrink-0 div inside its layout cell
+  const getLogoCell = () => screen.getByTestId('logo').parentElement!.parentElement!
+
+  it('keeps the logo on the left from md by default (logoAlign="start")', () => {
+    render(<Navbar logo={<span data-testid="logo">Brand</span>} items={items} />)
+    expect(getLogoCell()).toHaveClass('justify-center', 'md:justify-start')
+    const logo = screen.getByTestId('logo')
+    const firstItem = screen.getByRole('link', { name: 'Home' })
+    expect(logo.compareDocumentPosition(firstItem) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+  })
+
+  it('centers the logo at every width when logoAlign="center"', () => {
+    render(<Navbar logo={<span data-testid="logo">Brand</span>} logoAlign="center" />)
+    expect(getLogoCell()).toHaveClass('justify-center')
+    expect(getLogoCell()).not.toHaveClass('md:justify-start')
+  })
+
+  it('places nav items before the logo in DOM order when logoAlign="center"', () => {
+    render(<Navbar logo={<span data-testid="logo">Brand</span>} items={items} logoAlign="center" />)
+    const logo = screen.getByTestId('logo')
+    const firstItem = screen.getByRole('link', { name: 'Home' })
+    expect(firstItem.compareDocumentPosition(logo) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+  })
+
+  it('keeps the mobile toggle before the logo when logoAlign="center"', () => {
+    render(<Navbar logo={<span data-testid="logo">Brand</span>} items={items} logoAlign="center" />)
+    const toggle = screen.getByRole('button', { name: /open navigation menu/i })
+    const logo = screen.getByTestId('logo')
+    expect(toggle.compareDocumentPosition(logo) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+  })
+
+  it('has no accessibility violations with logoAlign="center"', async () => {
+    const { container } = render(
+      <Navbar
+        logo={<span>Brand</span>}
+        items={items}
+        actions={[<button key="login">Login</button>]}
+        logoAlign="center"
+      />,
+    )
+    expect(await axe(container)).toHaveNoViolations()
+  })
+})

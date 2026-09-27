@@ -10,6 +10,8 @@ export type NavItem =
   | { type?: 'link'; label: string; href?: string; active?: boolean; onClick?: () => void }
   | { type: 'dropdown'; label: string; items: DropdownMenuItem[] }
 
+export type NavbarLogoAlign = 'start' | 'center'
+
 export interface NavbarProps {
   logo?: ReactNode
   items?: NavItem[]
@@ -17,6 +19,18 @@ export interface NavbarProps {
   search?: ReactNode
   sticky?: boolean
   className?: string
+  /** Logo position from `md` up. On mobile the logo is always centered. */
+  logoAlign?: NavbarLogoAlign
+}
+
+const logoCellClasses: Record<NavbarLogoAlign, string> = {
+  start: 'justify-center md:justify-start',
+  center: 'justify-center',
+}
+
+const middleCellClasses: Record<NavbarLogoAlign, string> = {
+  start: 'justify-center',
+  center: 'justify-start',
 }
 
 const linkBaseClasses =
@@ -120,7 +134,15 @@ function MobileNavItem({ item }: { item: NavItem }) {
   )
 }
 
-export function Navbar({ logo, items, actions, search, sticky, className }: NavbarProps) {
+export function Navbar({
+  logo,
+  items,
+  actions,
+  search,
+  sticky,
+  className,
+  logoAlign = 'start',
+}: NavbarProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isActionsDrawerOpen, setIsActionsDrawerOpen] = useState(false)
 
@@ -128,6 +150,30 @@ export function Navbar({ logo, items, actions, search, sticky, className }: Navb
   const hasSearch = search !== undefined
   const showMobileToggle = hasItems || hasSearch
   const hasMultipleActions = actions !== undefined && actions.length > 1
+
+  const logoCell = (
+    <div className={cn('flex flex-1 items-center', logoCellClasses[logoAlign])}>
+      {logo !== undefined && <div className="flex-shrink-0">{logo}</div>}
+    </div>
+  )
+
+  const middleCell = (
+    <div className={cn('hidden flex-1 md:flex items-center', middleCellClasses[logoAlign])}>
+      {hasSearch ? (
+        <div className="w-full max-w-md flex justify-center">{search}</div>
+      ) : (
+        hasItems && (
+          <ul className="flex items-center gap-1">
+            {items!.map((item, index) => (
+              <li key={index}>
+                <DesktopNavItem item={item} />
+              </li>
+            ))}
+          </ul>
+        )
+      )}
+    </div>
+  )
 
   return (
     <header className={cn(sticky && 'sticky top-0 z-50', className)}>
@@ -141,6 +187,10 @@ export function Navbar({ logo, items, actions, search, sticky, className }: Navb
           Each breakpoint hides a different slot (`hidden md:flex` / `flex md:hidden`), so the
           visible 3 columns per breakpoint land in the right order without needing `order-*`:
           mobile -> toggle, logo, actions · desktop -> logo, search/items, actions.
+          With logoAlign="center" the logo and search/items slots swap in the DOM, so from md the
+          logo takes the middle column (desktop -> search/items, logo, actions) while mobile is
+          unchanged (search/items is hidden there). Swapping in the DOM rather than with `order-*`
+          keeps keyboard focus order matching the visual order.
         */}
         <div className="flex items-center gap-4 px-4 h-14">
           <div className="flex flex-1 md:hidden items-center justify-start">
@@ -156,25 +206,17 @@ export function Navbar({ logo, items, actions, search, sticky, className }: Navb
             )}
           </div>
 
-          <div className="flex flex-1 items-center justify-center md:justify-start">
-            {logo !== undefined && <div className="flex-shrink-0">{logo}</div>}
-          </div>
-
-          <div className="hidden flex-1 md:flex items-center justify-center">
-            {hasSearch ? (
-              <div className="w-full max-w-md flex justify-center">{search}</div>
-            ) : (
-              hasItems && (
-                <ul className="flex items-center gap-1">
-                  {items!.map((item, index) => (
-                    <li key={index}>
-                      <DesktopNavItem item={item} />
-                    </li>
-                  ))}
-                </ul>
-              )
-            )}
-          </div>
+          {logoAlign === 'center' ? (
+            <>
+              {middleCell}
+              {logoCell}
+            </>
+          ) : (
+            <>
+              {logoCell}
+              {middleCell}
+            </>
+          )}
 
           <div className="flex flex-1 items-center justify-end gap-2">
             <div className="hidden md:flex items-center gap-2">
