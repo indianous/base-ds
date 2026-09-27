@@ -91,6 +91,40 @@ describe('Carousel', () => {
     expect(screen.getByRole('region', { name: 'Carousel' })).toBeInTheDocument()
   })
 
+  it('uses label as the region aria-label', () => {
+    render(<Carousel items={slides} label="Produtos relacionados" />)
+    expect(screen.getByRole('region', { name: 'Produtos relacionados' })).toBeInTheDocument()
+  })
+
+  it('uses slideLabel and slideRoleDescription on each slide', () => {
+    render(
+      <Carousel
+        items={slides}
+        slideLabel={(n, total) => `Página ${n} de ${total}`}
+        slideRoleDescription="página"
+      />,
+    )
+    const firstSlide = screen.getByText('Slide 1').closest('[role="group"]')
+    expect(firstSlide).toHaveAttribute('aria-label', 'Página 1 de 3')
+    expect(firstSlide).toHaveAttribute('aria-roledescription', 'página')
+  })
+
+  it('uses previousLabel and nextLabel on the arrows', async () => {
+    const user = userEvent.setup()
+    render(<Carousel items={slides} previousLabel="Anterior" nextLabel="Próxima" />)
+    await user.click(screen.getByRole('button', { name: 'Próxima' }))
+    expect(screen.getByText('Slide 2').closest('[role="group"]')).not.toHaveClass('hidden')
+    await user.click(screen.getByRole('button', { name: 'Anterior' }))
+    expect(screen.getByText('Slide 1').closest('[role="group"]')).not.toHaveClass('hidden')
+  })
+
+  it('uses dotLabel on each dot', async () => {
+    const user = userEvent.setup()
+    render(<Carousel items={slides} dotLabel={(n) => `Ir para a página ${n}`} />)
+    await user.click(screen.getByRole('button', { name: 'Ir para a página 2' }))
+    expect(screen.getByText('Slide 2').closest('[role="group"]')).not.toHaveClass('hidden')
+  })
+
   it('has no accessibility violations (jest-axe)', async () => {
     const { container } = render(<Carousel items={slides} />)
     const results = await axe(container)

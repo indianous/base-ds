@@ -118,6 +118,7 @@ export type { TooltipProps } from './components/molecules/Tooltip/Tooltip'
 export { Card } from './components/organisms/Card/Card'
 
 export { Carousel } from './components/organisms/Carousel/Carousel'
+export type { CarouselProps } from './components/organisms/Carousel/Carousel'
 
 export { ConversationList } from './components/organisms/ConversationList/ConversationList'
 export type {

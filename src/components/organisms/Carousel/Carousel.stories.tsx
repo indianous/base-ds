@@ -37,3 +37,15 @@ export const WithoutDots: Story = {
 export const WithoutArrows: Story = {
   args: { items: slides, showArrows: false },
 }
+
+export const CustomLabels: Story = {
+  args: {
+    items: slides,
+    label: 'Produtos relacionados',
+    slideLabel: (n, total) => `Página ${n} de ${total}`,
+    slideRoleDescription: 'página',
+    previousLabel: 'Anterior',
+    nextLabel: 'Próxima',
+    dotLabel: (n) => `Ir para a página ${n}`,
+  },
+}

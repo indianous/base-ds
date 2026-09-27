@@ -4,13 +4,28 @@ import { cn } from '../../../utils/cn'
 import { Button } from '../../atoms/Button/Button'
 import { Icon } from '../../atoms/Icon/Icon'
 
-interface CarouselProps {
+export interface CarouselProps {
   items: ReactNode[]
   showArrows?: boolean
   showDots?: boolean
   loop?: boolean
   className?: string
+  /** `aria-label` of the region. */
+  label?: string
+  /** `aria-label` of each slide, from its 1-based position and the slide count. */
+  slideLabel?: (n: number, total: number) => string
+  /** `aria-roledescription` of each slide, read out by screen readers. */
+  slideRoleDescription?: string
+  /** `aria-label` of the previous arrow. */
+  previousLabel?: string
+  /** `aria-label` of the next arrow. */
+  nextLabel?: string
+  /** `aria-label` of each dot, from its 1-based position. */
+  dotLabel?: (n: number) => string
 }
+
+const defaultSlideLabel = (n: number, total: number) => `Slide ${n} of ${total}`
+const defaultDotLabel = (n: number) => `Go to slide ${n}`
 
 export function Carousel({
   items,
@@ -18,6 +33,12 @@ export function Carousel({
   showDots = true,
   loop = false,
   className,
+  label = 'Carousel',
+  slideLabel = defaultSlideLabel,
+  slideRoleDescription = 'slide',
+  previousLabel = 'Previous slide',
+  nextLabel = 'Next slide',
+  dotLabel = defaultDotLabel,
 }: CarouselProps) {
   const [current, setCurrent] = useState(0)
 
@@ -38,14 +59,14 @@ export function Carousel({
   }
 
   return (
-    <div role="region" aria-label="Carousel" className={cn('relative overflow-hidden', className)}>
+    <div role="region" aria-label={label} className={cn('relative overflow-hidden', className)}>
       <div>
         {items.map((item, i) => (
           <div
             key={i}
             role="group"
-            aria-roledescription="slide"
-            aria-label={`Slide ${i + 1} of ${items.length}`}
+            aria-roledescription={slideRoleDescription}
+            aria-label={slideLabel(i + 1, items.length)}
             className={cn(i !== current && 'hidden')}
           >
             {item}
@@ -61,7 +82,7 @@ export function Carousel({
             leftIcon={<Icon name="ChevronLeft" />}
             onClick={prev}
             disabled={!loop && current === 0}
-            aria-label="Previous slide"
+            aria-label={previousLabel}
           />
           <Button
             variant="ghost"
@@ -69,7 +90,7 @@ export function Carousel({
             leftIcon={<Icon name="ChevronRight" />}
             onClick={next}
             disabled={!loop && current === items.length - 1}
-            aria-label="Next slide"
+            aria-label={nextLabel}
           />
         </div>
       )}
@@ -81,7 +102,7 @@ export function Carousel({
               key={i}
               type="button"
               onClick={() => setCurrent(i)}
-              aria-label={`Go to slide ${i + 1}`}
+              aria-label={dotLabel(i + 1)}
               aria-current={i === current ? 'true' : 'false'}
               className={cn('w-2 h-2 rounded-full', i === current ? 'bg-primary' : 'bg-muted')}
             />
