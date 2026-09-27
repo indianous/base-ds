@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { axe } from 'jest-axe'
 import { FormField } from './FormField'
+import type { FormFieldProps } from './FormField'
 
 describe('FormField', () => {
   it('renders the label text', () => {
@@ -112,6 +113,30 @@ describe('FormField', () => {
       </FormField>,
     )
     expect(screen.getByRole('textbox')).toHaveAttribute('aria-describedby', 'email-error')
+  })
+
+  it('child aria-describedby points only to the error when both hint and error are provided', () => {
+    render(
+      <FormField label="Email" id="email" hint="Enter your email" error="Required">
+        <input type="text" />
+      </FormField>,
+    )
+    expect(screen.getByRole('textbox')).toHaveAttribute('aria-describedby', 'email-error')
+  })
+
+  it.each<Pick<FormFieldProps, 'hint' | 'error'>>([
+    {},
+    { hint: 'Enter your email' },
+    { error: 'Required' },
+    { hint: 'Enter your email', error: 'Required' },
+  ])('every id in aria-describedby refers to an element in the DOM (%o)', (props) => {
+    render(
+      <FormField label="Email" id="email" {...props}>
+        <input type="text" />
+      </FormField>,
+    )
+    const ids = screen.getByRole('textbox').getAttribute('aria-describedby')?.split(' ') ?? []
+    ids.forEach((id) => expect(document.getElementById(id)).toBeInTheDocument())
   })
 
   it('child receives aria-invalid="true" when error is provided', () => {

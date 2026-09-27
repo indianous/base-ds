@@ -134,10 +134,15 @@ describe('PinInput', () => {
     expect(onComplete).toHaveBeenCalledWith('123456')
   })
 
-  it('integrates with FormField: label focuses the first input and error is linked', async () => {
+  it('integrates with FormField: label focuses the first input and hint/error are linked', async () => {
     const user = userEvent.setup()
     const { container } = render(
-      <FormField label="Código" id="mfa-code" error="Código inválido">
+      <FormField
+        label="Código"
+        id="mfa-code"
+        hint="Veja o app autenticador"
+        error="Código inválido"
+      >
         <PinInput groupLabel="Código" />
       </FormField>,
     )

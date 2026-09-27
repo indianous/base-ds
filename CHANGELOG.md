@@ -6,6 +6,19 @@ Todas as mudanças relevantes do base-ds são registradas aqui. O formato segue 
 mudança que exige ajuste nos apps sobe o _minor_ (`0.1.0 → 0.2.0`); correções e componentes
 novos sem impacto sobem o _patch_.
 
+## [0.4.7] - 2026-09-26
+
+### Corrigido
+
+- `FormField`: com `hint` e `error` ao mesmo tempo, o `aria-describedby` do controle apontava
+  também para a dica, que não é renderizada nesse caso. Agora aponta só para o erro
+  ([#51](https://github.com/indianous/base-ds/issues/51)).
+
+### Ajustes necessários nos apps
+
+- Nenhum. Só muda algo para um teste de app que esperava `"<id>-hint <id>-error"` no
+  `aria-describedby`.
+
 ## [0.4.6] - 2026-09-26
 
 ### Adicionado
@@ -208,6 +221,7 @@ publicação ([#41](https://github.com/indianous/base-ds/issues/41)).
 - Versão inicial: todos os componentes, tokens e o suporte a Tailwind v4 entregues até a
   [#37](https://github.com/indianous/base-ds/issues/37).
 
+[0.4.7]: https://github.com/indianous/base-ds/compare/v0.4.6...v0.4.7
 [0.4.6]: https://github.com/indianous/base-ds/compare/v0.4.5...v0.4.6
 [0.4.5]: https://github.com/indianous/base-ds/compare/v0.4.4...v0.4.5
 [0.4.4]: https://github.com/indianous/base-ds/compare/v0.4.3...v0.4.4

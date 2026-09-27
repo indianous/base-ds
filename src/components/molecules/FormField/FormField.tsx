@@ -21,7 +21,10 @@ export function FormField({
   className,
   children,
 }: FormFieldProps) {
-  const hintId = hint ? `${id}-hint` : undefined
+  // The hint is hidden while an error is shown, so it only gets an id (and is only referenced by
+  // aria-describedby) when it is actually rendered
+  const showHint = Boolean(hint) && !error
+  const hintId = showHint ? `${id}-hint` : undefined
   const errorId = error ? `${id}-error` : undefined
 
   return (
@@ -44,7 +47,7 @@ export function FormField({
       })}
 
       {/* Hint — hidden when error is present */}
-      {hint && !error && (
+      {showHint && (
         <Text id={hintId} as="span" size="xs" color="muted">
           {hint}
         </Text>

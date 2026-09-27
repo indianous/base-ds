@@ -40,6 +40,19 @@ export const WithError: Story = {
   ),
 }
 
+export const WithHintAndError: Story = {
+  render: () => (
+    <FormField
+      label="Password"
+      id="password-hint-error"
+      hint="At least 8 characters"
+      error="Password must be at least 8 characters"
+    >
+      <Input id="password-hint-error" type="password" state="error" />
+    </FormField>
+  ),
+}
+
 export const Required: Story = {
   render: () => (
     <FormField label="Full name" id="fullname" required>
