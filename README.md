@@ -32,16 +32,19 @@ exige autenticação para instalar, então cada app precisa de um token.
    //npm.pkg.github.com/:_authToken=${GITHUB_PACKAGES_TOKEN}
    ```
 
-3. **Dependência com alias**, para o pacote continuar em `node_modules/base-ds` e os imports
-   `from 'base-ds'` / `'base-ds/styles'` não mudarem:
+3. **Dependência**, pelo nome com escopo:
 
    ```sh
-   npm install base-ds@npm:@indianous/base-ds@^0.3.0
+   npm install @indianous/base-ds@^0.4.7
    ```
 
-   O `package.json` do app fica com `"base-ds": "npm:@indianous/base-ds@^0.3.0"`.
+   O `package.json` do app fica com `"@indianous/base-ds": "^0.4.7"`, e os imports são
+   `from '@indianous/base-ds'`. Não use um alias do npm (`"base-ds": "npm:@indianous/base-ds@…"`):
+   o Dependabot não o resolve e deixa de propor atualizações
+   ([issue #44](https://github.com/indianous/base-ds/issues/44)).
 
-> **Não instale pelo diretório** (`npm install ../base-ds` ou `"base-ds": "file:../base-ds"`).
+> **Não instale pelo diretório** (`npm install ../base-ds` ou
+> `"@indianous/base-ds": "file:../base-ds"`).
 > Isso cria um symlink para este repositório, e o código do base-ds (e o `lucide-react` que ele
 > usa) passa a carregar o React de `base-ds/node_modules` — a cópia de desenvolvimento — em vez
 > do React do app. Com duas instâncias de React carregadas, qualquer componente com hooks quebra
@@ -51,23 +54,64 @@ exige autenticação para instalar, então cada app precisa de um token.
 
 O CSS dos tokens é importado à parte, uma vez, no CSS global do app:
 
-- Tailwind v3: `@import 'base-ds/styles';`
-- Tailwind v4: `@import 'base-ds/styles/v4';` (inclui o bloco `@theme` que gera os utilitários
+- Tailwind v3: `@import '@indianous/base-ds/styles';`
+- Tailwind v4: `@import '@indianous/base-ds/styles/v4';` (inclui o bloco `@theme` que gera os utilitários
   `bg-primary`, `text-muted-foreground` etc.)
 
 ## Atualizando
 
-1. No app, `npm outdated base-ds` mostra a versão instalada e a mais recente publicada.
+1. No app, `npm outdated @indianous/base-ds` mostra a versão instalada e a mais recente publicada.
 2. Leia o [CHANGELOG no GitHub](https://github.com/indianous/base-ds/blob/main/CHANGELOG.md)
    das versões entre as duas — em especial a seção **"Ajustes necessários nos apps"**. (A cópia
-   em `node_modules/base-ds/CHANGELOG.md` é a da versão instalada, ainda sem as novidades.)
+   em `node_modules/@indianous/base-ds/CHANGELOG.md` é a da versão instalada, ainda sem as novidades.)
 3. Atualize:
-   - dentro da mesma série (`0.3.x`, correções e componentes novos): `npm update base-ds`;
-   - para uma série nova (`0.3.x → 0.4.0`, que pede ajustes no app):
-     `npm install base-ds@npm:@indianous/base-ds@^0.4.0`.
+   - dentro da mesma série (`0.4.x`, correções e componentes novos):
+     `npm update @indianous/base-ds`;
+   - para uma série nova (`0.4.x → 0.5.0`, que pede ajustes no app):
+     `npm install @indianous/base-ds@^0.5.0`.
 
 Enquanto a versão for `0.x`, o `^` do npm só aceita atualizações de _patch_ — uma versão que
 exige ajuste no app nunca entra sozinha por `npm update`.
+
+### Dependabot
+
+Para receber um PR a cada versão nova, crie `.github/dependabot.yml` no app:
+
+```yaml
+version: 2
+registries:
+  github-packages:
+    type: npm-registry
+    url: https://npm.pkg.github.com
+    token: ${{ secrets.GH_PACKAGES_TOKEN }}
+updates:
+  - package-ecosystem: npm
+    directory: /
+    registries: [github-packages]
+    schedule:
+      interval: weekly
+    # opcional: limita os PRs ao base-ds
+    allow:
+      - dependency-name: '@indianous/base-ds'
+```
+
+`GH_PACKAGES_TOKEN` é um token clássico com `read:packages` (o mesmo tipo do token da
+[Instalação](#instalação)), salvo como segredo **do Dependabot**, não de Actions:
+`gh secret set GH_PACKAGES_TOKEN --app dependabot --repo <dono>/<app>`.
+
+O PR do Dependabot não dispensa o passo 2: ele pode propor uma série nova, e os ajustes descritos
+no CHANGELOG continuam por conta do app.
+
+### Migrando do alias `base-ds`
+
+Apps instalados com o alias `"base-ds": "npm:@indianous/base-ds@…"` (recomendado até a v0.4.7)
+devem trocar para o nome com escopo:
+
+1. `npm uninstall base-ds && npm install @indianous/base-ds@^<versão>`.
+2. Imports: `from 'base-ds'` → `from '@indianous/base-ds'`, e `base-ds/styles` →
+   `@indianous/base-ds/styles` (inclusive `/v4`).
+3. Qualquer caminho `node_modules/base-ds` na configuração do app, como o `content` do Tailwind v3
+   ou o `@source` do v4, passa a ser `node_modules/@indianous/base-ds`.
 
 ## Testando mudanças antes de publicar
 
@@ -75,8 +119,8 @@ Para experimentar no app uma mudança do base-ds que ainda não foi publicada, g
 local (o base-ds precisa estar clonado ao lado do app):
 
 1. No base-ds: `npm run pack:local` → `.pack/indianous-base-ds-<versão>.tgz`.
-2. No app: `npm install base-ds@file:../base-ds/.pack/indianous-base-ds-<versão>.tgz`.
-3. Ao terminar, volte para a versão publicada: `npm install base-ds@npm:@indianous/base-ds@^<versão>`.
+2. No app: `npm install @indianous/base-ds@file:../base-ds/.pack/indianous-base-ds-<versão>.tgz`.
+3. Ao terminar, volte para a versão publicada: `npm install @indianous/base-ds@^<versão>`.
 
 Use sempre o tarball, nunca o diretório (ver o aviso em [Instalação](#instalação)).
 
@@ -95,7 +139,7 @@ O push da tag dispara o workflow `.github/workflows/publish.yml`, que confere se
 ## Regras de uso
 
 - **Use o que já existe.** Antes de criar um componente de UI no app, confira o que o base-ds
-  exporta (`node_modules/base-ds/dist/index.d.ts`). Não recrie à mão uma receita que já é um
+  exporta (`node_modules/@indianous/base-ds/dist/index.d.ts`). Não recrie à mão uma receita que já é um
   componente.
 - **Use os tokens.** Estilize com os utilitários ligados aos tokens (`bg-primary`,
   `text-muted-foreground`, `rounded-md`, ...), nunca com cores, espaçamentos, sombras ou raios
@@ -111,15 +155,16 @@ Copie para o `CLAUDE.md` de cada app que usa o base-ds:
 ```markdown
 ## Design system (base-ds)
 
-- A UI vem do `base-ds`, instalado do GitHub Packages como alias
-  (`"base-ds": "npm:@indianous/base-ds@^<versão>"`, `.npmrc` apontando `@indianous` para
-  `https://npm.pkg.github.com`). Nunca instalar por `file:../base-ds` (symlink): causa duas
-  instâncias de React.
+- A UI vem do base-ds, instalado do GitHub Packages pelo nome com escopo
+  (`"@indianous/base-ds": "^<versão>"`, `.npmrc` apontando `@indianous` para
+  `https://npm.pkg.github.com`). Não usar alias `npm:` (o Dependabot não o resolve) nem instalar
+  por `file:../base-ds` (symlink: causa duas instâncias de React).
 - Antes de criar um componente de UI, conferir o que o base-ds exporta em
-  `node_modules/base-ds/dist/index.d.ts` e seguir as regras de `node_modules/base-ds/README.md`.
+  `node_modules/@indianous/base-ds/dist/index.d.ts` e seguir as regras de
+  `node_modules/@indianous/base-ds/README.md`.
 - Estilizar só com os utilitários dos tokens do base-ds, sem valores literais.
 - Faltou algo ou achou bug no base-ds: abrir issue em indianous/base-ds em vez de contornar no app.
-- Ao começar uma tarefa de UI, rodar `npm outdated base-ds`; se estiver atrás, ler
+- Ao começar uma tarefa de UI, rodar `npm outdated @indianous/base-ds`; se estiver atrás, ler
   https://github.com/indianous/base-ds/blob/main/CHANGELOG.md e atualizar conforme o README
   do base-ds.
 ```

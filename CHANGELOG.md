@@ -6,6 +6,24 @@ Todas as mudanças relevantes do base-ds são registradas aqui. O formato segue 
 mudança que exige ajuste nos apps sobe o _minor_ (`0.1.0 → 0.2.0`); correções e componentes
 novos sem impacto sobem o _patch_.
 
+## [Não publicado]
+
+### Alterado
+
+- README: a instalação recomendada passa a ser pelo nome com escopo
+  (`"@indianous/base-ds": "^<versão>"`), no lugar do alias `"base-ds": "npm:@indianous/base-ds@…"`
+  adotado na v0.3.0. O Dependabot não resolve o alias e nunca propõe atualizações; com o nome com
+  escopo, ele funciona ([#44](https://github.com/indianous/base-ds/issues/44)). O README também
+  ganhou a configuração do Dependabot, na seção "Atualizando".
+
+### Ajustes necessários nos apps
+
+- Apps que usam o alias devem migrar, conforme "Migrando do alias `base-ds`" no README: trocar a
+  dependência para `@indianous/base-ds`, os imports (`from 'base-ds'` → `from '@indianous/base-ds'`,
+  `base-ds/styles` → `@indianous/base-ds/styles`) e os caminhos `node_modules/base-ds` na
+  configuração do Tailwind (`content` no v3, `@source` no v4). O alias continua funcionando para o
+  npm; sem migrar, só o Dependabot fica sem efeito.
+
 ## [0.4.7] - 2026-09-26
 
 ### Corrigido
