@@ -35,14 +35,17 @@ anteriores adotaram **props soltas**, uma por texto (`label`, `previousLabel`, `
 
 ## Mudança
 
+Segue a seção "Accessibility labels" do `CLAUDE.md`. Os padrões em inglês ficam na
+desestruturação das props (`closeLabel = 'Close drawer'` etc.), com os textos atuais.
+
 ### `Drawer`
 
 ```ts
 export interface DrawerProps {
   // ...props atuais
-  /** `aria-label` do botão de fechar. Padrão `'Close drawer'`. */
+  /** `aria-label` of the close button. */
   closeLabel?: string
-  /** `aria-label` do fundo clicável que fecha o drawer. Padrão `'Dismiss drawer'`. */
+  /** `aria-label` of the backdrop button that closes the drawer. */
   dismissLabel?: string
 }
 ```
@@ -52,19 +55,19 @@ export interface DrawerProps {
 ```ts
 export interface NavbarProps {
   // ...props atuais
-  /** `aria-label` do `<nav>`. Padrão `'Main navigation'`. */
+  /** `aria-label` of the `<nav>`. */
   label?: string
-  /** `aria-label` do botão que abre o menu no celular. Padrão `'Open navigation menu'`. */
+  /** `aria-label` of the mobile button that opens the menu drawer. */
   menuButtonLabel?: string
-  /** `aria-label` do botão que abre as ações no celular. Padrão `'More actions'`. */
+  /** `aria-label` of the mobile button that opens the actions drawer. */
   actionsButtonLabel?: string
-  /** Título do drawer do menu. Padrão `'Menu'`. */
+  /** Title of the menu drawer. */
   menuTitle?: string
-  /** Título do drawer de ações. Padrão `'Actions'`. */
+  /** Title of the actions drawer. */
   actionsTitle?: string
-  /** `closeLabel` dos dois drawers. Padrão `'Close drawer'`. */
+  /** `closeLabel` of both drawers. */
   drawerCloseLabel?: string
-  /** `dismissLabel` dos dois drawers. Padrão `'Dismiss drawer'`. */
+  /** `dismissLabel` of both drawers. */
   drawerDismissLabel?: string
 }
 ```
