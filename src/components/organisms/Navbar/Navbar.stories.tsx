@@ -189,3 +189,37 @@ export const CenteredLogoWithItems: Story = {
     logoAlign: 'center',
   },
 }
+
+export const CustomLabels: Story = {
+  parameters: {
+    viewport: { defaultViewport: 'mobile1' },
+  },
+  args: {
+    logo,
+    items: [
+      { label: 'Início', href: '/', active: true },
+      { label: 'Projetos', href: '/projects' },
+      { label: 'Contato', href: '/contact' },
+    ],
+    actions: [
+      <Button key="theme" variant="ghost" size="sm">
+        Tema
+      </Button>,
+      <Button key="cv" size="sm">
+        Currículo
+      </Button>,
+    ],
+    label: 'Navegação principal',
+    menuButtonLabel: 'Abrir menu de navegação',
+    actionsButtonLabel: 'Mais ações',
+    menuTitle: 'Menu',
+    actionsTitle: 'Ações',
+    drawerCloseLabel: 'Fechar',
+    drawerDismissLabel: 'Fechar painel',
+  },
+  render: (args) => (
+    <div className="max-w-sm border border-border rounded-lg overflow-hidden">
+      <Navbar {...args} />
+    </div>
+  ),
+}

@@ -184,6 +184,32 @@ describe('Drawer', () => {
     expect(dialog.className).toMatch(/left-0/)
   })
 
+  it('uses closeLabel on the close button', async () => {
+    const user = userEvent.setup()
+    const onClose = vi.fn()
+    render(
+      <Drawer open={true} onClose={onClose} title="Test" closeLabel="Fechar">
+        <p>Content</p>
+      </Drawer>,
+    )
+    await user.click(screen.getByRole('button', { name: 'Fechar' }))
+    expect(onClose).toHaveBeenCalledTimes(1)
+    expect(screen.queryByRole('button', { name: /close drawer/i })).not.toBeInTheDocument()
+  })
+
+  it('uses dismissLabel on the backdrop button', async () => {
+    const user = userEvent.setup()
+    const onClose = vi.fn()
+    render(
+      <Drawer open={true} onClose={onClose} title="Test" dismissLabel="Fechar painel">
+        <p>Content</p>
+      </Drawer>,
+    )
+    await user.click(screen.getByRole('button', { name: 'Fechar painel' }))
+    expect(onClose).toHaveBeenCalledTimes(1)
+    expect(screen.queryByRole('button', { name: 'Dismiss drawer' })).not.toBeInTheDocument()
+  })
+
   it('has no accessibility violations when open', async () => {
     const { container } = render(
       <Drawer open={true} onClose={() => {}} title="Accessible Drawer">

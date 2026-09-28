@@ -67,3 +67,15 @@ function InteractiveDrawer() {
 export const Interactive: Story = {
   render: () => <InteractiveDrawer />,
 }
+
+export const CustomLabels: Story = {
+  args: {
+    open: true,
+    onClose: () => {},
+    side: 'right',
+    title: 'Configurações',
+    closeLabel: 'Fechar',
+    dismissLabel: 'Fechar painel',
+    children: <p>Conteúdo do painel.</p>,
+  },
+}

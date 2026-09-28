@@ -350,3 +350,49 @@ describe('Navbar logoAlign', () => {
     expect(await axe(container)).toHaveNoViolations()
   })
 })
+
+describe('Navbar custom labels', () => {
+  const items: NavItem[] = [
+    { label: 'Início', href: '/' },
+    { label: 'Projetos', href: '/projects' },
+  ]
+  const actions = [<button key="a">Notificações</button>, <button key="b">Entrar</button>]
+
+  it('uses label as the navigation aria-label', () => {
+    render(<Navbar label="Navegação principal" />)
+    expect(screen.getByRole('navigation', { name: 'Navegação principal' })).toBeInTheDocument()
+  })
+
+  it('uses menuButtonLabel and menuTitle for the mobile menu', async () => {
+    render(
+      <Navbar items={items} menuButtonLabel="Abrir menu de navegação" menuTitle="Menu principal" />,
+    )
+    await userEvent.click(screen.getByRole('button', { name: 'Abrir menu de navegação' }))
+    expect(screen.getByRole('dialog', { name: 'Menu principal' })).toBeInTheDocument()
+  })
+
+  it('uses actionsButtonLabel and actionsTitle for the actions drawer', async () => {
+    render(<Navbar actions={actions} actionsButtonLabel="Mais ações" actionsTitle="Ações" />)
+    await userEvent.click(screen.getByRole('button', { name: 'Mais ações' }))
+    expect(screen.getByRole('dialog', { name: 'Ações' })).toBeInTheDocument()
+  })
+
+  it('passes drawerCloseLabel and drawerDismissLabel to both drawers', async () => {
+    render(
+      <Navbar
+        items={items}
+        actions={actions}
+        drawerCloseLabel="Fechar"
+        drawerDismissLabel="Fechar painel"
+      />,
+    )
+
+    await userEvent.click(screen.getByRole('button', { name: /open navigation menu/i }))
+    await userEvent.click(screen.getByRole('button', { name: 'Fechar' }))
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+
+    await userEvent.click(screen.getByRole('button', { name: /more actions/i }))
+    await userEvent.click(screen.getByRole('button', { name: 'Fechar painel' }))
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  })
+})

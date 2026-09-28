@@ -17,6 +17,10 @@ export interface DrawerProps {
   children?: ReactNode
   footer?: ReactNode
   className?: string
+  /** `aria-label` of the close button. */
+  closeLabel?: string
+  /** `aria-label` of the backdrop button that closes the drawer. */
+  dismissLabel?: string
 }
 
 const SIDE_CLASSES: Record<DrawerSide, string> = {
@@ -34,6 +38,8 @@ export function Drawer({
   children,
   footer,
   className,
+  closeLabel = 'Close drawer',
+  dismissLabel = 'Dismiss drawer',
 }: DrawerProps) {
   const titleId = useId()
 
@@ -47,7 +53,7 @@ export function Drawer({
     <div data-testid="drawer-backdrop" className="fixed inset-0 z-50">
       <button
         type="button"
-        aria-label="Dismiss drawer"
+        aria-label={dismissLabel}
         onClick={onClose}
         className="absolute inset-0 cursor-default bg-overlay"
       />
@@ -67,7 +73,7 @@ export function Drawer({
               {title}
             </h2>
           )}
-          <Button variant="ghost" size="sm" onClick={onClose} aria-label="Close drawer">
+          <Button variant="ghost" size="sm" onClick={onClose} aria-label={closeLabel}>
             <Icon name="X" size="sm" />
           </Button>
         </div>

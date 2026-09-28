@@ -21,6 +21,20 @@ export interface NavbarProps {
   className?: string
   /** Logo position from `md` up. On mobile the logo is always centered. */
   logoAlign?: NavbarLogoAlign
+  /** `aria-label` of the `<nav>`. */
+  label?: string
+  /** `aria-label` of the mobile button that opens the menu drawer. */
+  menuButtonLabel?: string
+  /** `aria-label` of the mobile button that opens the actions drawer. */
+  actionsButtonLabel?: string
+  /** Title of the menu drawer. */
+  menuTitle?: string
+  /** Title of the actions drawer. */
+  actionsTitle?: string
+  /** `closeLabel` of both drawers. */
+  drawerCloseLabel?: string
+  /** `dismissLabel` of both drawers. */
+  drawerDismissLabel?: string
 }
 
 const logoCellClasses: Record<NavbarLogoAlign, string> = {
@@ -142,6 +156,13 @@ export function Navbar({
   sticky,
   className,
   logoAlign = 'start',
+  label = 'Main navigation',
+  menuButtonLabel = 'Open navigation menu',
+  actionsButtonLabel = 'More actions',
+  menuTitle = 'Menu',
+  actionsTitle = 'Actions',
+  drawerCloseLabel = 'Close drawer',
+  drawerDismissLabel = 'Dismiss drawer',
 }: NavbarProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isActionsDrawerOpen, setIsActionsDrawerOpen] = useState(false)
@@ -177,11 +198,7 @@ export function Navbar({
 
   return (
     <header className={cn(sticky && 'sticky top-0 z-50', className)}>
-      <nav
-        role="navigation"
-        aria-label="Main navigation"
-        className="bg-background border-b border-border"
-      >
+      <nav role="navigation" aria-label={label} className="bg-background border-b border-border">
         {/*
           4 equal flex-1 slots, always in this DOM order: toggle, logo, search/items, actions.
           Each breakpoint hides a different slot (`hidden md:flex` / `flex md:hidden`), so the
@@ -198,7 +215,7 @@ export function Navbar({
               <button
                 type="button"
                 onClick={() => setIsMobileMenuOpen(true)}
-                aria-label="Open navigation menu"
+                aria-label={menuButtonLabel}
                 className="flex items-center justify-center w-9 h-9 rounded-md text-foreground hover:bg-muted focus:outline-none focus:ring-2 focus:ring-ring"
               >
                 <Icon name="Menu" size="sm" />
@@ -232,7 +249,7 @@ export function Navbar({
                 <button
                   type="button"
                   onClick={() => setIsActionsDrawerOpen(true)}
-                  aria-label="More actions"
+                  aria-label={actionsButtonLabel}
                   className="flex items-center justify-center w-9 h-9 rounded-md text-foreground hover:bg-muted focus:outline-none focus:ring-2 focus:ring-ring"
                 >
                   <Icon name="Settings" size="sm" />
@@ -260,7 +277,9 @@ export function Navbar({
           open={isMobileMenuOpen}
           onClose={() => setIsMobileMenuOpen(false)}
           side="left"
-          title="Menu"
+          title={menuTitle}
+          closeLabel={drawerCloseLabel}
+          dismissLabel={drawerDismissLabel}
         >
           <div className="flex flex-col gap-4">
             {hasSearch && <div>{search}</div>}
@@ -283,7 +302,9 @@ export function Navbar({
           open={isActionsDrawerOpen}
           onClose={() => setIsActionsDrawerOpen(false)}
           side="right"
-          title="Actions"
+          title={actionsTitle}
+          closeLabel={drawerCloseLabel}
+          dismissLabel={drawerDismissLabel}
         >
           <div className="flex flex-col gap-2">
             {actions!.map((action, index) => (

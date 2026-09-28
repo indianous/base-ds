@@ -6,7 +6,17 @@ Todas as mudanças relevantes do base-ds são registradas aqui. O formato segue 
 mudança que exige ajuste nos apps sobe o _minor_ (`0.1.0 → 0.2.0`); correções e componentes
 novos sem impacto sobem o _patch_.
 
-## [Não publicado]
+## [0.4.8] - 2026-09-28
+
+### Adicionado
+
+- `Navbar`: props para os textos de acessibilidade, que eram fixos em inglês
+  ([#55](https://github.com/indianous/base-ds/issues/55)): `label` (o `<nav>`), `menuButtonLabel` e
+  `actionsButtonLabel` (os botões do celular), `menuTitle` e `actionsTitle` (os títulos dos
+  drawers), `drawerCloseLabel` e `drawerDismissLabel` (repassados aos dois drawers). Os padrões são
+  os textos de antes.
+- `Drawer`: props `closeLabel` e `dismissLabel` para o botão de fechar e o fundo clicável, com os
+  padrões `'Close drawer'` e `'Dismiss drawer'`.
 
 ### Alterado
 
@@ -23,6 +33,8 @@ novos sem impacto sobem o _patch_.
   `base-ds/styles` → `@indianous/base-ds/styles`) e os caminhos `node_modules/base-ds` na
   configuração do Tailwind (`content` no v3, `@source` no v4). O alias continua funcionando para o
   npm; sem migrar, só o Dependabot fica sem efeito.
+- `Navbar` e `Drawer`: nada obrigatório. Sites em português podem passar os rótulos novos; testes
+  que buscam os textos em inglês continuam valendo enquanto eles não forem passados.
 
 ## [0.4.7] - 2026-09-26
 
