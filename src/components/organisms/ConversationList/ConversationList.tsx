@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { cn } from '../../../utils/cn'
-import { Icon } from '../../atoms/Icon/Icon'
+import { IconBase } from '../../atoms/Icon/IconBase'
+import { MessageSquareIcon } from 'lucide-react'
 
 interface ConversationListItem {
   id: string
@@ -53,7 +54,7 @@ export function ConversationList({
                 {renderChannelIcon !== undefined ? (
                   renderChannelIcon(conversation.channel)
                 ) : (
-                  <Icon name="MessageSquare" size="md" aria-label={conversation.channel} />
+                  <IconBase icon={MessageSquareIcon} size="md" aria-label={conversation.channel} />
                 )}
               </span>
 

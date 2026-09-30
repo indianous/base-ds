@@ -28,8 +28,12 @@ describe('package.json', () => {
     })
   })
 
-  it('builds before publishing', () => {
-    expect(pkg.scripts).toHaveProperty('prepublishOnly', 'npm run build')
+  it('builds and checks the output before publishing', () => {
+    expect(pkg.scripts).toHaveProperty('prepublishOnly', 'npm run build && npm run check:dist')
+  })
+
+  it('lets bundlers drop unused modules, but never the CSS', () => {
+    expect(pkg.sideEffects).toEqual(['**/*.css'])
   })
 
   it('does not list react or react-dom as runtime dependencies', () => {

@@ -1,8 +1,18 @@
 import { useLayoutEffect, useRef, useState } from 'react'
 import type { KeyboardEvent } from 'react'
 import { cn } from '../../../utils/cn'
-import { Icon } from '../../atoms/Icon/Icon'
-import type { IconName } from '../../atoms/Icon/Icon'
+import { IconBase } from '../../atoms/Icon/IconBase'
+import {
+  AlertCircleIcon,
+  CheckCheckIcon,
+  CheckIcon,
+  ClockIcon,
+  FileTextIcon,
+  ImageIcon,
+  MusicIcon,
+  SendIcon,
+} from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 import { Input } from '../../atoms/Input/Input'
 import { Button } from '../../atoms/Button/Button'
 
@@ -30,12 +40,12 @@ interface ConversationThreadProps {
 
 const SCROLL_BOTTOM_THRESHOLD = 40
 
-const statusIconMap: Record<MessageStatus, IconName> = {
-  PENDING: 'Clock',
-  SENT: 'Check',
-  DELIVERED: 'CheckCheck',
-  READ: 'CheckCheck',
-  FAILED: 'AlertCircle',
+const statusIconMap: Record<MessageStatus, LucideIcon> = {
+  PENDING: ClockIcon,
+  SENT: CheckIcon,
+  DELIVERED: CheckCheckIcon,
+  READ: CheckCheckIcon,
+  FAILED: AlertCircleIcon,
 }
 
 const statusColorMap: Record<MessageStatus, string> = {
@@ -46,10 +56,10 @@ const statusColorMap: Record<MessageStatus, string> = {
   FAILED: 'text-destructive',
 }
 
-const mediaIconMap: Record<MessageMediaType, IconName> = {
-  image: 'Image',
-  audio: 'Music',
-  document: 'FileText',
+const mediaIconMap: Record<MessageMediaType, LucideIcon> = {
+  image: ImageIcon,
+  audio: MusicIcon,
+  document: FileTextIcon,
 }
 
 const mediaLabelMap: Record<MessageMediaType, string> = {
@@ -137,7 +147,7 @@ export function ConversationThread({
                 <p>{message.content}</p>
                 {message.mediaUrl !== undefined && message.mediaType !== undefined && (
                   <div className="mt-1 flex items-center gap-1 text-xs">
-                    <Icon name={mediaIconMap[message.mediaType]} size="sm" />
+                    <IconBase icon={mediaIconMap[message.mediaType]} size="sm" />
                     <span>{mediaLabelMap[message.mediaType]}</span>
                   </div>
                 )}
@@ -145,8 +155,8 @@ export function ConversationThread({
               <div className="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
                 <span>{formatTimestamp(message.timestamp)}</span>
                 {isOutbound && message.status !== undefined && (
-                  <Icon
-                    name={statusIconMap[message.status]}
+                  <IconBase
+                    icon={statusIconMap[message.status]}
                     size="sm"
                     className={statusColorMap[message.status]}
                   />
@@ -174,7 +184,7 @@ export function ConversationThread({
           aria-label="Send message"
           iconOnly
         >
-          <Icon name="Send" size="sm" />
+          <IconBase icon={SendIcon} size="sm" />
         </Button>
       </div>
     </div>

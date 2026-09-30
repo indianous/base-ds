@@ -2,7 +2,8 @@ import { Fragment, useId, useState } from 'react'
 import type { ReactNode } from 'react'
 import { cn } from '../../../utils/cn'
 import { Button } from '../../atoms/Button/Button'
-import { Icon } from '../../atoms/Icon/Icon'
+import { IconBase } from '../../atoms/Icon/IconBase'
+import { ChevronDownIcon, ChevronRightIcon, ChevronUpIcon, ChevronsUpDownIcon } from 'lucide-react'
 
 export interface TableColumn<T> {
   key: string
@@ -74,12 +75,12 @@ export function Table<T extends object>({
                     {col.header}
                     {sortState?.key === col.key ? (
                       sortState.dir === 'asc' ? (
-                        <Icon name="ChevronUp" size="sm" />
+                        <IconBase icon={ChevronUpIcon} size="sm" />
                       ) : (
-                        <Icon name="ChevronDown" size="sm" />
+                        <IconBase icon={ChevronDownIcon} size="sm" />
                       )
                     ) : (
-                      <Icon name="ChevronsUpDown" size="sm" />
+                      <IconBase icon={ChevronsUpDownIcon} size="sm" />
                     )}
                   </button>
                 ) : (
@@ -115,7 +116,10 @@ export function Table<T extends object>({
                           aria-label={`${isExpanded ? 'Collapse' : 'Expand'} row`}
                           onClick={() => toggleExpanded(ri)}
                         >
-                          <Icon name={isExpanded ? 'ChevronDown' : 'ChevronRight'} size="sm" />
+                          <IconBase
+                            icon={isExpanded ? ChevronDownIcon : ChevronRightIcon}
+                            size="sm"
+                          />
                         </Button>
                       </td>
                     )}

@@ -2,7 +2,8 @@ import { useState } from 'react'
 import type { AriaAttributes, KeyboardEvent, ChangeEvent } from 'react'
 import { cn } from '../../../utils/cn'
 import { Badge } from '../../atoms/Badge/Badge'
-import { Icon } from '../../atoms/Icon/Icon'
+import { IconBase } from '../../atoms/Icon/IconBase'
+import { XIcon } from 'lucide-react'
 
 export interface TagsInputProps extends Pick<
   AriaAttributes,
@@ -83,7 +84,7 @@ export function TagsInput({
             disabled={disabled}
             className="ml-1 hover:text-destructive-foreground focus:outline-none"
           >
-            <Icon name="X" size="sm" />
+            <IconBase icon={XIcon} size="sm" />
           </button>
         </Badge>
       ))}

@@ -189,3 +189,21 @@ conferir que o `@source`/`content` aponta para a pasta `dist`.
 `npm run lint`, `format:check`, `typecheck`, `npm test` (inclui o `bundle.test.ts`),
 `npm run test:stories`, `npm run build` + `npm run check:dist`, e a medição no app Next.js
 mínimo.
+
+## Resultado (implementação)
+
+`next build` do app mínimo (Next.js 16.3.6, Turbopack), soma dos `<script>` de cada página. A
+página sem base-ds (`/nativo`) tem os mesmos 565.715 bytes da tabela da issue.
+
+| página    | v0.4.10                  | v0.4.11                    |
+| --------- | ------------------------ | -------------------------- |
+| `/basico` | +951.344 (+252.294 gzip) | **+33.686 (+11.019 gzip)** |
+| `/navbar` | +951.344 (+252.294 gzip) | **+45.454 (+14.893 gzip)** |
+
+O Turbopack descartou os componentes não usados com o barril sem `'use client'`, então o
+`optimizePackageImports` não foi necessário. No Chromium, as duas páginas hidrataram sem erros no
+console, e o drawer do `Navbar` abriu ao clicar.
+
+Uma mudança fora do previsto: o `src/package.test.ts` esperava o `prepublishOnly` como
+`npm run build`. Ele passou a esperar `npm run build && npm run check:dist` e ganhou um teste para o
+`sideEffects`.

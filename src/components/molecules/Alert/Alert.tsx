@@ -1,8 +1,9 @@
 import React from 'react'
 import { cn } from '../../../utils/cn'
 import { Button } from '../../atoms/Button/Button'
-import { Icon } from '../../atoms/Icon/Icon'
-import type { IconName } from '../../atoms/Icon/Icon'
+import { IconBase } from '../../atoms/Icon/IconBase'
+import { AlertTriangleIcon, CheckCircle2Icon, InfoIcon, XCircleIcon, XIcon } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 
 type AlertVariant = 'info' | 'success' | 'warning' | 'danger' | 'neutral'
 type AlertLayout = 'full' | 'inline'
@@ -35,12 +36,12 @@ const layoutClasses: Record<AlertLayout, string> = {
   inline: 'rounded-lg border p-4',
 }
 
-const defaultIcons: Record<AlertVariant, IconName> = {
-  info: 'Info',
-  success: 'CheckCircle2',
-  warning: 'AlertTriangle',
-  danger: 'XCircle',
-  neutral: 'Info',
+const defaultIcons: Record<AlertVariant, LucideIcon> = {
+  info: InfoIcon,
+  success: CheckCircle2Icon,
+  warning: AlertTriangleIcon,
+  danger: XCircleIcon,
+  neutral: InfoIcon,
 }
 
 const defaultRoles: Record<AlertVariant, 'status' | 'alert'> = {
@@ -63,7 +64,8 @@ export function Alert({
   className,
   ...rest
 }: AlertProps) {
-  const resolvedIcon = icon === undefined ? <Icon name={defaultIcons[variant]} size="md" /> : icon
+  const resolvedIcon =
+    icon === undefined ? <IconBase icon={defaultIcons[variant]} size="md" /> : icon
 
   return (
     <div
@@ -97,7 +99,7 @@ export function Alert({
           aria-label={dismissLabel}
           className="-my-1 flex-shrink-0"
         >
-          <Icon name="X" size="sm" />
+          <IconBase icon={XIcon} size="sm" />
         </Button>
       )}
     </div>

@@ -2,7 +2,8 @@ import { useEffect, useId, useRef, useState } from 'react'
 import type { AriaAttributes, KeyboardEvent as ReactKeyboardEvent } from 'react'
 import { cn } from '../../../utils/cn'
 import { Badge } from '../../atoms/Badge/Badge'
-import { Icon } from '../../atoms/Icon/Icon'
+import { IconBase } from '../../atoms/Icon/IconBase'
+import { CheckIcon, XIcon } from 'lucide-react'
 
 export interface MultiSelectOption {
   value: string
@@ -130,7 +131,7 @@ export function MultiSelect({
               disabled={disabled}
               className="ml-1 hover:text-destructive-foreground focus:outline-none"
             >
-              <Icon name="X" size="sm" />
+              <IconBase icon={XIcon} size="sm" />
             </button>
           </Badge>
         ))}
@@ -191,7 +192,7 @@ export function MultiSelect({
                 )}
               >
                 {opt.label}
-                {isSelected && <Icon name="Check" size="sm" />}
+                {isSelected && <IconBase icon={CheckIcon} size="sm" />}
               </div>
             )
           })}

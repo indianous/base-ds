@@ -2,7 +2,8 @@ import type { ReactNode } from 'react'
 import { useState } from 'react'
 import { cn } from '../../../utils/cn'
 import { Button } from '../../atoms/Button/Button'
-import { Icon } from '../../atoms/Icon/Icon'
+import { IconBase } from '../../atoms/Icon/IconBase'
+import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
 
 export interface CarouselProps {
   items: ReactNode[]
@@ -79,7 +80,7 @@ export function Carousel({
           <Button
             variant="ghost"
             size="sm"
-            leftIcon={<Icon name="ChevronLeft" />}
+            leftIcon={<IconBase icon={ChevronLeftIcon} />}
             onClick={prev}
             disabled={!loop && current === 0}
             aria-label={previousLabel}
@@ -87,7 +88,7 @@ export function Carousel({
           <Button
             variant="ghost"
             size="sm"
-            leftIcon={<Icon name="ChevronRight" />}
+            leftIcon={<IconBase icon={ChevronRightIcon} />}
             onClick={next}
             disabled={!loop && current === items.length - 1}
             aria-label={nextLabel}

@@ -9,7 +9,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 - `npm run dev` — Vite dev server
-- `npm run build` — tsup build to `dist/`
+- `npm run build` — tsup build to `dist/` (empties it first); `npm run check:dist` checks the output afterwards
 - `npm run pack:local` — build + `npm pack` into `.pack/indianous-base-ds-<version>.tgz`, for testing unpublished changes in a consumer app (see README)
 - `npm run lint` — ESLint, `--max-warnings 0` (any warning fails)
 - `npm run typecheck` — `tsc -b` over `tsconfig.app.json` (all of `src/`, including tests and stories) and `tsconfig.node.json` (`vite.config.ts`). The build's `tsconfig.build.json` excludes tests/stories and Vitest doesn't type-check, so this is the only thing that catches type errors there.
@@ -71,7 +71,8 @@ Apps using the design system aren't all in English (e.g. `pt-BR` sites), so ever
 ## Build gotchas
 
 - `tsup.config.ts` sets `platform: 'browser'` deliberately — without it, esbuild pulls in Node-targeted code from dependencies (e.g. `qrcode`'s `fs`/`pngjs` path) and breaks SSR for consumers like Next.js.
-- `'use client'` is prepended to `dist/index.js`/`dist/index.cjs` via a post-build string step, not an esbuild banner — esbuild drops directives when bundling to a single file without code-splitting. Every component is client-only.
+- The ESM build is split per component (issue #53): every `src/components/**/*.tsx` is a tsup entry with `splitting: true`, so `dist/index.js` is a barrel that only re-exports from per-component chunks. `'use client'` is prepended (post-build string step) to every `.js` in `dist` **except** `dist/index.js`, plus `dist/index.cjs` (CJS stays one file — esbuild can't split it). The barrel must stay directive-free: Next.js then ships only the client files of the components a page uses (a minimal page went from +951 KB to +34 KB). `package.json` `"sideEffects": ["**/*.css"]` is part of this — nothing in `src/` may rely on import side effects. `npm run check:dist` (run by `prepublishOnly`) guards the structure, and `src/bundle.test.ts` guards what a single import pulls in.
+- Inside components, render icons with `IconBase` and a named import (`import { SearchIcon } from 'lucide-react'`, `<IconBase icon={SearchIcon} />`), never `<Icon name="…">`: `Icon`'s lookup by name keeps all ~650 KB of lucide icons in the bundle. `Icon` stays exported for apps that accept that cost.
 - `react`/`react-dom` must stay **only** in `peerDependencies` (+ `devDependencies` for local dev), never in `dependencies` — `src/package.test.ts` guards this. Consumers must install from the registry (or a packed tarball), never `file:../base-ds`: a symlink makes the bundle (and `lucide-react`) resolve React from this repo's `node_modules`, giving two React instances (`Invalid hook call`, issue #38).
 - The package has two entry points: `.` (JS/TS) and `./styles` (→ `dist/styles/theme.css`) — consumers import the CSS separately.
 

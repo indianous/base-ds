@@ -7,7 +7,8 @@ import { useStackedEscape } from '../../../utils/useStackedEscape'
 import { Badge } from '../../atoms/Badge/Badge'
 import { Button } from '../../atoms/Button/Button'
 import { Checkbox } from '../../atoms/Checkbox/Checkbox'
-import { Icon } from '../../atoms/Icon/Icon'
+import { IconBase } from '../../atoms/Icon/IconBase'
+import { ChevronDownIcon } from 'lucide-react'
 
 const PANEL_WIDTH = 288
 
@@ -108,7 +109,7 @@ export function FilterDropdown({
           aria-haspopup="true"
           aria-expanded={open}
           aria-controls={open ? panelId : undefined}
-          rightIcon={<Icon name="ChevronDown" size="sm" />}
+          rightIcon={<IconBase icon={ChevronDownIcon} size="sm" />}
           onClick={handleTriggerClick}
         >
           {label}

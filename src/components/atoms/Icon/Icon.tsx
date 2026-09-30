@@ -1,9 +1,9 @@
-import React from 'react'
 import * as LucideIcons from 'lucide-react'
-import { cn } from '../../../utils/cn'
+import type { LucideIcon } from 'lucide-react'
+import { IconBase } from './IconBase'
+import type { IconSize } from './IconBase'
 
 type IconName = keyof typeof LucideIcons
-type IconSize = 'sm' | 'md' | 'lg' | 'xl'
 
 export type { IconName, IconSize }
 
@@ -14,20 +14,13 @@ interface IconProps {
   className?: string
 }
 
-const sizeMap = { sm: 16, md: 20, lg: 24, xl: 32 } as const
-const sizeClasses = { sm: 'w-4 h-4', md: 'w-5 h-5', lg: 'w-6 h-6', xl: 'w-8 h-8' } as const
+/**
+ * Renders a lucide icon by name. The lookup by name keeps every lucide icon (~650 KB) in the
+ * bundle of any app that uses `Icon`; in the app, prefer importing the icon from `lucide-react`.
+ */
+export function Icon({ name, ...props }: IconProps) {
+  const LucideIconComponent = LucideIcons[name] as LucideIcon | undefined
+  if (!LucideIconComponent) return null
 
-export function Icon({ name, size = 'md', 'aria-label': ariaLabel, className }: IconProps) {
-  const LucideIcon = LucideIcons[name] as React.ElementType
-  if (!LucideIcon) return null
-
-  return (
-    <LucideIcon
-      size={sizeMap[size]}
-      aria-hidden={ariaLabel ? undefined : 'true'}
-      role={ariaLabel ? 'img' : undefined}
-      aria-label={ariaLabel}
-      className={cn(sizeClasses[size], className)}
-    />
-  )
+  return <IconBase icon={LucideIconComponent} {...props} />
 }

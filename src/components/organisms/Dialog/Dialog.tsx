@@ -5,7 +5,8 @@ import { cn } from '../../../utils/cn'
 import { useBodyScrollLock } from '../../../utils/useBodyScrollLock'
 import { useStackedEscape } from '../../../utils/useStackedEscape'
 import { Button } from '../../atoms/Button/Button'
-import { Icon } from '../../atoms/Icon/Icon'
+import { IconBase } from '../../atoms/Icon/IconBase'
+import { XIcon } from 'lucide-react'
 
 interface DialogProps {
   open: boolean
@@ -68,7 +69,7 @@ export function Dialog({
               </h2>
             )}
             <Button variant="ghost" size="sm" onClick={onClose} aria-label="Close dialog">
-              <Icon name="X" size="sm" />
+              <IconBase icon={XIcon} size="sm" />
             </Button>
           </div>
           {description && (

@@ -1,6 +1,13 @@
 import { cn } from '../../../utils/cn'
 import { Button } from '../../atoms/Button/Button'
-import { Icon } from '../../atoms/Icon/Icon'
+import { IconBase } from '../../atoms/Icon/IconBase'
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  ChevronsLeftIcon,
+  ChevronsRightIcon,
+  MoreHorizontalIcon,
+} from 'lucide-react'
 
 interface PaginationProps {
   currentPage: number
@@ -44,7 +51,7 @@ export function Pagination({
           disabled={currentPage === 1}
           onClick={() => onPageChange(1)}
           aria-label="First page"
-          leftIcon={<Icon name="ChevronsLeft" size="sm" />}
+          leftIcon={<IconBase icon={ChevronsLeftIcon} size="sm" />}
         />
       )}
       <Button
@@ -53,13 +60,13 @@ export function Pagination({
         disabled={currentPage === 1}
         onClick={() => onPageChange(currentPage - 1)}
         aria-label="Previous page"
-        leftIcon={<Icon name="ChevronLeft" size="sm" />}
+        leftIcon={<IconBase icon={ChevronLeftIcon} size="sm" />}
       />
 
       {pages.map((page, i) =>
         page === '...' ? (
           <span key={`ellipsis-${i}`} className="px-2">
-            <Icon name="MoreHorizontal" size="sm" className="text-muted-foreground" />
+            <IconBase icon={MoreHorizontalIcon} size="sm" className="text-muted-foreground" />
           </span>
         ) : (
           <Button
@@ -81,7 +88,7 @@ export function Pagination({
         disabled={currentPage === totalPages}
         onClick={() => onPageChange(currentPage + 1)}
         aria-label="Next page"
-        rightIcon={<Icon name="ChevronRight" size="sm" />}
+        rightIcon={<IconBase icon={ChevronRightIcon} size="sm" />}
       />
       {showEdges && (
         <Button
@@ -90,7 +97,7 @@ export function Pagination({
           disabled={currentPage === totalPages}
           onClick={() => onPageChange(totalPages)}
           aria-label="Last page"
-          rightIcon={<Icon name="ChevronsRight" size="sm" />}
+          rightIcon={<IconBase icon={ChevronsRightIcon} size="sm" />}
         />
       )}
     </nav>

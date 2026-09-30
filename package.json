@@ -1,6 +1,6 @@
 {
   "name": "@indianous/base-ds",
-  "version": "0.4.10",
+  "version": "0.4.11",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/indianous/base-ds.git"
@@ -25,12 +25,16 @@
     "dist",
     "CHANGELOG.md"
   ],
+  "sideEffects": [
+    "**/*.css"
+  ],
   "scripts": {
     "dev": "vite",
-    "build": "tsup",
+    "build": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true })\" && tsup",
+    "check:dist": "node scripts/check-dist.mjs",
     "build:watch": "tsup --watch",
     "pack:local": "npm run build && mkdir -p .pack && npm pack --pack-destination .pack",
-    "prepublishOnly": "npm run build",
+    "prepublishOnly": "npm run build && npm run check:dist",
     "lint": "eslint src --max-warnings 0",
     "typecheck": "tsc -b",
     "test": "vitest run --project=unit --passWithNoTests",
@@ -77,6 +81,7 @@
     "@vitest/coverage-v8": "^4.1.10",
     "@vitest/ui": "^4.1.10",
     "autoprefixer": "^10.5.2",
+    "esbuild": "^0.27.7",
     "eslint": "^9.39.4",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-jsx-a11y": "^6.10.2",

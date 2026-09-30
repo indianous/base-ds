@@ -6,6 +6,28 @@ Todas as mudanças relevantes do base-ds são registradas aqui. O formato segue 
 mudança que exige ajuste nos apps sobe o _minor_ (`0.1.0 → 0.2.0`); correções e componentes
 novos sem impacto sobem o _patch_.
 
+## [0.4.11] - 2026-09-30
+
+### Alterado
+
+- Importar um componente leva ao cliente só ele e o que ele usa
+  ([#53](https://github.com/indianous/base-ds/issues/53)). Numa página Next.js 16 com `Heading`,
+  `Text`, `Button` e `Container`, o base-ds passou de +951 KB (+252 KB gzip) para +34 KB (+11 KB
+  gzip). Com o `Navbar`, de +951 KB para +45 KB. Os imports não mudam.
+  - O build ESM é dividido por componente. O `dist/index.js` só reexporta e não tem mais
+    `'use client'`, e cada arquivo de componente tem o seu. Assim o Next.js leva ao cliente só os
+    componentes que a página usa. O CJS continua num arquivo só.
+  - O `package.json` declara `"sideEffects": ["**/*.css"]`.
+  - Os componentes importam só os ícones que usam, e não trazem mais todos os ícones do
+    `lucide-react` (~650 KB). O `Icon`, que busca por nome, continua igual e ainda traz todos os
+    ícones. O README recomenda importar do `lucide-react` direto no app.
+
+### Ajustes necessários nos apps
+
+- Conferir que o `@source` (Tailwind v4) ou o `content` (v3) aponta para a **pasta**
+  `node_modules/@indianous/base-ds/dist`, e não para o arquivo `dist/index.js`. As classes dos
+  componentes agora estão espalhadas por vários arquivos. Veja "Estilos" no README.
+
 ## [0.4.10] - 2026-09-30
 
 ### Adicionado

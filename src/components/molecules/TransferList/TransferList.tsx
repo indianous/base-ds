@@ -2,7 +2,13 @@ import { useId, useState } from 'react'
 import type { KeyboardEvent as ReactKeyboardEvent } from 'react'
 import { cn } from '../../../utils/cn'
 import { Button } from '../../atoms/Button/Button'
-import { Icon } from '../../atoms/Icon/Icon'
+import { IconBase } from '../../atoms/Icon/IconBase'
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  ChevronsLeftIcon,
+  ChevronsRightIcon,
+} from 'lucide-react'
 
 export interface TransferListOption {
   value: string
@@ -183,7 +189,7 @@ export function TransferList({
             if (highlightedAvailable !== undefined) moveToSelected(highlightedAvailable)
           }}
         >
-          <Icon name="ChevronRight" size="sm" />
+          <IconBase icon={ChevronRightIcon} size="sm" />
         </Button>
         <Button
           iconOnly
@@ -193,7 +199,7 @@ export function TransferList({
           disabled={disabled || availableOptions.length === 0}
           onClick={moveAllToSelected}
         >
-          <Icon name="ChevronsRight" size="sm" />
+          <IconBase icon={ChevronsRightIcon} size="sm" />
         </Button>
         <Button
           iconOnly
@@ -203,7 +209,7 @@ export function TransferList({
           disabled={disabled || selectedOptions.length === 0}
           onClick={moveAllToAvailable}
         >
-          <Icon name="ChevronsLeft" size="sm" />
+          <IconBase icon={ChevronsLeftIcon} size="sm" />
         </Button>
         <Button
           iconOnly
@@ -215,7 +221,7 @@ export function TransferList({
             if (highlightedSelected !== undefined) moveToAvailable(highlightedSelected)
           }}
         >
-          <Icon name="ChevronLeft" size="sm" />
+          <IconBase icon={ChevronLeftIcon} size="sm" />
         </Button>
       </div>
 

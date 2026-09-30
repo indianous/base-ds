@@ -1,7 +1,15 @@
 import { cn } from '../../../utils/cn'
-import { Icon } from '../../atoms/Icon/Icon'
+import { IconBase } from '../../atoms/Icon/IconBase'
+import {
+  AlertTriangleIcon,
+  BellIcon,
+  CheckCircle2Icon,
+  InfoIcon,
+  XCircleIcon,
+  XIcon,
+} from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 import { Button } from '../../atoms/Button/Button'
-import type { IconName } from '../../atoms/Icon/Icon'
 
 type ToastVariant = 'default' | 'success' | 'warning' | 'destructive' | 'info'
 
@@ -19,12 +27,12 @@ interface ToastProps {
   className?: string
 }
 
-const iconMap: Record<ToastVariant, IconName> = {
-  default: 'Bell',
-  success: 'CheckCircle2',
-  warning: 'AlertTriangle',
-  destructive: 'XCircle',
-  info: 'Info',
+const iconMap: Record<ToastVariant, LucideIcon> = {
+  default: BellIcon,
+  success: CheckCircle2Icon,
+  warning: AlertTriangleIcon,
+  destructive: XCircleIcon,
+  info: InfoIcon,
 }
 
 const iconColorMap: Record<ToastVariant, string> = {
@@ -53,8 +61,8 @@ export function Toast({
         className,
       )}
     >
-      <Icon
-        name={iconMap[variant]}
+      <IconBase
+        icon={iconMap[variant]}
         size="md"
         className={cn('mt-0.5 flex-shrink-0', iconColorMap[variant])}
       />
@@ -80,7 +88,7 @@ export function Toast({
         aria-label="Close notification"
         className="flex-shrink-0 px-2"
       >
-        <Icon name="X" size="sm" />
+        <IconBase icon={XIcon} size="sm" />
       </Button>
     </div>
   )

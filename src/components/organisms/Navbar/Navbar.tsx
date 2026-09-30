@@ -2,7 +2,8 @@ import { useState } from 'react'
 import type { ReactNode } from 'react'
 import { cn } from '../../../utils/cn'
 import type { LinkComponent } from '../../../utils/linkComponent'
-import { Icon } from '../../atoms/Icon/Icon'
+import { IconBase } from '../../atoms/Icon/IconBase'
+import { ChevronDownIcon, MenuIcon, SettingsIcon } from 'lucide-react'
 import { Drawer } from '../Drawer/Drawer'
 import { DropdownMenu } from '../../molecules/DropdownMenu/DropdownMenu'
 import type { DropdownMenuItem } from '../../molecules/DropdownMenu/DropdownMenu'
@@ -66,7 +67,7 @@ function DesktopNavItem({ item, linkComponent }: { item: NavItem; linkComponent:
         trigger={
           <button type="button" className={cn(linkBaseClasses, 'inline-flex items-center gap-1')}>
             {item.label}
-            <Icon name="ChevronDown" size="sm" />
+            <IconBase icon={ChevronDownIcon} size="sm" />
           </button>
         }
         items={item.items}
@@ -255,7 +256,7 @@ export function Navbar({
                 aria-label={menuButtonLabel}
                 className="flex items-center justify-center w-9 h-9 rounded-md text-foreground hover:bg-muted focus:outline-none focus:ring-2 focus:ring-ring"
               >
-                <Icon name="Menu" size="sm" />
+                <IconBase icon={MenuIcon} size="sm" />
               </button>
             )}
           </div>
@@ -289,7 +290,7 @@ export function Navbar({
                   aria-label={actionsButtonLabel}
                   className="flex items-center justify-center w-9 h-9 rounded-md text-foreground hover:bg-muted focus:outline-none focus:ring-2 focus:ring-ring"
                 >
-                  <Icon name="Settings" size="sm" />
+                  <IconBase icon={SettingsIcon} size="sm" />
                 </button>
               )}
             </div>

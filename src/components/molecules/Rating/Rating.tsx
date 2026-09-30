@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { cn } from '../../../utils/cn'
-import { Icon } from '../../atoms/Icon/Icon'
+import { IconBase } from '../../atoms/Icon/IconBase'
+import { StarIcon } from 'lucide-react'
 
 type RatingSize = 'sm' | 'md' | 'lg'
 
@@ -48,8 +49,8 @@ export function Rating({
             disabled={readOnly}
             className="focus:outline-none focus-visible:ring-1 focus-visible:ring-ring rounded"
           >
-            <Icon
-              name="Star"
+            <IconBase
+              icon={StarIcon}
               size={iconSize[size]}
               className={cn(
                 'transition-colors',

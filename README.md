@@ -58,6 +58,12 @@ O CSS dos tokens é importado à parte, uma vez, no CSS global do app:
 - Tailwind v4: `@import '@indianous/base-ds/styles/v4';` (inclui o bloco `@theme` que gera os utilitários
   `bg-primary`, `text-muted-foreground` etc.)
 
+O Tailwind do app também precisa ler as classes usadas dentro dos componentes. Aponte para a
+**pasta** `dist`, não para um arquivo: desde a v0.4.11, cada componente fica num arquivo próprio.
+
+- Tailwind v4: `@source '../node_modules/@indianous/base-ds/dist';` (caminho relativo ao CSS)
+- Tailwind v3: `'./node_modules/@indianous/base-ds/dist/**/*.js'` no `content`
+
 ### Tema escuro
 
 O tema claro é o padrão. Para o escuro, coloque a classe `dark` no `<html>`: os tokens de cor
@@ -183,6 +189,21 @@ O push da tag dispara o workflow `.github/workflows/publish.yml`, que confere se
 - **Não contorne o base-ds no app.** Bug ou falta de algo (uma prop, uma variante, um
   componente) vira issue em [indianous/base-ds](https://github.com/indianous/base-ds/issues) —
   não um symlink, um wrapper que corrige comportamento ou uma cópia local do componente.
+
+## Tamanho do bundle
+
+Importar um componente leva ao cliente só ele e o que ele usa: os imports continuam
+`from '@indianous/base-ds'`, e o bundler do app descarta o resto. Numa página Next.js com
+`Heading`, `Text`, `Button` e `Container`, o base-ds acrescenta ~34 KB (11 KB com gzip).
+
+A exceção é o `Icon`: ele busca o ícone pelo nome, então todos os ícones do `lucide-react`
+(~650 KB) entram no bundle de quem o usa. No app, importe o ícone direto:
+
+```tsx
+import { MenuIcon } from 'lucide-react'
+
+;<MenuIcon className="h-5 w-5" aria-hidden="true" />
+```
 
 ## Links com o roteador do app (Next.js)
 

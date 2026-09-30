@@ -2,7 +2,8 @@ import React, { useId, useState } from 'react'
 import { cn } from '../../../utils/cn'
 import { Input } from '../../atoms/Input/Input'
 import { Button } from '../../atoms/Button/Button'
-import { Icon } from '../../atoms/Icon/Icon'
+import { IconBase } from '../../atoms/Icon/IconBase'
+import { SearchIcon } from 'lucide-react'
 
 interface SearchFieldProps {
   onSearch: (value: string) => void
@@ -57,7 +58,7 @@ export function SearchField({
         type="submit"
         aria-label={buttonLabel}
         isLoading={isLoading}
-        leftIcon={<Icon name="Search" size="sm" />}
+        leftIcon={<IconBase icon={SearchIcon} size="sm" />}
         iconOnly={buttonIconOnly}
       >
         {buttonIconOnly ? null : buttonLabel}

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Input, type InputProps } from '../../atoms/Input/Input'
-import { Icon } from '../../atoms/Icon/Icon'
+import { IconBase } from '../../atoms/Icon/IconBase'
+import { EyeIcon, EyeOffIcon } from 'lucide-react'
 import { cn } from '../../../utils/cn'
 
 export type PasswordInputProps = Omit<InputProps, 'type'> & {
@@ -27,7 +28,7 @@ export function PasswordInput({
         onClick={() => setShowPassword((prev) => !prev)}
         className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors focus:outline-none"
       >
-        <Icon name={showPassword ? 'EyeOff' : 'Eye'} size="sm" />
+        <IconBase icon={showPassword ? EyeOffIcon : EyeIcon} size="sm" />
       </button>
     </div>
   )

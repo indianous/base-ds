@@ -5,7 +5,8 @@ import { cn } from '../../../utils/cn'
 import { useBodyScrollLock } from '../../../utils/useBodyScrollLock'
 import { useStackedEscape } from '../../../utils/useStackedEscape'
 import { Button } from '../../atoms/Button/Button'
-import { Icon } from '../../atoms/Icon/Icon'
+import { IconBase } from '../../atoms/Icon/IconBase'
+import { XIcon } from 'lucide-react'
 
 type DrawerSide = 'left' | 'right' | 'top' | 'bottom'
 
@@ -74,7 +75,7 @@ export function Drawer({
             </h2>
           )}
           <Button variant="ghost" size="sm" onClick={onClose} aria-label={closeLabel}>
-            <Icon name="X" size="sm" />
+            <IconBase icon={XIcon} size="sm" />
           </Button>
         </div>
         <div className="flex-1 overflow-y-auto p-4">{children}</div>

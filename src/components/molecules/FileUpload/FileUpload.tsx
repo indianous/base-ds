@@ -1,7 +1,8 @@
 import React, { useRef, useState } from 'react'
 import { cn } from '../../../utils/cn'
 import { Button } from '../../atoms/Button/Button'
-import { Icon } from '../../atoms/Icon/Icon'
+import { IconBase } from '../../atoms/Icon/IconBase'
+import { AlertCircleIcon, FileIcon, UploadIcon, XIcon } from 'lucide-react'
 import { Text } from '../../atoms/Typography/Text'
 
 interface FileUploadProps {
@@ -104,7 +105,7 @@ export function FileUpload({
           )}
         >
           <div className="flex flex-col items-center gap-2">
-            <Icon name="Upload" size="lg" className="text-muted-foreground" />
+            <IconBase icon={UploadIcon} size="lg" className="text-muted-foreground" />
             <Text size="sm" color="muted">
               Drag files here or click to select
             </Text>
@@ -126,7 +127,7 @@ export function FileUpload({
                 className="flex items-center justify-between gap-2 rounded-md border border-border p-2"
               >
                 <div className="flex items-center gap-2 min-w-0">
-                  <Icon name="File" size="sm" />
+                  <IconBase icon={FileIcon} size="sm" />
                   <Text size="sm" className="truncate">
                     {file.name}
                   </Text>
@@ -135,7 +136,7 @@ export function FileUpload({
                   </Text>
                   {exceedsMax && (
                     <Text size="xs" color="destructive">
-                      <Icon name="AlertCircle" size="sm" className="inline mr-1" />
+                      <IconBase icon={AlertCircleIcon} size="sm" className="inline mr-1" />
                       File exceeds maximum size of {formatSize(maxSize!)}
                     </Text>
                   )}
@@ -146,7 +147,7 @@ export function FileUpload({
                   aria-label={`Remove ${file.name}`}
                   className="shrink-0 text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  <Icon name="X" size="sm" />
+                  <IconBase icon={XIcon} size="sm" />
                 </button>
               </div>
             )

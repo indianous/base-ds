@@ -1,7 +1,8 @@
 import React from 'react'
 import { cn } from '../../../utils/cn'
 import { Text } from '../../atoms/Typography/Text'
-import { Icon } from '../../atoms/Icon/Icon'
+import { IconBase } from '../../atoms/Icon/IconBase'
+import { ChevronRightIcon } from 'lucide-react'
 
 interface BreadcrumbItem {
   label: string
@@ -16,7 +17,9 @@ interface BreadcrumbProps {
 }
 
 export function Breadcrumb({ items, separator, className }: BreadcrumbProps) {
-  const defaultSeparator = <Icon name="ChevronRight" size="sm" className="text-muted-foreground" />
+  const defaultSeparator = (
+    <IconBase icon={ChevronRightIcon} size="sm" className="text-muted-foreground" />
+  )
 
   return (
     <nav aria-label="Breadcrumb" className={className}>

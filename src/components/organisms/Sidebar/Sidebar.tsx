@@ -2,7 +2,8 @@ import type { ReactElement, ReactNode } from 'react'
 import { cloneElement, useState } from 'react'
 import { cn } from '../../../utils/cn'
 import { Button } from '../../atoms/Button/Button'
-import { Icon } from '../../atoms/Icon/Icon'
+import { IconBase } from '../../atoms/Icon/IconBase'
+import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
 
 interface SidebarItem {
   label: string
@@ -67,7 +68,7 @@ export function Sidebar({ items, collapsed, onCollapse, footer, className }: Sid
           aria-label="Toggle sidebar"
           className="flex items-center justify-center w-8 h-8 rounded-md text-muted-foreground hover:bg-muted focus:ring-2 focus:ring-ring focus:outline-none"
         >
-          <Icon name={isCollapsed ? 'ChevronRight' : 'ChevronLeft'} size="sm" />
+          <IconBase icon={isCollapsed ? ChevronRightIcon : ChevronLeftIcon} size="sm" />
         </button>
       </div>
 

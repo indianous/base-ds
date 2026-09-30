@@ -6,7 +6,8 @@ import { useStackedEscape } from '../../../utils/useStackedEscape'
 import { Image } from '../../atoms/Image/Image'
 import type { ImageProps } from '../../atoms/Image/Image'
 import { Button } from '../../atoms/Button/Button'
-import { Icon } from '../../atoms/Icon/Icon'
+import { IconBase } from '../../atoms/Icon/IconBase'
+import { ChevronLeftIcon, ChevronRightIcon, XIcon } from 'lucide-react'
 
 export interface GalleryImage {
   src: string
@@ -121,7 +122,7 @@ export function ImageGallery({
               aria-label="Previous image"
               className="absolute left-2 top-1/2 -translate-y-1/2 bg-background shadow-md"
             >
-              <Icon name="ChevronLeft" size="sm" />
+              <IconBase icon={ChevronLeftIcon} size="sm" />
             </Button>
             <Button
               iconOnly
@@ -132,7 +133,7 @@ export function ImageGallery({
               aria-label="Next image"
               className="absolute right-2 top-1/2 -translate-y-1/2 bg-background shadow-md"
             >
-              <Icon name="ChevronRight" size="sm" />
+              <IconBase icon={ChevronRightIcon} size="sm" />
             </Button>
           </>
         )}
@@ -165,7 +166,7 @@ export function ImageGallery({
                 aria-label="Close zoom"
                 className="absolute right-2 top-2 z-10 bg-background shadow-md"
               >
-                <Icon name="X" size="sm" />
+                <IconBase icon={XIcon} size="sm" />
               </Button>
 
               <img
@@ -185,7 +186,7 @@ export function ImageGallery({
                     aria-label="Previous image"
                     className="absolute left-2 top-1/2 -translate-y-1/2 bg-background shadow-md"
                   >
-                    <Icon name="ChevronLeft" size="sm" />
+                    <IconBase icon={ChevronLeftIcon} size="sm" />
                   </Button>
                   <Button
                     iconOnly
@@ -196,7 +197,7 @@ export function ImageGallery({
                     aria-label="Next image"
                     className="absolute right-2 top-1/2 -translate-y-1/2 bg-background shadow-md"
                   >
-                    <Icon name="ChevronRight" size="sm" />
+                    <IconBase icon={ChevronRightIcon} size="sm" />
                   </Button>
                 </>
               )}
