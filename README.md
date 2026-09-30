@@ -93,7 +93,16 @@ updates:
     # opcional: limita os PRs ao base-ds
     allow:
       - dependency-name: '@indianous/base-ds'
+    # opcional: propõe o base-ds assim que ele é publicado
+    cooldown:
+      default-days: 3
+      exclude:
+        - '@indianous/base-ds'
 ```
+
+O Dependabot só propõe uma versão depois que ela está publicada há 3 dias (a carência padrão).
+Sem o bloco `cooldown`, a PR do base-ds chega uns 3 dias depois da publicação. O `exclude` tira só
+o base-ds da carência, e as outras dependências continuam com ela.
 
 `GH_PACKAGES_TOKEN` é um token clássico com `read:packages` (o mesmo tipo do token da
 [Instalação](#instalação)), salvo como segredo **do Dependabot**, não de Actions:

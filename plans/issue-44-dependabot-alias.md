@@ -175,3 +175,59 @@ Só muda Markdown: rodar `npm run format:check` (o Prettier cobre `README.md`, `
 A issue fica aberta até a confirmação final: o PR do Dependabot no `ecommerce-frontend` na próxima
 versão publicada do base-ds. Depois do commit deste README, eu comento na #44 o que mudou e o que
 falta.
+
+## Verificação com a v0.4.8 (2026-09-30)
+
+A v0.4.8 saiu em 2026-09-28 às 15:52 UTC, e o Dependabot ainda não abriu PR no
+`ecommerce-frontend`. O motivo não é o alias nem o token. Desde 2026-07-14, o Dependabot tem uma
+**carência padrão de 3 dias** nas atualizações de versão: ele só propõe uma versão depois de 3 dias
+publicada, mesmo sem nada no `dependabot.yml`
+([changelog do GitHub](https://github.blog/changelog/2026-07-14-dependabot-version-updates-introduce-default-package-cooldown/)).
+O log da execução de 2026-09-27 às 12:03 mostra isso:
+
+```
+Filtered out 5 versions due to cooldown      (0.4.3 a 0.4.7, publicadas em 26 e 27/09)
+Latest version is 0.4.2
+No update needed for @indianous/base-ds 0.4.7
+```
+
+Além disso, o Dependabot não rodou depois da publicação da v0.4.8, que só pode ser proposta a partir
+de 2026-10-01 às 15:52 UTC.
+
+A carência é configurada no `dependabot.yml` de cada app, não no pacote, e é opcional. Sem mexer
+nela, a PR do base-ds chega uns 3 dias depois da publicação. Para um pacote publicado pela própria
+equipe, a carência não protege de nada, então o app pode tirar só o base-ds dela.
+
+### README
+
+Na seção **Atualizando → Dependabot**, acrescentar ao exemplo um bloco `cooldown`, marcado como
+opcional:
+
+```yaml
+cooldown:
+  default-days: 3
+  exclude:
+    - '@indianous/base-ds'
+```
+
+Explicar em uma frase que, sem ele, a PR chega uns 3 dias depois da publicação, e que o `exclude`
+mantém a carência para as outras dependências.
+
+### CHANGELOG
+
+A mudança é só no README: sem bump de versão nem tag. A entrada vai numa seção `## [Não publicado]`,
+em "Alterado".
+
+### `ecommerce-frontend`
+
+Não muda. Ele fica com a carência padrão, o que também serve para verificar o fluxo com o padrão.
+
+### Fechamento da issue
+
+Depois de 2026-10-01 às 15:52 UTC, rodar o "Check for updates" (Insights → Dependency graph →
+Dependabot) ou esperar a execução semanal. Eu confiro o log e a PR com o `gh`: ela deve levar o
+`@indianous/base-ds` de `0.4.7` para `0.4.8`. Com a PR aberta, comento o resultado na #44 e a fecho.
+
+### Verificação
+
+`npm run format:check`.

@@ -6,6 +6,15 @@ Todas as mudanças relevantes do base-ds são registradas aqui. O formato segue 
 mudança que exige ajuste nos apps sobe o _minor_ (`0.1.0 → 0.2.0`); correções e componentes
 novos sem impacto sobem o _patch_.
 
+## [Não publicado]
+
+### Alterado
+
+- README: o exemplo do Dependabot ganhou um bloco `cooldown` opcional, que tira o base-ds da
+  carência padrão de 3 dias do Dependabot
+  ([#44](https://github.com/indianous/base-ds/issues/44)). Sem ele, a PR de uma versão nova chega
+  uns 3 dias depois da publicação.
+
 ## [0.4.8] - 2026-09-28
 
 ### Adicionado
