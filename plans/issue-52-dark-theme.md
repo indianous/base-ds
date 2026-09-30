@@ -127,6 +127,16 @@ Seção nova, "Tema escuro":
   que, no Next.js, o `next-themes` (`attribute="class"`) já faz isso;
 - o que fica por conta do app: salvar a preferência e o botão de alternância.
 
+### Resultado da validação (implementação)
+
+A primeira tentativa foi um `define` (`import.meta.env.VITE_STORYBOOK_THEME`) só no projeto
+`storybook-dark`. O valor vazou para o projeto `storybook`, que também passou a abrir no escuro.
+Isso apareceu ao estragar um token escuro de propósito: as stories reprovaram nos dois projetos. A
+solução foi uma pasta de configuração própria, `.storybook-dark/`, cujo `main.ts` reexporta o
+principal e cujo `preview.tsx` reaproveita o preview principal, trocando só o `initialGlobals.theme`
+para `'dark'`. Com o mesmo token estragado, só o `storybook-dark` reprova. Nenhuma story precisou de
+ajuste: as 264 passam nos dois temas.
+
 ## Versão e changelog
 
 Recurso novo, opcional, sem ajuste obrigatório nos apps: **patch**, v0.4.10. Entrada em

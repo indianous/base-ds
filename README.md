@@ -58,6 +58,33 @@ O CSS dos tokens é importado à parte, uma vez, no CSS global do app:
 - Tailwind v4: `@import '@indianous/base-ds/styles/v4';` (inclui o bloco `@theme` que gera os utilitários
   `bg-primary`, `text-muted-foreground` etc.)
 
+### Tema escuro
+
+O tema claro é o padrão. Para o escuro, coloque a classe `dark` no `<html>`: os tokens de cor
+(`--color-background`, `--color-primary` …) trocam de valor, e os componentes acompanham sem
+nenhuma prop. A classe também funciona num trecho da página (`<section class="dark">`). O contraste
+dos dois temas é verificado no base-ds.
+
+- **Tailwind v4:** o `@import '@indianous/base-ds/styles/v4'` já liga a variante `dark:` à classe
+  `.dark`, para o app usar `dark:` nos próprios estilos.
+- **Tailwind v3:** para usar `dark:` no app, configure `darkMode: 'class'` no `tailwind.config`.
+- Dê ao `<body>` o fundo e o texto do tema: `class="bg-background text-foreground"`.
+
+A escolha do tema fica com o app: seguir o `prefers-color-scheme`, salvar a preferência do
+visitante e oferecer um botão para alternar. Aplique a classe **antes da primeira pintura**, senão
+a página aparece clara e depois escurece. O jeito comum é um script inline no `<head>`:
+
+```html
+<script>
+  const saved = localStorage.getItem('theme')
+  const dark = saved ? saved === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches
+  document.documentElement.classList.toggle('dark', dark)
+</script>
+```
+
+No Next.js, o [`next-themes`](https://github.com/pacocoursey/next-themes) com `attribute="class"`
+faz isso (script, preferência salva e sincronização entre abas).
+
 ## Atualizando
 
 1. No app, `npm outdated @indianous/base-ds` mostra a versão instalada e a mais recente publicada.

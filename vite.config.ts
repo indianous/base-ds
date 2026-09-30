@@ -44,6 +44,20 @@ export default defineConfig({
           },
         },
       },
+      {
+        // Same stories on the dark theme, so the a11y addon checks contrast in both themes.
+        extends: true,
+        plugins: [storybookTest({ configDir: path.join(dirname, '.storybook-dark') })],
+        test: {
+          name: 'storybook-dark',
+          browser: {
+            enabled: true,
+            headless: true,
+            provider: playwright({}),
+            instances: [{ browser: 'chromium' }],
+          },
+        },
+      },
     ],
   },
 })

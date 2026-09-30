@@ -1,6 +1,6 @@
 {
   "name": "@indianous/base-ds",
-  "version": "0.4.9",
+  "version": "0.4.10",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/indianous/base-ds.git"
@@ -36,7 +36,7 @@
     "test": "vitest run --project=unit --passWithNoTests",
     "test:watch": "vitest --project=unit",
     "test:ui": "vitest --ui --project=unit",
-    "test:stories": "vitest run --project=storybook --passWithNoTests",
+    "test:stories": "vitest run --project=storybook --project=storybook-dark --passWithNoTests",
     "test:all": "vitest run --passWithNoTests",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",

@@ -9,14 +9,30 @@ const themeCss = readFileSync(new URL('../styles/theme.css', import.meta.url), '
 // WCAG AA minimum for normal-size text.
 const MIN_TEXT_CONTRAST = 4.5
 
-const declarations = new Map(
-  [...themeCss.matchAll(/(--[\w-]+):\s*([^;]+);/g)].map(([, name = '', value = '']) => [
-    name,
-    value.trim(),
-  ]),
-)
+// Declarations of a top-level rule in theme.css (`:root { … }`, `.dark { … }`), empty if missing.
+function parseBlock(selector: string): Map<string, string> {
+  const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  const body = new RegExp(`^${escaped} \\{([\\s\\S]*?)^\\}`, 'm').exec(themeCss)?.[1] ?? ''
+  return new Map(
+    [...body.matchAll(/(--[\w-]+):\s*([^;]+);/g)].map(([, name = '', value = '']) => [
+      name,
+      value.trim(),
+    ]),
+  )
+}
 
-function resolveToken(name: string): string {
+const rootDeclarations = parseBlock(':root')
+const darkDeclarations = parseBlock('.dark')
+
+// In the dark theme a token resolves in `.dark` first and falls back to `:root` (the primitives).
+const themes = {
+  light: rootDeclarations,
+  dark: new Map([...rootDeclarations, ...darkDeclarations]),
+}
+type Theme = keyof typeof themes
+
+function resolveToken(name: string, theme: Theme): string {
+  const declarations = themes[theme]
   const value = declarations.get(`--color-${name}`)
   if (value === undefined) throw new Error(`Unknown color token: ${name}`)
   let resolved = value
@@ -51,21 +67,58 @@ const textPairs: [foreground: string, background: string][] = [
   ['muted-foreground', 'background'],
   ['muted-foreground', 'muted'],
   ...statuses.map((status): [string, string] => [`${status}-foreground`, status]),
+  ...statuses.map((status): [string, string] => [`${status}-foreground`, `${status}-hover`]),
   ...statuses.map((status): [string, string] => [`${status}-muted-fg`, `${status}-muted`]),
+  // Statuses used as text (`text-primary`, `text-destructive` …) on the page background.
+  ...statuses.map((status): [string, string] => [status, 'background']),
 ]
 
-describe('color tokens', () => {
+// Same in both themes, so `.dark` doesn't redefine them.
+const themeIndependent = (name: string) => name === 'overlay' || name.startsWith('chart-')
+
+const semanticDark: Record<string, string> = colors['semantic-dark']
+
+describe.each(['light', 'dark'] as const)('%s theme color tokens', (theme) => {
   it.each(textPairs)('%s on %s meets WCAG AA contrast for text', (foreground, background) => {
-    const ratio = contrastRatio(resolveToken(foreground), resolveToken(background))
+    const ratio = contrastRatio(resolveToken(foreground, theme), resolveToken(background, theme))
     expect(ratio).toBeGreaterThanOrEqual(MIN_TEXT_CONTRAST)
   })
+})
 
-  it('keeps colors.json in sync with theme.css', () => {
+describe('color tokens', () => {
+  it('keeps colors.json semantic in sync with the :root block of theme.css', () => {
     const semantic: Record<string, string> = colors.semantic
     const hexTokens = Object.entries(semantic).filter(([, value]) => value.startsWith('#'))
     expect(hexTokens.length).toBeGreaterThan(0)
     for (const [name, value] of hexTokens) {
-      expect({ name, value: resolveToken(name) }).toEqual({ name, value: value.toLowerCase() })
+      expect({ name, value: resolveToken(name, 'light') }).toEqual({
+        name,
+        value: value.toLowerCase(),
+      })
     }
+  })
+
+  it('keeps colors.json semantic-dark in sync with the .dark block of theme.css', () => {
+    const darkTokens = [...darkDeclarations.keys()]
+      .filter((name) => name.startsWith('--color-'))
+      .map((name) => name.slice('--color-'.length))
+    expect(darkTokens.sort()).toEqual(Object.keys(semanticDark).sort())
+    for (const [name, value] of Object.entries(semanticDark)) {
+      expect({ name, value: resolveToken(name, 'dark') }).toEqual({
+        name,
+        value: value.toLowerCase(),
+      })
+    }
+  })
+
+  it('redefines every theme-dependent semantic color in the dark theme', () => {
+    const expected = Object.keys(colors.semantic).filter((name) => !themeIndependent(name))
+    expect(Object.keys(semanticDark).sort()).toEqual(expected.sort())
+  })
+
+  it('sets color-scheme for each theme so native controls follow it', () => {
+    expect(rootDeclarations.size).toBeGreaterThan(0)
+    expect(themeCss).toMatch(/^:root \{[^}]*color-scheme: light;/m)
+    expect(themeCss).toMatch(/^\.dark \{[^}]*color-scheme: dark;/m)
   })
 })

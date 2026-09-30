@@ -6,6 +6,26 @@ Todas as mudanças relevantes do base-ds são registradas aqui. O formato segue 
 mudança que exige ajuste nos apps sobe o _minor_ (`0.1.0 → 0.2.0`); correções e componentes
 novos sem impacto sobem o _patch_.
 
+## [0.4.10] - 2026-09-30
+
+### Adicionado
+
+- Tema escuro ([#52](https://github.com/indianous/base-ds/issues/52)): com a classe `dark` no
+  `<html>` (ou num trecho da página), os tokens semânticos de cor trocam para a paleta escura.
+  Nos status, o tom principal fica mais claro (400), com texto escuro por cima. Os primitivos,
+  os gráficos, o `overlay` e os tokens que não são de cor não mudam. O `theme.css` também define o
+  `color-scheme` de cada tema, para os controles nativos e as barras de rolagem acompanharem.
+- `theme-v4.css`: `@custom-variant dark`, que liga o `dark:` do Tailwind v4 à classe `.dark`.
+- `colors.json`: chave `semantic-dark` com os valores do tema escuro.
+- O teste de contraste cobre os dois temas e ganha dois pares: os status usados como texto sobre o
+  fundo (`text-primary` …) e o texto dos botões sobre o hover.
+- Storybook: botão para alternar o tema na barra de ferramentas. O `test:stories` roda o a11y de
+  todas as stories nos dois temas.
+
+### Ajustes necessários nos apps
+
+- Nenhum. O tema claro continua o padrão. Para o escuro, veja "Tema escuro" no README.
+
 ## [0.4.9] - 2026-09-30
 
 ### Adicionado

@@ -15,8 +15,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `npm run typecheck` — `tsc -b` over `tsconfig.app.json` (all of `src/`, including tests and stories) and `tsconfig.node.json` (`vite.config.ts`). The build's `tsconfig.build.json` excludes tests/stories and Vitest doesn't type-check, so this is the only thing that catches type errors there.
 - `npm run lint:fix` / `npm run format` / `npm run format:check` — ESLint autofix / Prettier write / Prettier check. The Prettier scripts cover the whole repo (`.`), honoring `.gitignore` and `.prettierignore` — not just `src/`.
 - `npm test` — Vitest `unit` project only (jsdom). Does **not** run Storybook interaction tests.
-- `npm run test:stories` — Vitest `storybook` project (Playwright/Chromium browser mode) — required to exercise Storybook interaction tests
-- `npm run test:all` — both Vitest projects
+- `npm run test:stories` — Vitest `storybook` and `storybook-dark` projects (Playwright/Chromium browser mode; every story on the light and on the dark theme) — required to exercise Storybook interaction tests
+- `npm run test:all` — all three Vitest projects
 - `npm run storybook` — Storybook dev server
 
 `.oxlintrc.json` exists but isn't wired into any script — ESLint is the only linter that actually gates code; ignore oxlint.
@@ -34,7 +34,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Never hardcode colors, spacing, shadows, radii, or typography values in a component. Tokens live in `src/tokens/*.json`, are exposed as CSS custom properties in `src/styles/theme.css`, and are mapped to Tailwind utilities in `tailwind.config.js` (e.g. `bg-primary` → `var(--...)`). Use the Tailwind utility classes, not literal values.
 
-Semantic color values exist twice — hex in `src/tokens/colors.json` and `var(--primitive)` in `src/styles/theme.css` — and must stay in sync. `src/tokens/contrast.test.ts` (unit project) enforces that sync and WCAG AA (4.5:1) for every foreground/background token pair; changing a semantic color means that test must keep passing.
+Semantic color values exist twice — hex in `src/tokens/colors.json` and `var(--primitive)` in `src/styles/theme.css` — and must stay in sync. There are two themes: light in `:root` / `semantic`, dark in `.dark` / `semantic-dark` (only theme-dependent colors; `overlay` and `chart-*` are shared). A new semantic color needs a value in both. `src/tokens/contrast.test.ts` (unit project) enforces the sync, that every theme-dependent color has a dark value, and WCAG AA (4.5:1) for every foreground/background token pair in both themes; changing a semantic color means that test must keep passing.
 
 ## Accessibility labels
 
@@ -56,7 +56,7 @@ Apps using the design system aren't all in English (e.g. `pt-BR` sites), so ever
 
 ## Testing
 
-- Two Vitest projects: `unit` (jsdom, default `npm test`) and `storybook` (Playwright/Chromium, `npm run test:stories`) — `npm test` alone doesn't cover Storybook interaction tests.
+- Three Vitest projects: `unit` (jsdom, default `npm test`), `storybook` and `storybook-dark` (Playwright/Chromium, both run by `npm run test:stories`) — `npm test` alone doesn't cover Storybook interaction tests. `storybook-dark` runs the same stories on the dark theme through `.storybook-dark/` (its `preview.tsx` only overrides `initialGlobals.theme`); don't switch it with `define`/env vars, which leak into the `storybook` project.
 - Interactive components should include an accessibility assertion via `jest-axe` (`toHaveNoViolations`, wired in `src/setupTests.ts`).
 - `jest-axe` in jsdom can't measure color contrast. Contrast (and every other axe rule) is checked per story by the Storybook a11y addon (`a11y: { test: 'error' }` in `.storybook/preview.tsx`), so `npm run test:stories` must pass with zero failures before work is done — it also gates publishing.
 - Form controls must forward `aria-label`/`aria-labelledby`/`aria-describedby`/`aria-invalid` to the actual input: `FormField` injects the last two via `cloneElement`. Stories rendering a control on its own give it an `aria-label`.
