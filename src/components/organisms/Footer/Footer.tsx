@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { cn } from '../../../utils/cn'
+import type { LinkComponent } from '../../../utils/linkComponent'
 
 interface FooterColumn {
   title: string
@@ -18,9 +19,18 @@ interface FooterProps {
   socialLinks?: FooterSocialLink[]
   copyright?: string
   className?: string
+  /** Component rendered in place of `<a>` for every link (e.g. Next.js `Link`). */
+  linkComponent?: LinkComponent
 }
 
-export function Footer({ logo, columns, socialLinks, copyright, className }: FooterProps) {
+export function Footer({
+  logo,
+  columns,
+  socialLinks,
+  copyright,
+  className,
+  linkComponent: LinkElement = 'a',
+}: FooterProps) {
   const year = new Date().getFullYear()
 
   return (
@@ -36,12 +46,12 @@ export function Footer({ logo, columns, socialLinks, copyright, className }: Foo
                 <ul className="flex flex-col gap-2">
                   {column.links.map((link) => (
                     <li key={link.href}>
-                      <a
+                      <LinkElement
                         href={link.href}
                         className="text-sm text-muted-foreground hover:text-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-ring"
                       >
                         {link.label}
-                      </a>
+                      </LinkElement>
                     </li>
                   ))}
                 </ul>
@@ -56,14 +66,14 @@ export function Footer({ logo, columns, socialLinks, copyright, className }: Foo
           {socialLinks !== undefined && socialLinks.length > 0 && (
             <div className="flex items-center gap-3">
               {socialLinks.map((social) => (
-                <a
+                <LinkElement
                   key={social.href}
                   href={social.href}
                   aria-label={social.label}
                   className="text-muted-foreground hover:text-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-ring"
                 >
                   {social.icon}
-                </a>
+                </LinkElement>
               ))}
             </div>
           )}

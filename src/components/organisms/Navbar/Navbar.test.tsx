@@ -1,4 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
+import type { AnchorHTMLAttributes } from 'react'
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { axe } from 'jest-axe'
@@ -394,5 +395,106 @@ describe('Navbar custom labels', () => {
     await userEvent.click(screen.getByRole('button', { name: /more actions/i }))
     await userEvent.click(screen.getByRole('button', { name: 'Fechar painel' }))
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  })
+})
+
+// Stands in for a router link (e.g. Next.js `Link`): renders its own <a> and navigates on the
+// client, so the click never reaches the browser's default navigation.
+function TestLink({
+  href,
+  children,
+  onClick,
+  ...props
+}: AnchorHTMLAttributes<HTMLAnchorElement> & { href: string }) {
+  return (
+    <a
+      {...props}
+      href={href}
+      data-custom-link=""
+      onClick={(e) => {
+        onClick?.(e)
+        e.preventDefault()
+      }}
+    >
+      {children}
+    </a>
+  )
+}
+
+describe('Navbar linkComponent', () => {
+  const items: NavItem[] = [
+    { label: 'Home', href: '/', active: true },
+    { label: 'Projects', href: '/projects' },
+    {
+      type: 'dropdown',
+      label: 'Resources',
+      items: [{ label: 'Docs', href: '/docs' }],
+    },
+  ]
+
+  it('renders desktop link items with linkComponent, keeping href, aria-current and classes', () => {
+    render(<Navbar items={items} linkComponent={TestLink} />)
+    const home = screen.getByRole('link', { name: 'Home' })
+    expect(home).toHaveAttribute('data-custom-link')
+    expect(home).toHaveAttribute('href', '/')
+    expect(home).toHaveAttribute('aria-current', 'page')
+    expect(home).toHaveClass('text-primary')
+    expect(screen.getByRole('link', { name: 'Projects' })).toHaveAttribute('data-custom-link')
+  })
+
+  it('renders desktop dropdown sub-items with linkComponent', async () => {
+    render(<Navbar items={items} linkComponent={TestLink} />)
+    await userEvent.click(screen.getByRole('button', { name: 'Resources' }))
+    const docs = screen.getByRole('menuitem', { name: 'Docs' })
+    expect(docs).toHaveAttribute('data-custom-link')
+    expect(docs).toHaveAttribute('href', '/docs')
+  })
+
+  it('renders mobile drawer link items and dropdown sub-items with linkComponent', async () => {
+    render(<Navbar items={items} linkComponent={TestLink} />)
+    await userEvent.click(screen.getByRole('button', { name: /open navigation menu/i }))
+    const dialog = screen.getByRole('dialog')
+    expect(within(dialog).getByRole('link', { name: 'Home' })).toHaveAttribute('data-custom-link')
+    expect(within(dialog).getByRole('link', { name: 'Docs' })).toHaveAttribute('data-custom-link')
+  })
+
+  it('closes the mobile drawer when a link item is clicked', async () => {
+    render(<Navbar items={items} linkComponent={TestLink} />)
+    await userEvent.click(screen.getByRole('button', { name: /open navigation menu/i }))
+    await userEvent.click(
+      within(screen.getByRole('dialog')).getByRole('link', { name: 'Projects' }),
+    )
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  })
+
+  it('closes the mobile drawer when a dropdown sub-item is clicked', async () => {
+    render(<Navbar items={items} linkComponent={TestLink} />)
+    await userEvent.click(screen.getByRole('button', { name: /open navigation menu/i }))
+    await userEvent.click(within(screen.getByRole('dialog')).getByRole('link', { name: 'Docs' }))
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  })
+
+  it('closes the mobile drawer and calls onClick when a button item is clicked', async () => {
+    const onClick = vi.fn()
+    render(<Navbar items={[{ label: 'Settings', onClick }]} />)
+    await userEvent.click(screen.getByRole('button', { name: /open navigation menu/i }))
+    await userEvent.click(
+      within(screen.getByRole('dialog')).getByRole('button', { name: 'Settings' }),
+    )
+    expect(onClick).toHaveBeenCalledTimes(1)
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  })
+
+  it('closes the mobile drawer when a plain <a> item is clicked', async () => {
+    render(<Navbar items={[{ label: 'About', href: '#about' }]} />)
+    await userEvent.click(screen.getByRole('button', { name: /open navigation menu/i }))
+    await userEvent.click(within(screen.getByRole('dialog')).getByRole('link', { name: 'About' }))
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  })
+
+  it('has no accessibility violations with linkComponent', async () => {
+    const { container } = render(<Navbar items={items} linkComponent={TestLink} />)
+    await userEvent.click(screen.getByRole('button', { name: /open navigation menu/i }))
+    expect(await axe(container)).toHaveNoViolations()
   })
 })

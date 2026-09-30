@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { ReactNode } from 'react'
 import { cn } from '../../../utils/cn'
+import type { LinkComponent } from '../../../utils/linkComponent'
 import { Icon } from '../../atoms/Icon/Icon'
 import { Drawer } from '../Drawer/Drawer'
 import { DropdownMenu } from '../../molecules/DropdownMenu/DropdownMenu'
@@ -35,6 +36,8 @@ export interface NavbarProps {
   drawerCloseLabel?: string
   /** `dismissLabel` of both drawers. */
   drawerDismissLabel?: string
+  /** Component rendered in place of `<a>` for every link (e.g. Next.js `Link`). */
+  linkComponent?: LinkComponent
 }
 
 const logoCellClasses: Record<NavbarLogoAlign, string> = {
@@ -53,10 +56,13 @@ const linkBaseClasses =
 const mobileLinkBaseClasses =
   'block px-3 py-2 rounded-md text-sm font-medium text-foreground hover:bg-muted transition-colors focus:outline-none focus:ring-2 focus:ring-ring'
 
-function DesktopNavItem({ item }: { item: NavItem }) {
+function DesktopNavItem({ item, linkComponent }: { item: NavItem; linkComponent: LinkComponent }) {
+  const LinkElement = linkComponent
+
   if (item.type === 'dropdown') {
     return (
       <DropdownMenu
+        linkComponent={linkComponent}
         trigger={
           <button type="button" className={cn(linkBaseClasses, 'inline-flex items-center gap-1')}>
             {item.label}
@@ -71,13 +77,13 @@ function DesktopNavItem({ item }: { item: NavItem }) {
   const activeProps = item.active ? { 'aria-current': 'page' as const } : {}
 
   return item.href !== undefined ? (
-    <a
+    <LinkElement
       href={item.href}
       {...activeProps}
       className={cn(linkBaseClasses, item.active && 'text-primary font-semibold')}
     >
       {item.label}
-    </a>
+    </LinkElement>
   ) : (
     <button
       type="button"
@@ -90,7 +96,17 @@ function DesktopNavItem({ item }: { item: NavItem }) {
   )
 }
 
-function MobileDropdownSubItem({ item }: { item: DropdownMenuItem }) {
+interface MobileItemProps {
+  linkComponent: LinkComponent
+  /** Closes the drawer: with client-side navigation the page no longer reloads to close it. */
+  onNavigate: () => void
+}
+
+function MobileDropdownSubItem({
+  item,
+  linkComponent: LinkElement,
+  onNavigate,
+}: MobileItemProps & { item: DropdownMenuItem }) {
   if (item.type === 'separator') {
     return <div role="separator" className="my-1 h-px bg-border" />
   }
@@ -98,17 +114,29 @@ function MobileDropdownSubItem({ item }: { item: DropdownMenuItem }) {
   const className = cn(mobileLinkBaseClasses, item.danger && 'text-destructive')
 
   return item.href !== undefined ? (
-    <a href={item.href} className={className}>
+    <LinkElement href={item.href} onClick={onNavigate} className={className}>
       {item.label}
-    </a>
+    </LinkElement>
   ) : (
-    <button type="button" onClick={item.onClick} disabled={item.disabled} className={className}>
+    <button
+      type="button"
+      onClick={() => {
+        item.onClick?.()
+        onNavigate()
+      }}
+      disabled={item.disabled}
+      className={className}
+    >
       {item.label}
     </button>
   )
 }
 
-function MobileNavItem({ item }: { item: NavItem }) {
+function MobileNavItem({
+  item,
+  linkComponent: LinkElement,
+  onNavigate,
+}: MobileItemProps & { item: NavItem }) {
   if (item.type === 'dropdown') {
     return (
       <div>
@@ -118,7 +146,11 @@ function MobileNavItem({ item }: { item: NavItem }) {
         <ul className="flex flex-col gap-1 pl-3">
           {item.items.map((subItem, index) => (
             <li key={index}>
-              <MobileDropdownSubItem item={subItem} />
+              <MobileDropdownSubItem
+                item={subItem}
+                linkComponent={LinkElement}
+                onNavigate={onNavigate}
+              />
             </li>
           ))}
         </ul>
@@ -129,17 +161,21 @@ function MobileNavItem({ item }: { item: NavItem }) {
   const activeProps = item.active ? { 'aria-current': 'page' as const } : {}
 
   return item.href !== undefined ? (
-    <a
+    <LinkElement
       href={item.href}
+      onClick={onNavigate}
       {...activeProps}
       className={cn(mobileLinkBaseClasses, item.active && 'text-primary font-semibold')}
     >
       {item.label}
-    </a>
+    </LinkElement>
   ) : (
     <button
       type="button"
-      onClick={item.onClick}
+      onClick={() => {
+        item.onClick?.()
+        onNavigate()
+      }}
       {...activeProps}
       className={cn(mobileLinkBaseClasses, item.active && 'text-primary font-semibold')}
     >
@@ -163,6 +199,7 @@ export function Navbar({
   actionsTitle = 'Actions',
   drawerCloseLabel = 'Close drawer',
   drawerDismissLabel = 'Dismiss drawer',
+  linkComponent = 'a',
 }: NavbarProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isActionsDrawerOpen, setIsActionsDrawerOpen] = useState(false)
@@ -187,7 +224,7 @@ export function Navbar({
           <ul className="flex items-center gap-1">
             {items!.map((item, index) => (
               <li key={index}>
-                <DesktopNavItem item={item} />
+                <DesktopNavItem item={item} linkComponent={linkComponent} />
               </li>
             ))}
           </ul>
@@ -264,7 +301,7 @@ export function Navbar({
             <ul className="flex items-center gap-1">
               {items!.map((item, index) => (
                 <li key={index}>
-                  <DesktopNavItem item={item} />
+                  <DesktopNavItem item={item} linkComponent={linkComponent} />
                 </li>
               ))}
             </ul>
@@ -288,7 +325,11 @@ export function Navbar({
               <ul className="flex flex-col gap-1">
                 {items!.map((item, index) => (
                   <li key={index}>
-                    <MobileNavItem item={item} />
+                    <MobileNavItem
+                      item={item}
+                      linkComponent={linkComponent}
+                      onNavigate={() => setIsMobileMenuOpen(false)}
+                    />
                   </li>
                 ))}
               </ul>

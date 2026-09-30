@@ -3,6 +3,7 @@ import type { KeyboardEvent as ReactKeyboardEvent, ReactElement, ReactNode } fro
 import { cn } from '../../../utils/cn'
 import { Button } from '../../atoms/Button/Button'
 import type { TooltipSide } from '../../../utils/tooltipPosition'
+import type { LinkComponent } from '../../../utils/linkComponent'
 
 export type DropdownMenuItem =
   | { type: 'separator' }
@@ -23,6 +24,8 @@ export interface DropdownMenuProps {
   position?: TooltipSide
   onOpenChange?: (open: boolean) => void
   className?: string
+  /** Component rendered in place of `<a>` for items with `href` (e.g. Next.js `Link`). */
+  linkComponent?: LinkComponent
 }
 
 const sideClass: Record<TooltipSide, string> = {
@@ -44,6 +47,7 @@ export function DropdownMenu({
   position = 'bottom',
   onOpenChange,
   className,
+  linkComponent: LinkElement = 'a',
 }: DropdownMenuProps) {
   const [open, setOpen] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -164,18 +168,25 @@ export function DropdownMenu({
               return (
                 <Button
                   key={index}
-                  as="a"
-                  href={item.href}
+                  asChild
                   role="menuitem"
                   tabIndex={-1}
                   variant="ghost"
                   size="sm"
-                  disabled={item.disabled ?? false}
-                  onClick={handleSelect}
-                  className={itemClassName}
+                  aria-disabled={item.disabled ? 'true' : undefined}
+                  onClick={(e) => {
+                    if (item.disabled) {
+                      e.preventDefault()
+                      return
+                    }
+                    handleSelect()
+                  }}
+                  className={cn(itemClassName, item.disabled && 'pointer-events-none opacity-50')}
                 >
-                  {item.icon}
-                  {item.label}
+                  <LinkElement href={item.href}>
+                    {item.icon}
+                    {item.label}
+                  </LinkElement>
                 </Button>
               )
             }

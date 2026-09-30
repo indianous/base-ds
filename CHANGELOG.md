@@ -6,7 +6,20 @@ Todas as mudanças relevantes do base-ds são registradas aqui. O formato segue 
 mudança que exige ajuste nos apps sobe o _minor_ (`0.1.0 → 0.2.0`); correções e componentes
 novos sem impacto sobem o _patch_.
 
-## [Não publicado]
+## [0.4.9] - 2026-09-30
+
+### Adicionado
+
+- `Navbar`, `Footer` e `DropdownMenu`: prop `linkComponent`, que troca o `<a>` dos links pelo
+  componente de link do app, como o `Link` do Next.js, para navegar sem recarregar a página
+  ([#54](https://github.com/indianous/base-ds/issues/54)). O `Navbar` a repassa aos menus dropdown.
+  O padrão continua sendo `<a>`. O tipo `LinkComponent` é exportado.
+
+### Corrigido
+
+- `Navbar`: o drawer do celular fecha quando um item é clicado. Antes, ele só "fechava" porque a
+  página recarregava, e continuaria aberto com uma navegação no cliente ou com um item que chama
+  `onClick`.
 
 ### Alterado
 

@@ -1,4 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
+import type { AnchorHTMLAttributes } from 'react'
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { axe } from 'jest-axe'
@@ -189,5 +190,107 @@ describe('DropdownMenu', () => {
     )
     await userEvent.click(screen.getByRole('button', { name: 'User menu' }))
     expect(screen.getByRole('menu')).toBeInTheDocument()
+  })
+})
+
+// Stands in for a router link (e.g. Next.js `Link`): renders its own <a> and navigates on the
+// client, so the click never reaches the browser's default navigation.
+function TestLink({
+  href,
+  children,
+  onClick,
+  ...props
+}: AnchorHTMLAttributes<HTMLAnchorElement> & { href: string }) {
+  return (
+    <a
+      {...props}
+      href={href}
+      data-custom-link=""
+      onClick={(e) => {
+        onClick?.(e)
+        e.preventDefault()
+      }}
+    >
+      {children}
+    </a>
+  )
+}
+
+describe('DropdownMenu linkComponent', () => {
+  const linkItems: DropdownMenuItem[] = [
+    { label: 'Home', href: '/' },
+    { label: 'Docs', href: '/docs' },
+  ]
+
+  it('renders items with href using linkComponent, keeping role="menuitem" and href', async () => {
+    render(
+      <DropdownMenu
+        trigger={<Button>Options</Button>}
+        items={linkItems}
+        linkComponent={TestLink}
+      />,
+    )
+    await userEvent.click(screen.getByRole('button', { name: 'Options' }))
+    const home = screen.getByRole('menuitem', { name: 'Home' })
+    expect(home).toHaveAttribute('data-custom-link')
+    expect(home).toHaveAttribute('href', '/')
+  })
+
+  it('keeps arrow key navigation across linkComponent items', async () => {
+    render(
+      <DropdownMenu
+        trigger={<Button>Options</Button>}
+        items={linkItems}
+        linkComponent={TestLink}
+      />,
+    )
+    await userEvent.click(screen.getByRole('button', { name: 'Options' }))
+    expect(screen.getByRole('menuitem', { name: 'Home' })).toHaveFocus()
+    await userEvent.keyboard('{ArrowDown}')
+    expect(screen.getByRole('menuitem', { name: 'Docs' })).toHaveFocus()
+  })
+
+  it('calls onClick and closes the menu when a linkComponent item is selected', async () => {
+    const onClick = vi.fn()
+    render(
+      <DropdownMenu
+        trigger={<Button>Options</Button>}
+        items={[{ label: 'Home', href: '/', onClick }]}
+        linkComponent={TestLink}
+      />,
+    )
+    await userEvent.click(screen.getByRole('button', { name: 'Options' }))
+    await userEvent.click(screen.getByRole('menuitem', { name: 'Home' }))
+    expect(onClick).toHaveBeenCalledTimes(1)
+    expect(screen.queryByRole('menu')).not.toBeInTheDocument()
+  })
+
+  it('marks a disabled linkComponent item with aria-disabled and does not select it', async () => {
+    const onClick = vi.fn()
+    render(
+      <DropdownMenu
+        trigger={<Button>Options</Button>}
+        items={[{ label: 'Home', href: '/', onClick, disabled: true }]}
+        linkComponent={TestLink}
+      />,
+    )
+    await userEvent.click(screen.getByRole('button', { name: 'Options' }))
+    const home = screen.getByRole('menuitem', { name: 'Home' })
+    expect(home).toHaveAttribute('aria-disabled', 'true')
+    home.click()
+    expect(onClick).not.toHaveBeenCalled()
+    expect(screen.getByRole('menu')).toBeInTheDocument()
+  })
+
+  it('has no accessibility violations with linkComponent', async () => {
+    const { container } = render(
+      <DropdownMenu
+        trigger={<Button>Options</Button>}
+        items={linkItems}
+        linkComponent={TestLink}
+      />,
+    )
+    await userEvent.click(screen.getByRole('button', { name: 'Options' }))
+    expect(await axe(container)).toHaveNoViolations()
   })
 })

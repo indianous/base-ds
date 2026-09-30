@@ -157,6 +157,26 @@ O push da tag dispara o workflow `.github/workflows/publish.yml`, que confere se
   componente) vira issue em [indianous/base-ds](https://github.com/indianous/base-ds/issues) —
   não um symlink, um wrapper que corrige comportamento ou uma cópia local do componente.
 
+## Links com o roteador do app (Next.js)
+
+O `Navbar`, o `Footer` e o `DropdownMenu` renderizam seus links como `<a href>`, o que recarrega a
+página inteira a cada clique. Para navegar pelo roteador do app, passe o componente de link dele em
+`linkComponent`:
+
+```tsx
+import Link from 'next/link'
+import { Footer, Navbar } from '@indianous/base-ds'
+
+<Navbar linkComponent={Link} items={[{ label: 'Projetos', href: '/projects', active: true }]} />
+<Footer linkComponent={Link} columns={[...]} />
+```
+
+O componente recebe `href`, `className`, `children` e os atributos `aria-*` e `on*` de um `<a>`, e
+precisa renderizar um `<a>` (o `Link` do Next.js já faz isso). O `Navbar` repassa o `linkComponent`
+aos menus dropdown e fecha o drawer do celular quando um item é clicado.
+
+O `Sidebar` resolve o mesmo problema com a prop `asChild` em cada item.
+
 ## Trecho para o `CLAUDE.md` dos apps
 
 Copie para o `CLAUDE.md` de cada app que usa o base-ds:

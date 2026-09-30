@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
+import type { AnchorHTMLAttributes } from 'react'
 import { DropdownMenu } from './DropdownMenu'
 import { Button } from '../../atoms/Button/Button'
 import { Icon } from '../../atoms/Icon/Icon'
@@ -98,4 +99,39 @@ export const AlignEnd: Story = {
       />
     </div>
   ),
+}
+
+// Stands in for a router link such as Next.js `Link`, which base-ds doesn't depend on: it renders
+// its own <a> and skips the browser navigation, as client-side routing would.
+function DemoLink({
+  href,
+  children,
+  onClick,
+  ...props
+}: AnchorHTMLAttributes<HTMLAnchorElement> & { href: string }) {
+  return (
+    <a
+      {...props}
+      href={href}
+      data-router-link=""
+      onClick={(e) => {
+        onClick?.(e)
+        e.preventDefault()
+      }}
+    >
+      {children}
+    </a>
+  )
+}
+
+export const CustomLinkComponent: Story = {
+  args: {
+    trigger: <Button>Pages</Button>,
+    items: [
+      { label: 'Home', href: '/' },
+      { label: 'Docs', href: '/docs' },
+      { label: 'Archived', href: '/archived', disabled: true },
+    ],
+    linkComponent: DemoLink,
+  },
 }

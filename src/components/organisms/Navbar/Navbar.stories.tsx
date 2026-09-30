@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
+import type { AnchorHTMLAttributes } from 'react'
 import { Navbar } from './Navbar'
 import type { NavItem } from './Navbar'
 import { Button } from '../../atoms/Button/Button'
@@ -222,4 +223,35 @@ export const CustomLabels: Story = {
       <Navbar {...args} />
     </div>
   ),
+}
+
+// Stands in for a router link such as Next.js `Link`, which base-ds doesn't depend on: it renders
+// its own <a> and skips the browser navigation, as client-side routing would.
+function DemoLink({
+  href,
+  children,
+  onClick,
+  ...props
+}: AnchorHTMLAttributes<HTMLAnchorElement> & { href: string }) {
+  return (
+    <a
+      {...props}
+      href={href}
+      data-router-link=""
+      onClick={(e) => {
+        onClick?.(e)
+        e.preventDefault()
+      }}
+    >
+      {children}
+    </a>
+  )
+}
+
+export const CustomLinkComponent: Story = {
+  args: {
+    logo,
+    items: itemsWithDropdown,
+    linkComponent: DemoLink,
+  },
 }

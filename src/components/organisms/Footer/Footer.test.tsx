@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest'
+import type { AnchorHTMLAttributes } from 'react'
 import { render, screen, within } from '@testing-library/react'
 import { axe } from 'jest-axe'
 import { Footer } from './Footer'
@@ -102,6 +103,58 @@ describe('Footer', () => {
         socialLinks={socialLinks}
         copyright="© 2026 base-ds"
       />,
+    )
+    expect(await axe(container)).toHaveNoViolations()
+  })
+})
+
+// Stands in for a router link (e.g. Next.js `Link`): renders its own <a> and navigates on the
+// client, so the click never reaches the browser's default navigation.
+function TestLink({
+  href,
+  children,
+  onClick,
+  ...props
+}: AnchorHTMLAttributes<HTMLAnchorElement> & { href: string }) {
+  return (
+    <a
+      {...props}
+      href={href}
+      data-custom-link=""
+      onClick={(e) => {
+        onClick?.(e)
+        e.preventDefault()
+      }}
+    >
+      {children}
+    </a>
+  )
+}
+
+describe('Footer linkComponent', () => {
+  const columns = [{ title: 'Product', links: [{ label: 'Features', href: '/features' }] }]
+  const socialLinks = [
+    { icon: <span data-testid="icon-github" />, href: 'https://github.com/x', label: 'GitHub' },
+  ]
+
+  it('renders column links with linkComponent, keeping href and classes', () => {
+    render(<Footer columns={columns} linkComponent={TestLink} />)
+    const link = screen.getByRole('link', { name: 'Features' })
+    expect(link).toHaveAttribute('data-custom-link')
+    expect(link).toHaveAttribute('href', '/features')
+    expect(link).toHaveClass('text-muted-foreground')
+  })
+
+  it('renders social links with linkComponent, keeping href and aria-label', () => {
+    render(<Footer socialLinks={socialLinks} linkComponent={TestLink} />)
+    const link = screen.getByRole('link', { name: 'GitHub' })
+    expect(link).toHaveAttribute('data-custom-link')
+    expect(link).toHaveAttribute('href', 'https://github.com/x')
+  })
+
+  it('has no accessibility violations with linkComponent', async () => {
+    const { container } = render(
+      <Footer columns={columns} socialLinks={socialLinks} linkComponent={TestLink} />,
     )
     expect(await axe(container)).toHaveNoViolations()
   })
