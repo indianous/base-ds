@@ -318,6 +318,55 @@ import { Code, CodeBlock } from '@indianous/base-ds'
 - O tema `css-variables` tem só 9 tipos de token, menos que os temas comuns do Shiki, e as cores
   ANSI (da linguagem `ansi`) ficam de fora.
 
+## React Native (NativeWind)
+
+Os componentes do base-ds são React DOM e não rodam em React Native. Um app mobile pode usar os
+**tokens** e os **mesmos nomes de utilitários** (`bg-primary`, `p-4`, `text-lg`) com o
+[NativeWind](https://www.nativewind.dev) v4, que usa Tailwind v3, para montar componentes próprios
+com os mesmos nomes e variantes do base-ds.
+
+1. **Preset** no `tailwind.config.js` do app:
+
+   ```js
+   module.exports = {
+     content: ['./app/**/*.{ts,tsx}', './components/**/*.{ts,tsx}'],
+     presets: [require('nativewind/preset'), require('@indianous/base-ds/tailwind-preset')],
+   }
+   ```
+
+   As cores do preset leem as variáveis `--color-*`, e o resto (espaçamento, tipografia, raios,
+   bordas) tem o valor direto.
+
+2. **Cores do tema** na raiz do app, com os valores de `themeVariables` e o `vars()` do
+   NativeWind:
+
+   ```tsx
+   import { useColorScheme, View } from 'react-native'
+   import { vars } from 'nativewind'
+   import { themeVariables } from '@indianous/base-ds/tokens'
+
+   export function ThemeRoot({ children }: { children: React.ReactNode }) {
+     const colorScheme = useColorScheme() === 'dark' ? 'dark' : 'light'
+     return <View style={[{ flex: 1 }, vars(themeVariables[colorScheme])]}>{children}</View>
+   }
+   ```
+
+3. **`inlineRem: 16`** no `withNativeWind` do `metro.config.js`. No nativo, o NativeWind troca
+   `rem` por `px` com base 14 por padrão. Os tamanhos de fonte do base-ds usam base 16, como na web.
+
+O que não funciona igual no React Native:
+
+- `fontFamily`: o preset traz as pilhas de fonte da web, que o React Native não entende. Sobrescreva
+  `theme.extend.fontFamily` com o nome das fontes carregadas no app.
+- Sombras (`shadow-*`): o NativeWind só aproveita parte delas, com diferenças entre iOS e Android.
+
+Esse fluxo segue a documentação do NativeWind v4 e não foi testado num app real.
+
+O `@indianous/base-ds/tokens` também serve fora do React Native: tem as cores primitivas e
+semânticas dos dois temas (`colors.semantic` e `colors.semanticDark`), o espaçamento, a tipografia,
+as bordas e as sombras, sem React e sem DOM (para gráficos nativos, e-mails ou scripts de build).
+O preset também funciona num app web com Tailwind v3.
+
 ## Trecho para o `CLAUDE.md` dos apps
 
 Copie para o `CLAUDE.md` de cada app que usa o base-ds:

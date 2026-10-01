@@ -63,3 +63,21 @@ describe('bundle size', () => {
     expect(bytesFrom(inputs, dndKit)).toBeGreaterThan(0)
   })
 })
+
+describe('tokens entry', () => {
+  it('brings no React and no component code', async () => {
+    const result = await build({
+      entryPoints: [`${root}src/tokens/index.ts`],
+      bundle: true,
+      write: false,
+      format: 'esm',
+      platform: 'neutral',
+      metafile: true,
+      logLevel: 'silent',
+    })
+    const [output] = Object.values(result.metafile.outputs)
+    const inputs = Object.keys(output?.inputs ?? {})
+    expect(inputs.length).toBeGreaterThan(0)
+    expect(inputs.every((path) => path.startsWith('src/tokens/'))).toBe(true)
+  })
+})

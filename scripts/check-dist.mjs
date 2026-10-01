@@ -3,6 +3,7 @@
 // so a Next.js page only ships the components it imports. Runs in `prepublishOnly`.
 import { readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
+import { createRequire } from 'node:module'
 import { build } from 'esbuild'
 
 const dist = 'dist'
@@ -31,8 +32,38 @@ if (leftover !== '') {
   failures.push(`${dist}/index.js must only re-export, found code: ${leftover.slice(0, 80)}…`)
 }
 
-// 2. Every other JS file (components, shared chunks, the CJS bundle) is a client module.
-const clientFiles = jsFiles(dist).filter((file) => file !== join(dist, 'index.js'))
+// 2. The data entries (issue #57) are plain modules: React Native has no 'use client'. Besides
+// their own files, every .cjs but index.cjs belongs to them (the components' CJS is one file).
+const dataEntryFiles = ['tokens', 'tailwind-preset'].flatMap((name) => [
+  join(dist, `${name}.js`),
+  join(dist, `${name}.cjs`),
+])
+const dataModules = [
+  ...new Set([
+    ...dataEntryFiles,
+    ...jsFiles(dist).filter((file) => file.endsWith('.cjs') && file !== join(dist, 'index.cjs')),
+  ]),
+]
+for (const file of dataModules) {
+  let contents = ''
+  try {
+    contents = readFileSync(file, 'utf8')
+  } catch {
+    failures.push(`${file} is missing`)
+    continue
+  }
+  if (USE_CLIENT.test(contents)) failures.push(`${file} must not start with 'use client'`)
+}
+const require = createRequire(import.meta.url)
+const preset = require(join(process.cwd(), dist, 'tailwind-preset.cjs'))
+if (!preset?.theme?.extend?.colors) {
+  failures.push(`require('${dist}/tailwind-preset.cjs') must return the preset, not { default }`)
+}
+
+// 3. Every other JS file (components, shared chunks, the CJS bundle) is a client module.
+const clientFiles = jsFiles(dist).filter(
+  (file) => file !== join(dist, 'index.js') && !dataModules.includes(file),
+)
 if (clientFiles.length < 10) {
   failures.push(`expected one file per component in ${dist}/, found ${clientFiles.length}`)
 }
@@ -42,7 +73,7 @@ for (const file of clientFiles) {
   }
 }
 
-// 3. Importing one component from the published entry leaves the rest out.
+// 4. Importing one component from the published entry leaves the rest out.
 async function inputsFor(exportName) {
   const result = await build({
     stdin: { contents: `export { ${exportName} } from './${dist}/index.js'`, resolveDir: '.' },

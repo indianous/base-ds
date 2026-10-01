@@ -6,6 +6,26 @@ Todas as mudanças relevantes do base-ds são registradas aqui. O formato segue 
 mudança que exige ajuste nos apps sobe o _minor_ (`0.1.0 → 0.2.0`); correções e componentes
 novos sem impacto sobem o _patch_.
 
+## [0.5.2] - 2026-10-01
+
+### Adicionado
+
+- `@indianous/base-ds/tokens` ([#57](https://github.com/indianous/base-ds/issues/57)): os tokens
+  como dados, sem React e sem DOM. Inclui cores primitivas e semânticas dos dois temas, espaçamento,
+  tipografia, bordas e sombras, e o `themeVariables` (as variáveis de cor de cada tema, com os
+  valores já resolvidos, para o `vars()` do NativeWind).
+- `@indianous/base-ds/tailwind-preset`: preset Tailwind v3 com os mesmos nomes de utilitário da
+  web. As cores leem as variáveis `--color-*`, e o resto tem o valor direto. Serve para o
+  NativeWind v4 e para apps web com Tailwind v3.
+- Os dois subpaths têm ESM, CJS e tipos, sem `'use client'`.
+- Um teste novo garante que o espaçamento, a tipografia, as bordas e as sombras dos JSONs batem
+  com o `theme.css`.
+- README: seção "React Native (NativeWind)".
+
+### Ajustes necessários nos apps
+
+- Nenhum.
+
 ## [0.5.1] - 2026-10-01
 
 ### Adicionado

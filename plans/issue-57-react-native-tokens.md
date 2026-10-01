@@ -165,3 +165,17 @@ apps": nenhum.
 
 `npm run lint`, `format:check`, `typecheck`, `npm test`, `npm run test:stories`, `npm run build` +
 `npm run check:dist`.
+
+## Resultado (implementação)
+
+Entregue como planejado. O que o build exigiu:
+
+- O CJS do tsup devolvia `{ default: preset }` num `require()`. O `cjsInterop` resolve, mas o tsup
+  só o aplica com `splitting` ligado. Por isso o CJS dos dados usa os dois, e o `check:dist`
+  confere que o `require` devolve o preset.
+- No ESM, o `splitting` vem ligado por padrão no tsup e criou um chunk compartilhado entre os dois
+  subpaths, que recebia o `'use client'` do passo dos componentes. O ESM dos dados usa
+  `splitting: false`, e cada arquivo fica completo. O chunk `.cjs` não é afetado, porque o passo da
+  diretiva só olha arquivos `.js`. O `check:dist` trata todo `.cjs` que não seja o `index.cjs` como
+  dado, sem `'use client'`.
+- O teste de sincronia passou de primeira: os JSONs não-cor já estavam iguais ao `theme.css`.

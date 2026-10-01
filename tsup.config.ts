@@ -18,6 +18,13 @@ function jsFiles(dir: string): string[] {
   })
 }
 
+// Plain data entries (issue #57): no React, no DOM and no 'use client' (React Native has no such
+// directive), so they stay out of the client-only step below.
+const dataEntries = { tokens: 'src/tokens/index.ts', 'tailwind-preset': 'src/tailwind-preset.ts' }
+const plainModules = ['index.js', ...Object.keys(dataEntries).map((name) => `${name}.js`)].map(
+  (file) => join('dist', file),
+)
+
 const shared: Options = {
   external: ['react', 'react-dom'],
   sourcemap: true,
@@ -57,9 +64,11 @@ export default defineConfig([
       // re-exports, so a Server Component can import from it and Next.js only ships the
       // client files of the components a page actually uses. The directive is prepended as a
       // plain string after esbuild is done, rather than written in each source file.
-      const clientFiles = jsFiles('dist').filter((file) => file !== join('dist', 'index.js'))
+      const clientFiles = jsFiles('dist').filter((file) => !plainModules.includes(file))
       clientFiles.forEach(prependUseClient)
-      console.log(`"use client" prepended to ${clientFiles.length} files (all but dist/index.js)`)
+      console.log(
+        `"use client" prepended to ${clientFiles.length} files (all but ${plainModules.join(', ')})`,
+      )
     },
   },
   {
@@ -76,5 +85,25 @@ export default defineConfig([
       prependUseClient(join('dist', 'index.cjs'))
       console.log('"use client" prepended to dist/index.cjs')
     },
+  },
+  {
+    ...shared,
+    entry: dataEntries,
+    // No splitting: each data file is self-contained, with no shared chunk that the client-only
+    // step above would prepend 'use client' to.
+    format: ['esm'],
+    splitting: false,
+    dts: true,
+  },
+  {
+    ...shared,
+    entry: dataEntries,
+    format: ['cjs'],
+    // `require('@indianous/base-ds/tailwind-preset')` must return the preset itself (as Tailwind
+    // expects in `presets: [require(...)]`), not `{ default: preset }`. tsup only applies
+    // `cjsInterop` with splitting on; its `.cjs` chunks aren't touched by the client-only step.
+    cjsInterop: true,
+    splitting: true,
+    dts: true,
   },
 ])
