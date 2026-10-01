@@ -8,9 +8,17 @@ interface QrCodeProps {
   size?: number
   errorCorrection?: ErrorCorrectionLevel
   className?: string
+  /** `aria-label` of the QR code image, from the encoded value. */
+  label?: (value: string) => string
 }
 
-export function QrCode({ value, size = 128, errorCorrection = 'M', className }: QrCodeProps) {
+export function QrCode({
+  value,
+  size = 128,
+  errorCorrection = 'M',
+  className,
+  label = (value) => `QR Code: ${value}`,
+}: QrCodeProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
@@ -28,7 +36,7 @@ export function QrCode({ value, size = 128, errorCorrection = 'M', className }: 
       width={size}
       height={size}
       role="img"
-      aria-label={`QR Code: ${value}`}
+      aria-label={label(value)}
       className={className}
     />
   )

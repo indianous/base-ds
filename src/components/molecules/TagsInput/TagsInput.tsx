@@ -16,6 +16,8 @@ export interface TagsInputProps extends Pick<
   disabled?: boolean
   maxTags?: number
   className?: string
+  /** `aria-label` of the button that removes a tag, from the tag. */
+  removeLabel?: (tag: string) => string
 }
 
 export function TagsInput({
@@ -26,6 +28,7 @@ export function TagsInput({
   disabled = false,
   maxTags,
   className,
+  removeLabel = (tag) => `Remove ${tag}`,
   ...ariaProps
 }: TagsInputProps) {
   const [tags, setTags] = useState<string[]>(value ?? [])
@@ -80,7 +83,7 @@ export function TagsInput({
           <button
             type="button"
             onClick={() => removeTag(tag)}
-            aria-label={`Remove ${tag}`}
+            aria-label={removeLabel(tag)}
             disabled={disabled}
             className="ml-1 hover:text-destructive-foreground focus:outline-none"
           >

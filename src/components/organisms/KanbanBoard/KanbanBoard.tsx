@@ -34,6 +34,8 @@ export interface KanbanBoardProps<TCard extends { id: string }> {
   getCardAriaLabel?: (card: TCard) => string
   columnWidth?: string
   className?: string
+  /** `aria-label` of each column's card count, from the number of cards. */
+  cardCountLabel?: (count: number) => string
 }
 
 export function computeCardMove<TCard extends { id: string }>(
@@ -129,6 +131,7 @@ interface KanbanColumnViewProps<TCard extends { id: string }> {
   renderCard: (card: TCard) => ReactNode
   getCardAriaLabel: (card: TCard) => string
   columnWidth: string
+  cardCountLabel: (count: number) => string
 }
 
 function KanbanColumnView<TCard extends { id: string }>({
@@ -136,6 +139,7 @@ function KanbanColumnView<TCard extends { id: string }>({
   renderCard,
   getCardAriaLabel,
   columnWidth,
+  cardCountLabel,
 }: KanbanColumnViewProps<TCard>) {
   const { setNodeRef } = useDroppable({ id: column.id })
 
@@ -148,7 +152,7 @@ function KanbanColumnView<TCard extends { id: string }>({
       <div className="flex items-center justify-between px-2 py-1">
         <span className="text-sm font-semibold text-foreground">{column.title}</span>
         <span
-          aria-label={`${column.cards.length} cards`}
+          aria-label={cardCountLabel(column.cards.length)}
           className="rounded-full bg-background px-2 py-0.5 text-xs font-medium text-muted-foreground"
         >
           {column.cards.length}
@@ -181,6 +185,7 @@ export function KanbanBoard<TCard extends { id: string }>({
   getCardAriaLabel = (card) => `Card ${card.id}`,
   columnWidth = 'w-72',
   className,
+  cardCountLabel = (count) => `${count} cards`,
 }: KanbanBoardProps<TCard>) {
   const [items, setItems] = useState(columns)
   const [syncedColumns, setSyncedColumns] = useState(columns)
@@ -258,6 +263,7 @@ export function KanbanBoard<TCard extends { id: string }>({
             renderCard={renderCard}
             getCardAriaLabel={getCardAriaLabel}
             columnWidth={columnWidth}
+            cardCountLabel={cardCountLabel}
           />
         ))}
       </div>

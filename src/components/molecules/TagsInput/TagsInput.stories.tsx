@@ -47,3 +47,12 @@ export const InFormField: Story = {
   ),
   args: { id: 'tags-field', value: ['React'], onChange: () => {} },
 }
+
+export const CustomLabels: Story = {
+  args: {
+    id: 'etiquetas',
+    'aria-label': 'Etiquetas',
+    value: ['urgente', 'cliente novo'],
+    removeLabel: (tag) => `Remover ${tag}`,
+  },
+}

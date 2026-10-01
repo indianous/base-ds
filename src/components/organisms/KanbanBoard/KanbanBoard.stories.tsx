@@ -176,3 +176,11 @@ export const ManyCardsHorizontalScroll: Story = {
     onCardMove: () => {},
   },
 }
+
+export const CustomLabels: Story = {
+  args: {
+    ...EmptyColumn.args,
+    getCardAriaLabel: (card) => `Mover lead ${card.name}`,
+    cardCountLabel: (count) => `${count} ${count === 1 ? 'cartão' : 'cartões'}`,
+  },
+}

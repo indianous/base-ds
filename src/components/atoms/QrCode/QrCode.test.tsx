@@ -51,3 +51,10 @@ describe('QrCode', () => {
     expect(await axe(container)).toHaveNoViolations()
   })
 })
+
+describe('QrCode custom labels', () => {
+  it('uses label with the encoded value for the image', () => {
+    render(<QrCode value="https://example.com" label={(value) => `Código QR: ${value}`} />)
+    expect(screen.getByRole('img', { name: 'Código QR: https://example.com' })).toBeInTheDocument()
+  })
+})

@@ -74,3 +74,13 @@ export const InFormField: Story = {
     onChange: () => {},
   },
 }
+
+export const CustomLabels: Story = {
+  ...Default,
+  args: {
+    ...Default.args,
+    'aria-label': 'Categorias',
+    placeholder: 'Escolha as categorias...',
+    removeLabel: (optionLabel) => `Remover ${optionLabel}`,
+  },
+}

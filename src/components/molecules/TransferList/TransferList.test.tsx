@@ -215,3 +215,19 @@ describe('TransferList', () => {
     })
   })
 })
+
+describe('TransferList custom labels', () => {
+  it('uses emptyMessage for an empty column', () => {
+    render(
+      <TransferList
+        options={options}
+        value={[]}
+        onChange={vi.fn()}
+        selectedLabel="Selecionados"
+        emptyMessage="Nenhum item"
+      />,
+    )
+    const emptyColumn = screen.getByRole('group', { name: 'Selecionados' })
+    expect(within(emptyColumn).getByText('Nenhum item')).toBeInTheDocument()
+  })
+})

@@ -68,3 +68,8 @@ export const Disabled: Story = {
     disabled: true,
   },
 }
+
+export const CustomLabels: Story = {
+  ...FullyLocalized,
+  args: { ...FullyLocalized.args, value: [], emptyMessage: 'Nenhuma permissão' },
+}

@@ -6,6 +6,24 @@ Todas as mudanças relevantes do base-ds são registradas aqui. O formato segue 
 mudança que exige ajuste nos apps sobe o _minor_ (`0.1.0 → 0.2.0`); correções e componentes
 novos sem impacto sobem o _patch_.
 
+## [0.4.15] - 2026-10-01
+
+### Adicionado
+
+Props para os textos que os componentes liam ou mostravam em inglês, sem como trocar (lote 3 da
+[#58](https://github.com/indianous/base-ds/issues/58)). Os padrões são os textos de antes.
+
+- `MultiSelect`: `removeLabel: (optionLabel) => string` (o botão de remover de cada opção
+  escolhida).
+- `TagsInput`: `removeLabel: (tag) => string`.
+- `QrCode`: `label: (value) => string` (o nome da imagem).
+- `KanbanBoard`: `cardCountLabel: (count) => string` (a contagem de cards de cada coluna).
+- `TransferList`: `emptyMessage` (o "Empty" de uma coluna vazia).
+
+### Ajustes necessários nos apps
+
+- Nenhum. Sites em português podem passar as props novas.
+
 ## [0.4.14] - 2026-10-01
 
 ### Adicionado

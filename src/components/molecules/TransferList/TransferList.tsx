@@ -27,6 +27,8 @@ export interface TransferListProps {
   moveAllBackLabel?: string
   disabled?: boolean
   className?: string
+  /** Text shown in a column with no items. */
+  emptyMessage?: string
 }
 
 interface ListboxColumnProps {
@@ -37,6 +39,7 @@ interface ListboxColumnProps {
   onHighlight: (value: string) => void
   onMove: (value: string) => void
   disabled: boolean
+  emptyMessage: string
 }
 
 function ListboxColumn({
@@ -47,6 +50,7 @@ function ListboxColumn({
   onHighlight,
   onMove,
   disabled,
+  emptyMessage,
 }: ListboxColumnProps) {
   const titleId = `${id}-title`
   const isEmpty = items.length === 0
@@ -90,7 +94,7 @@ function ListboxColumn({
       >
         {isEmpty && (
           <div className="flex flex-1 items-center justify-center text-sm text-muted-foreground">
-            Empty
+            {emptyMessage}
           </div>
         )}
         {items.map((item) => {
@@ -136,6 +140,7 @@ export function TransferList({
   moveAllBackLabel,
   disabled = false,
   className,
+  emptyMessage = 'Empty',
 }: TransferListProps) {
   const baseId = useId()
   const [highlightedAvailable, setHighlightedAvailable] = useState<string | undefined>(undefined)
@@ -176,6 +181,7 @@ export function TransferList({
         onHighlight={setHighlightedAvailable}
         onMove={moveToSelected}
         disabled={disabled}
+        emptyMessage={emptyMessage}
       />
 
       <div className="flex flex-col gap-2">
@@ -233,6 +239,7 @@ export function TransferList({
         onHighlight={setHighlightedSelected}
         onMove={moveToAvailable}
         disabled={disabled}
+        emptyMessage={emptyMessage}
       />
     </div>
   )

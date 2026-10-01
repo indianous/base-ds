@@ -21,6 +21,8 @@ export interface MultiSelectProps extends Pick<
   placeholder?: string
   disabled?: boolean
   className?: string
+  /** `aria-label` of the button that removes a selected option, from the option's label. */
+  removeLabel?: (optionLabel: string) => string
 }
 
 export function MultiSelect({
@@ -31,6 +33,7 @@ export function MultiSelect({
   placeholder,
   disabled = false,
   className,
+  removeLabel = (optionLabel) => `Remove ${optionLabel}`,
   ...ariaProps
 }: MultiSelectProps) {
   const [open, setOpen] = useState(false)
@@ -127,7 +130,7 @@ export function MultiSelect({
             <button
               type="button"
               onClick={() => removeOption(opt.value)}
-              aria-label={`Remove ${opt.label}`}
+              aria-label={removeLabel(opt.label)}
               disabled={disabled}
               className="ml-1 hover:text-destructive-foreground focus:outline-none"
             >

@@ -214,3 +214,19 @@ describe('MultiSelect', () => {
     expect(await axe(container)).toHaveNoViolations()
   })
 })
+
+describe('MultiSelect custom labels', () => {
+  it('uses removeLabel with the option label for the remove button of each chip', () => {
+    render(
+      <MultiSelect
+        id="categorias"
+        aria-label="Categorias"
+        options={options}
+        value={['books']}
+        onChange={vi.fn()}
+        removeLabel={(optionLabel) => `Remover ${optionLabel}`}
+      />,
+    )
+    expect(screen.getByRole('button', { name: 'Remover Books' })).toBeInTheDocument()
+  })
+})

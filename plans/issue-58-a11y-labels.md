@@ -215,3 +215,15 @@ ganhou uma segunda story, `CustomEmptyMessage`, porque o `emptyMessage` só apar
 Entregue como planejado, sem textos a mais. No `ConversationThread`, o mapa interno dos nomes de
 mídia virou o padrão do `mediaLabel`. No `NumberInput`, as props novas ficam antes do
 `...ariaProps` na desestruturação.
+
+## Resultado do lote 3 (implementação)
+
+Entregue como planejado. No `TransferList`, a story `FullyLocalized` começa com um item escolhido e
+nenhuma coluna vazia, então a nova `CustomLabels` parte dela com `value: []`, para o
+`emptyMessage` aparecer.
+
+**Achado fora do plano**: o `KanbanBoard` também tem textos em inglês que vêm do `@dnd-kit`. São
+as instruções de teclado ("To pick up a draggable item, press the space bar…"), os anúncios de
+arrastar e soltar ("Picked up draggable item lead-1.", que usam o `id` do card, e não um nome
+legível) e o `aria-roledescription="draggable"` de cada card. Eles ficaram fora deste lote porque
+pedem decisões de desenho, como anunciar o card pelo `getCardAriaLabel` e a coluna pelo título.

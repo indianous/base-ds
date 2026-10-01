@@ -14,3 +14,7 @@ export const Large: Story = { args: { value: 'https://example.com', size: 256 } 
 export const HighCorrection: Story = {
   args: { value: 'https://example.com', size: 200, errorCorrection: 'H' },
 }
+
+export const CustomLabels: Story = {
+  args: { value: 'https://example.com', label: (value) => `Código QR: ${value}` },
+}

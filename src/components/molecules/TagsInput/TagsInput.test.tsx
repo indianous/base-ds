@@ -145,3 +145,17 @@ describe('TagsInput', () => {
     expect(await axe(container)).toHaveNoViolations()
   })
 })
+
+describe('TagsInput custom labels', () => {
+  it('uses removeLabel with the tag for the remove button of each tag', () => {
+    render(
+      <TagsInput
+        id="tags"
+        aria-label="Etiquetas"
+        value={['urgente']}
+        removeLabel={(tag) => `Remover ${tag}`}
+      />,
+    )
+    expect(screen.getByRole('button', { name: 'Remover urgente' })).toBeInTheDocument()
+  })
+})

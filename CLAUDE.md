@@ -46,7 +46,7 @@ Apps using the design system aren't all in English (e.g. `pt-BR` sites), so ever
 - When a component renders another one that has its own label props (e.g. `Navbar` → `Drawer`), expose them prefixed with the inner component's name (`drawerCloseLabel`) and forward them — otherwise the English text leaks through.
 - Tests: one test per label prop with a Portuguese value; the existing tests that query the English text stay as the guard for the defaults. Stories: a `CustomLabels` story with every label in Portuguese, so the a11y addon checks it.
 - Defaults are always English. `FilterDropdown` and `MultiSelect` predate this and still have hardcoded Portuguese; they're switched to English props in issue #58's last batch (a minor bump).
-- New components follow this from the start. Still pending (issue #58, `plans/issue-58-a11y-labels.md`): `MultiSelect`, `TagsInput`, `QrCode`, `KanbanBoard`, `TransferList`, `FilterDropdown`.
+- New components follow this from the start. Still pending (issue #58, `plans/issue-58-a11y-labels.md`): the Portuguese defaults of `FilterDropdown` and `MultiSelect`, and `KanbanBoard`'s drag-and-drop texts, which come from `@dnd-kit` in English (keyboard instructions, announcements, `aria-roledescription="draggable"`).
 
 ## Project structure
 

@@ -186,3 +186,18 @@ describe('computeCardMove', () => {
     expect(targetColumn.cards.map((c) => c.id)).toEqual(['lead-3'])
   })
 })
+
+describe('KanbanBoard custom labels', () => {
+  it('uses cardCountLabel with the number of cards for each column count', () => {
+    render(
+      <KanbanBoard
+        columns={buildColumns()}
+        renderCard={renderCard}
+        onCardMove={() => {}}
+        cardCountLabel={(count) => `${count} ${count === 1 ? 'cartão' : 'cartões'}`}
+      />,
+    )
+    expect(screen.getByLabelText('2 cartões')).toBeInTheDocument()
+    expect(screen.getByLabelText('0 cartões')).toBeInTheDocument()
+  })
+})
