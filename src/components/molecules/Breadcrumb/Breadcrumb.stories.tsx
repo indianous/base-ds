@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
+import type { AnchorHTMLAttributes } from 'react'
 import { Breadcrumb } from './Breadcrumb'
 
 const meta: Meta<typeof Breadcrumb> = {
@@ -42,5 +43,40 @@ export const CustomLabels: Story = {
       { label: 'Notebook Pro X' },
     ],
     label: 'Trilha de navegação',
+  },
+}
+
+// Stands in for a router link such as Next.js `Link`, which base-ds doesn't depend on: it renders
+// its own <a> and skips the browser navigation, as client-side routing would.
+function DemoLink({
+  href,
+  children,
+  onClick,
+  ...props
+}: AnchorHTMLAttributes<HTMLAnchorElement> & { href: string }) {
+  return (
+    <a
+      {...props}
+      href={href}
+      data-router-link=""
+      onClick={(e) => {
+        onClick?.(e)
+        e.preventDefault()
+      }}
+    >
+      {children}
+    </a>
+  )
+}
+
+export const CustomLinkComponent: Story = {
+  args: {
+    items: [
+      { label: 'Projetos', href: '/projects' },
+      { label: 'Arquivo', onClick: () => {} },
+      { label: 'base-ds' },
+    ],
+    label: 'Trilha de navegação',
+    linkComponent: DemoLink,
   },
 }

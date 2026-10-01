@@ -65,6 +65,7 @@ export { Alert } from './components/molecules/Alert/Alert'
 export type { AlertProps, AlertVariant, AlertLayout } from './components/molecules/Alert/Alert'
 
 export { Breadcrumb } from './components/molecules/Breadcrumb/Breadcrumb'
+export type { BreadcrumbProps, BreadcrumbItem } from './components/molecules/Breadcrumb/Breadcrumb'
 
 export { CodeBlock } from './components/molecules/CodeBlock/CodeBlock'
 export type { CodeBlockProps } from './components/molecules/CodeBlock/CodeBlock'

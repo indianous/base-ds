@@ -207,7 +207,7 @@ import { MenuIcon } from 'lucide-react'
 
 ## Links com o roteador do app (Next.js)
 
-O `Navbar`, o `Footer` e o `DropdownMenu` renderizam seus links como `<a href>`, o que recarrega a
+O `Navbar`, o `Footer`, o `DropdownMenu` e o `Breadcrumb` renderizam seus links como `<a href>`, o que recarrega a
 página inteira a cada clique. Para navegar pelo roteador do app, passe o componente de link dele em
 `linkComponent`:
 

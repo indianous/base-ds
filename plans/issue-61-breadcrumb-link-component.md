@@ -73,3 +73,10 @@ v0.5.4. "Adicionado": `linkComponent` no `Breadcrumb` e os tipos `BreadcrumbProp
 
 `npm run lint`, `format:check`, `typecheck`, `npm test`, `npm run test:stories`, `npm run build` +
 `npm run check:dist`.
+
+## Resultado (implementação)
+
+Entregue como planejado. As classes dos links e dos botões viraram uma constante (`itemClasses`),
+então o `cn()` deixou de ser usado no componente. O teste importa `BreadcrumbItem` e
+`BreadcrumbProps` do `src/index.ts`, e com isso o typecheck também garante a exportação: ele
+falhou antes da mudança.

@@ -1,24 +1,35 @@
 import React from 'react'
-import { cn } from '../../../utils/cn'
+import type { LinkComponent } from '../../../utils/linkComponent'
 import { Text } from '../../atoms/Typography/Text'
 import { IconBase } from '../../atoms/Icon/IconBase'
 import { ChevronRightIcon } from 'lucide-react'
 
-interface BreadcrumbItem {
+export interface BreadcrumbItem {
   label: string
   href?: string
   onClick?: () => void
 }
 
-interface BreadcrumbProps {
+export interface BreadcrumbProps {
   items: BreadcrumbItem[]
   separator?: React.ReactNode
   className?: string
   /** `aria-label` of the `<nav>`. */
   label?: string
+  /** Component rendered in place of `<a>` for items with `href` (e.g. Next.js `Link`). */
+  linkComponent?: LinkComponent
 }
 
-export function Breadcrumb({ items, separator, className, label = 'Breadcrumb' }: BreadcrumbProps) {
+const itemClasses =
+  'rounded-sm text-sm text-muted-foreground hover:text-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-ring'
+
+export function Breadcrumb({
+  items,
+  separator,
+  className,
+  label = 'Breadcrumb',
+  linkComponent: LinkElement = 'a',
+}: BreadcrumbProps) {
   const defaultSeparator = (
     <IconBase icon={ChevronRightIcon} size="sm" className="text-muted-foreground" />
   )
@@ -35,22 +46,11 @@ export function Breadcrumb({ items, separator, className, label = 'Breadcrumb' }
                   {item.label}
                 </Text>
               ) : item.href ? (
-                <a
-                  href={item.href}
-                  className={cn(
-                    'text-sm text-muted-foreground hover:text-foreground transition-colors',
-                  )}
-                >
+                <LinkElement href={item.href} className={itemClasses}>
                   {item.label}
-                </a>
+                </LinkElement>
               ) : (
-                <button
-                  type="button"
-                  onClick={item.onClick}
-                  className={cn(
-                    'text-sm text-muted-foreground hover:text-foreground transition-colors focus:outline-none',
-                  )}
-                >
+                <button type="button" onClick={item.onClick} className={itemClasses}>
                   {item.label}
                 </button>
               )}

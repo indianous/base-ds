@@ -6,6 +6,26 @@ Todas as mudanças relevantes do base-ds são registradas aqui. O formato segue 
 mudança que exige ajuste nos apps sobe o _minor_ (`0.1.0 → 0.2.0`); correções e componentes
 novos sem impacto sobem o _patch_.
 
+## [0.5.4] - 2026-10-01
+
+### Adicionado
+
+- `Breadcrumb`: prop `linkComponent`, como no `Navbar`, no `Footer` e no `DropdownMenu`
+  ([#61](https://github.com/indianous/base-ds/issues/61)). Ela troca o `<a>` dos itens com `href`
+  pelo componente de link do app, como o `AppLink` do README, para navegar sem recarregar a
+  página. O padrão continua `<a>`.
+- Os tipos `BreadcrumbProps` e `BreadcrumbItem` passam a ser exportados.
+
+### Corrigido
+
+- `Breadcrumb`: os itens clicáveis não tinham anel de foco. O botão tirava o contorno do
+  navegador sem pôr nada no lugar, e o link usava o contorno padrão. Os dois passam a usar o mesmo
+  anel de foco dos outros componentes.
+
+### Ajustes necessários nos apps
+
+- Nenhum.
+
 ## [0.5.3] - 2026-10-01
 
 ### Corrigido

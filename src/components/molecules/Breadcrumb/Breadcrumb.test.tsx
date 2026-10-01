@@ -2,7 +2,9 @@ import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { axe } from 'jest-axe'
+import type { AnchorHTMLAttributes } from 'react'
 import { Breadcrumb } from './Breadcrumb'
+import type { BreadcrumbItem, BreadcrumbProps } from '../../../index'
 
 const items = [
   { label: 'Home', href: '/' },
@@ -93,5 +95,68 @@ describe('Breadcrumb custom labels', () => {
   it('uses label for the navigation landmark', () => {
     render(<Breadcrumb items={items} label="Trilha de navegação" />)
     expect(screen.getByRole('navigation', { name: 'Trilha de navegação' })).toBeInTheDocument()
+  })
+})
+
+// Stands in for a router link (e.g. Next.js `Link`): renders its own <a>.
+function TestLink({
+  href,
+  children,
+  ...props
+}: AnchorHTMLAttributes<HTMLAnchorElement> & { href: string }) {
+  return (
+    <a {...props} href={href} data-custom-link="">
+      {children}
+    </a>
+  )
+}
+
+describe('Breadcrumb linkComponent', () => {
+  const trail: BreadcrumbItem[] = [
+    { label: 'Projetos', href: '/projects' },
+    { label: 'Arquivo', onClick: vi.fn() },
+    { label: 'base-ds' },
+  ]
+  const renderTrail = (props: Partial<BreadcrumbProps> = {}) =>
+    render(<Breadcrumb items={trail} linkComponent={TestLink} {...props} />)
+
+  it('renders items with href using linkComponent, keeping href and classes', () => {
+    renderTrail()
+    const link = screen.getByRole('link', { name: 'Projetos' })
+    expect(link).toHaveAttribute('data-custom-link')
+    expect(link).toHaveAttribute('href', '/projects')
+    expect(link).toHaveClass('text-sm', 'text-muted-foreground')
+  })
+
+  it('keeps the last item as the current page and onClick items as buttons', () => {
+    renderTrail()
+    expect(screen.getByText('base-ds')).toHaveAttribute('aria-current', 'page')
+    expect(screen.getByRole('button', { name: 'Arquivo' })).toBeInTheDocument()
+    expect(screen.getAllByRole('link')).toHaveLength(1)
+  })
+
+  it('has no accessibility violations with linkComponent', async () => {
+    const { container } = renderTrail({ label: 'Trilha de navegação' })
+    expect(await axe(container)).toHaveNoViolations()
+  })
+})
+
+describe('Breadcrumb focus', () => {
+  it('shows a focus ring on links and buttons', () => {
+    render(
+      <Breadcrumb
+        items={[
+          { label: 'Projetos', href: '/projects' },
+          { label: 'Arquivo', onClick: vi.fn() },
+          { label: 'base-ds' },
+        ]}
+      />,
+    )
+    for (const element of [
+      screen.getByRole('link', { name: 'Projetos' }),
+      screen.getByRole('button', { name: 'Arquivo' }),
+    ]) {
+      expect(element).toHaveClass('focus:ring-2', 'focus:ring-ring')
+    }
   })
 })
