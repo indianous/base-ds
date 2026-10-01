@@ -20,6 +20,10 @@ export default defineConfig({
   },
   test: {
     passWithNoTests: true,
+    // Caps the jsdom workers of the `unit` project (the default is one per CPU core minus one):
+    // ~1.35 GB peak instead of ~2.5 GB on a 12-core machine, for ~6 s more. It doesn't limit the
+    // browser projects — see `fileParallelism` there.
+    maxWorkers: 4,
     projects: [
       {
         extends: true,
@@ -36,6 +40,9 @@ export default defineConfig({
         plugins: [storybookTest({ configDir: path.join(dirname, '.storybook') })],
         test: {
           name: 'storybook',
+          // One story file at a time: in parallel, each file got its own Chromium renderer
+          // (~11 GB peak across both story projects). Sequential is ~3.3 GB and also faster.
+          fileParallelism: false,
           browser: {
             enabled: true,
             headless: true,
@@ -50,6 +57,7 @@ export default defineConfig({
         plugins: [storybookTest({ configDir: path.join(dirname, '.storybook-dark') })],
         test: {
           name: 'storybook-dark',
+          fileParallelism: false,
           browser: {
             enabled: true,
             headless: true,
