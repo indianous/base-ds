@@ -155,7 +155,7 @@ O `@dnd-kit` lê três tipos de texto em inglês, que o app não consegue trocar
 | texto atual (`@dnd-kit`)                                       | prop nova                                                  |
 | -------------------------------------------------------------- | ---------------------------------------------------------- |
 | instruções de teclado ("To pick up a draggable item, press …") | `dragInstructions`                                         |
-| `aria-roledescription="draggable"` em cada card                | `cardRoleDescription`                                      |
+| `aria-roledescription="sortable"` em cada card                 | `cardRoleDescription`                                      |
 | "Picked up draggable item lead-1."                             | `dragStartAnnouncement: (card, column) => string`          |
 | "Draggable item lead-1 was moved over droppable area …"        | `dragOverAnnouncement: (card, column, position) => string` |
 | "Draggable item lead-1 was dropped over droppable area …"      | `dragEndAnnouncement: (card, column, position) => string`  |
@@ -173,10 +173,11 @@ O `@dnd-kit` lê três tipos de texto em inglês, que o app não consegue trocar
   da coluna, por exemplo "Picked up Card lead-1 in Novo." / "Card lead-1 was dropped in Contatado,
   position 1.". O texto de hoje, com o `id`, não serve para quem ouve. Como é uma mudança de
   padrão, ela vai neste lote, que já é _minor_.
-- **Sem destino**: quando o card sai de todas as colunas, o `@dnd-kit` anuncia "Draggable item
-  lead-1 is no longer over a droppable area." Isso vira `dragOutAnnouncement: (card) => string`.
-  Soltar fora de qualquer coluna ("Draggable item lead-1 was dropped.") não move o card, que volta
-  para a coluna de origem, então usa o `dragCancelAnnouncement`.
+- **Sem destino**: o `@dnd-kit` tem anúncios para quando o card sai de todas as colunas e para
+  quando é solto fora delas. Neste componente, isso não acontece: a detecção de colisão
+  (`closestCorners`) sempre devolve a coluna mais próxima. Por isso não há prop para esses casos.
+  O código só se protege: não anuncia nada ao mover sem destino e usa o `dragCancelAnnouncement`
+  ao soltar sem destino.
 - Os anúncios vão para o `accessibility.announcements` do `DndContext`, que já tem uma região
   `aria-live` própria.
 
@@ -262,5 +263,31 @@ nenhuma coluna vazia, então a nova `CustomLabels` parte dela com `value: []`, p
 **Achado fora do plano**: o `KanbanBoard` também tem textos em inglês que vêm do `@dnd-kit`. São
 as instruções de teclado ("To pick up a draggable item, press the space bar…"), os anúncios de
 arrastar e soltar ("Picked up draggable item lead-1.", que usam o `id` do card, e não um nome
-legível) e o `aria-roledescription="draggable"` de cada card. Eles ficaram fora deste lote porque
+legível) e o `aria-roledescription` de cada card. Eles ficaram fora deste lote porque
 pedem decisões de desenho, como anunciar o card pelo `getCardAriaLabel` e a coluna pelo título.
+
+## Resultado do lote 4 (implementação)
+
+- **`FilterDropdown` e `MultiSelect`**: como planejado. Os testes que buscavam "Selecionar todos",
+  "Limpar", "Aplicar" e "Nenhum resultado" passaram a buscar os padrões em inglês e falharam antes
+  da mudança. A story `CustomLabels` do `FilterDropdown` abre o painel no `play`, para o addon de
+  a11y verificar os botões.
+- **O `aria-roledescription` dos cards é "sortable", não "draggable"**: o `useSortable` troca o
+  padrão do `@dnd-kit`. O plano dizia "draggable" e foi corrigido. O padrão da prop
+  `cardRoleDescription` continua o texto de hoje, "sortable".
+- **Sem `dragOutAnnouncement`**: a detecção de colisão `closestCorners` sempre devolve uma coluna,
+  então o card nunca fica sem destino. A prop seria código morto e não teria como ser testada.
+- **Testes dos anúncios**: no jsdom, cada tecla precisa de um `act` próprio, porque o sensor de
+  teclado ativa no ciclo seguinte. Pegar e passar sobre a própria coluna acontecem no mesmo ciclo,
+  e a região `aria-live` só mostra o segundo anúncio, então os testes usam funções espiãs para
+  conferir os argumentos. Mover para outra coluna precisa de layout real e ficou numa story com
+  `play` (`KeyboardMoveAnnouncement`), a primeira do projeto.
+- **Correção no `onCardMove`**: o teste da story mostrou que soltar um card numa coluna vazia
+  chamava o `onCardMove` com índice 1, e não 0. Durante o arraste, o componente já move o card
+  para a coluna de destino e, ao soltar, contava o próprio card. O mesmo erro aparecia na posição
+  anunciada. Agora o índice ignora o próprio card, no `onCardMove` e nos anúncios. Para os apps, o
+  efeito prático é nenhum ou quase nenhum: inserir no índice 1 de uma lista vazia já colocava o card
+  no fim.
+- **O teclado do `@dnd-kit`**: a primeira seta a partir de um card pode parar na borda da própria
+  coluna, antes de chegar à vizinha. É o comportamento de antes, e o teste da story aperta a seta
+  até chegar.

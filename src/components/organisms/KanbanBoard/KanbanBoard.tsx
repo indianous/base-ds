@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import {
   DndContext,
   DragOverlay,
@@ -10,7 +10,7 @@ import {
   useSensor,
   useSensors,
 } from '@dnd-kit/core'
-import type { DragEndEvent, DragOverEvent, DragStartEvent } from '@dnd-kit/core'
+import type { Announcements, DragEndEvent, DragOverEvent, DragStartEvent } from '@dnd-kit/core'
 import {
   SortableContext,
   sortableKeyboardCoordinates,
@@ -36,6 +36,37 @@ export interface KanbanBoardProps<TCard extends { id: string }> {
   className?: string
   /** `aria-label` of each column's card count, from the number of cards. */
   cardCountLabel?: (count: number) => string
+  /** Keyboard instructions read for each card's drag handle. */
+  dragInstructions?: string
+  /** `aria-roledescription` of each card's drag handle. */
+  cardRoleDescription?: string
+  /** Announcement when a card is picked up, from the card and its column title. */
+  dragStartAnnouncement?: (card: TCard, column: string) => string
+  /** Announcement while a card is over a column, from the card, column title and position (from 1). */
+  dragOverAnnouncement?: (card: TCard, column: string, position: number) => string
+  /** Announcement when a card is dropped, from the card, column title and position (from 1). */
+  dragEndAnnouncement?: (card: TCard, column: string, position: number) => string
+  /** Announcement when a drag is cancelled, from the card and the column it stays in. */
+  dragCancelAnnouncement?: (card: TCard, column: string) => string
+}
+
+const defaultDragInstructions =
+  'To pick up a draggable item, press the space bar. While dragging, use the arrow keys to move the item. Press space again to drop the item in its new position, or press escape to cancel.'
+
+// Where the active card lands when dropped over `overId` (a card or a column): the column and
+// the index among the column's other cards. While dragging, the card may already sit in the target
+// column, so it doesn't count itself (dropping into a column that was empty gives index 0).
+function resolveDropTarget<TCard extends { id: string }>(
+  columns: KanbanColumn<TCard>[],
+  activeId: string,
+  overId: string,
+): { column: KanbanColumn<TCard>; index: number } | undefined {
+  const columnId = findContainerId(columns, overId) ?? overId
+  const column = columns.find((c) => c.id === columnId)
+  if (!column) return undefined
+  const others = column.cards.filter((card) => card.id !== activeId).length
+  const overIndex = column.cards.findIndex((card) => card.id === overId)
+  return { column, index: overIndex >= 0 ? Math.min(overIndex, others) : others }
 }
 
 export function computeCardMove<TCard extends { id: string }>(
@@ -87,15 +118,18 @@ interface KanbanCardViewProps<TCard extends { id: string }> {
   card: TCard
   renderCard: (card: TCard) => ReactNode
   ariaLabel: string
+  roleDescription: string
 }
 
 function KanbanCardView<TCard extends { id: string }>({
   card,
   renderCard,
   ariaLabel,
+  roleDescription,
 }: KanbanCardViewProps<TCard>) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: card.id,
+    attributes: { roleDescription },
   })
 
   const style = {
@@ -132,6 +166,7 @@ interface KanbanColumnViewProps<TCard extends { id: string }> {
   getCardAriaLabel: (card: TCard) => string
   columnWidth: string
   cardCountLabel: (count: number) => string
+  cardRoleDescription: string
 }
 
 function KanbanColumnView<TCard extends { id: string }>({
@@ -140,6 +175,7 @@ function KanbanColumnView<TCard extends { id: string }>({
   getCardAriaLabel,
   columnWidth,
   cardCountLabel,
+  cardRoleDescription,
 }: KanbanColumnViewProps<TCard>) {
   const { setNodeRef } = useDroppable({ id: column.id })
 
@@ -170,6 +206,7 @@ function KanbanColumnView<TCard extends { id: string }>({
               card={card}
               renderCard={renderCard}
               ariaLabel={getCardAriaLabel(card)}
+              roleDescription={cardRoleDescription}
             />
           ))}
         </div>
@@ -186,6 +223,15 @@ export function KanbanBoard<TCard extends { id: string }>({
   columnWidth = 'w-72',
   className,
   cardCountLabel = (count) => `${count} cards`,
+  dragInstructions = defaultDragInstructions,
+  cardRoleDescription = 'sortable',
+  dragStartAnnouncement = (card, column) => `Picked up ${getCardAriaLabel(card)} in ${column}.`,
+  dragOverAnnouncement = (card, column, position) =>
+    `${getCardAriaLabel(card)} is over ${column}, position ${position}.`,
+  dragEndAnnouncement = (card, column, position) =>
+    `${getCardAriaLabel(card)} was dropped in ${column}, position ${position}.`,
+  dragCancelAnnouncement = (card, column) =>
+    `Dragging was cancelled. ${getCardAriaLabel(card)} returned to ${column}.`,
 }: KanbanBoardProps<TCard>) {
   const [items, setItems] = useState(columns)
   const [syncedColumns, setSyncedColumns] = useState(columns)
@@ -238,14 +284,58 @@ export function KanbanBoard<TCard extends { id: string }>({
     setActiveCard(null)
     if (!over || !origin) return
 
-    const overId = String(over.id)
-    const toColumnId = findContainerId(items, overId) ?? overId
-    const toColumn = items.find((c) => c.id === toColumnId)
-    const overIndex = toColumn?.cards.findIndex((card) => card.id === overId) ?? -1
-    const newIndex = overIndex >= 0 ? overIndex : (toColumn?.cards.length ?? 0)
+    const target = resolveDropTarget(items, origin.cardId, String(over.id))
+    const toColumnId = target?.column.id ?? String(over.id)
+    const newIndex = target?.index ?? 0
 
     onCardMove(origin.cardId, origin.fromColumnId, toColumnId, newIndex)
   }
+
+  const announcements = useMemo<Announcements>(() => {
+    const cardAndColumn = (cardId: string | number) => {
+      const columnId = findContainerId(items, String(cardId))
+      const column = items.find((c) => c.id === columnId)
+      const card = column?.cards.find((c) => c.id === String(cardId))
+      return card && column ? { card, column } : undefined
+    }
+    const dropPosition = (activeId: string | number, overId: string | number) => {
+      const target = resolveDropTarget(items, String(activeId), String(overId))
+      return target && { title: target.column.title, position: target.index + 1 }
+    }
+
+    return {
+      onDragStart({ active }) {
+        const found = cardAndColumn(active.id)
+        return found && dragStartAnnouncement(found.card, found.column.title)
+      },
+      onDragOver({ active, over }) {
+        const found = cardAndColumn(active.id)
+        if (!found) return undefined
+        // `closestCorners` always finds a column, so `over` is only missing defensively.
+        if (!over) return undefined
+        const target = dropPosition(active.id, over.id)
+        return target && dragOverAnnouncement(found.card, target.title, target.position)
+      },
+      onDragEnd({ active, over }) {
+        const found = cardAndColumn(active.id)
+        if (!found) return undefined
+        // Dropped with no column under it (defensive, see onDragOver): nothing moves, like a cancel.
+        if (!over) return dragCancelAnnouncement(found.card, found.column.title)
+        const target = dropPosition(active.id, over.id)
+        return target && dragEndAnnouncement(found.card, target.title, target.position)
+      },
+      onDragCancel({ active }) {
+        const found = cardAndColumn(active.id)
+        return found && dragCancelAnnouncement(found.card, found.column.title)
+      },
+    }
+  }, [
+    items,
+    dragStartAnnouncement,
+    dragOverAnnouncement,
+    dragEndAnnouncement,
+    dragCancelAnnouncement,
+  ])
 
   return (
     <DndContext
@@ -254,6 +344,10 @@ export function KanbanBoard<TCard extends { id: string }>({
       onDragStart={handleDragStart}
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
+      accessibility={{
+        announcements,
+        screenReaderInstructions: { draggable: dragInstructions },
+      }}
     >
       <div className={cn('flex gap-4 overflow-x-auto p-1', className)}>
         {items.map((column) => (
@@ -264,6 +358,7 @@ export function KanbanBoard<TCard extends { id: string }>({
             getCardAriaLabel={getCardAriaLabel}
             columnWidth={columnWidth}
             cardCountLabel={cardCountLabel}
+            cardRoleDescription={cardRoleDescription}
           />
         ))}
       </div>

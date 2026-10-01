@@ -23,6 +23,8 @@ export interface MultiSelectProps extends Pick<
   className?: string
   /** `aria-label` of the button that removes a selected option, from the option's label. */
   removeLabel?: (optionLabel: string) => string
+  /** Text shown in the list when the typed filter matches no option. */
+  emptyMessage?: string
 }
 
 export function MultiSelect({
@@ -34,6 +36,7 @@ export function MultiSelect({
   disabled = false,
   className,
   removeLabel = (optionLabel) => `Remove ${optionLabel}`,
+  emptyMessage = 'No results',
   ...ariaProps
 }: MultiSelectProps) {
   const [open, setOpen] = useState(false)
@@ -171,7 +174,7 @@ export function MultiSelect({
           className="absolute top-full z-20 mt-1 max-h-60 w-full overflow-auto rounded-md border border-border bg-background py-1 shadow-md"
         >
           {filteredOptions.length === 0 && (
-            <div className="px-3 py-2 text-sm text-muted-foreground">Nenhum resultado</div>
+            <div className="px-3 py-2 text-sm text-muted-foreground">{emptyMessage}</div>
           )}
           {filteredOptions.map((opt, index) => {
             const isSelected = value.includes(opt.value)

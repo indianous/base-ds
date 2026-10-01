@@ -64,7 +64,7 @@ describe('FilterDropdown', () => {
     const onApply = vi.fn()
     render(<FilterDropdown label="Status" options={options} value={[]} onApply={onApply} />)
     await userEvent.click(screen.getByRole('button', { name: 'Status' }))
-    await userEvent.click(screen.getByRole('button', { name: 'Selecionar todos' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Select all' }))
     for (const checkbox of screen.getAllByRole('checkbox')) {
       expect(checkbox).toBeChecked()
     }
@@ -82,7 +82,7 @@ describe('FilterDropdown', () => {
       />,
     )
     await userEvent.click(screen.getByRole('button', { name: 'Status 2' }))
-    await userEvent.click(screen.getByRole('button', { name: 'Limpar' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Clear' }))
     for (const checkbox of screen.getAllByRole('checkbox')) {
       expect(checkbox).not.toBeChecked()
     }
@@ -94,7 +94,7 @@ describe('FilterDropdown', () => {
     render(<FilterDropdown label="Status" options={options} value={[]} onApply={onApply} />)
     await userEvent.click(screen.getByRole('button', { name: 'Status' }))
     await userEvent.click(screen.getByRole('checkbox', { name: 'Delivered' }))
-    await userEvent.click(screen.getByRole('button', { name: 'Aplicar' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Apply' }))
     expect(onApply).toHaveBeenCalledWith(['delivered'])
     expect(screen.queryAllByRole('checkbox')).toHaveLength(0)
   })
@@ -181,5 +181,25 @@ describe('FilterDropdown', () => {
     )
     await userEvent.click(screen.getByRole('button', { name: 'Status 1' }))
     expect(await axe(container)).toHaveNoViolations()
+  })
+})
+
+describe('FilterDropdown custom labels', () => {
+  it('uses selectAllLabel, clearLabel and applyLabel for the panel buttons', async () => {
+    render(
+      <FilterDropdown
+        label="Status"
+        options={options}
+        value={[]}
+        onApply={vi.fn()}
+        selectAllLabel="Selecionar todos"
+        clearLabel="Limpar"
+        applyLabel="Aplicar"
+      />,
+    )
+    await userEvent.click(screen.getByRole('button', { name: 'Status' }))
+    for (const name of ['Selecionar todos', 'Limpar', 'Aplicar']) {
+      expect(screen.getByRole('button', { name })).toBeInTheDocument()
+    }
   })
 })

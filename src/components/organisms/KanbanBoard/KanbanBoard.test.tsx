@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { render, screen, within, fireEvent } from '@testing-library/react'
+import { act, render, screen, within, fireEvent } from '@testing-library/react'
 import { axe } from 'jest-axe'
 import { KanbanBoard, computeCardMove } from './KanbanBoard'
 import type { KanbanColumn } from './KanbanBoard'
@@ -199,5 +199,98 @@ describe('KanbanBoard custom labels', () => {
     )
     expect(screen.getByLabelText('2 cartões')).toBeInTheDocument()
     expect(screen.getByLabelText('0 cartões')).toBeInTheDocument()
+  })
+})
+
+describe('KanbanBoard drag and drop texts', () => {
+  const space = { code: 'Space', key: ' ' }
+  const escape = { code: 'Escape', key: 'Escape' }
+  const liveRegion = () => document.querySelector('[aria-live]')?.textContent ?? ''
+
+  // The keyboard sensor activates on the next tick, so each key press gets its own act().
+  async function press(target: Element | Document, key: typeof space) {
+    await act(async () => {
+      fireEvent.keyDown(target, key)
+      await new Promise((resolve) => setTimeout(resolve, 20))
+    })
+  }
+
+  function renderBoard(props: Partial<Parameters<typeof KanbanBoard<LeadCard>>[0]> = {}) {
+    render(
+      <KanbanBoard
+        columns={buildColumns()}
+        renderCard={renderCard}
+        onCardMove={() => {}}
+        getCardAriaLabel={(card) => `Mover ${card.name}`}
+        {...props}
+      />,
+    )
+    return screen.getByRole('button', { name: 'Mover Ana Souza' })
+  }
+
+  const ana = expect.objectContaining({ id: 'lead-1', name: 'Ana Souza' })
+
+  it('uses dragInstructions for the keyboard instructions of each card', () => {
+    const handle = renderBoard({ dragInstructions: 'Pressione espaço para pegar o card.' })
+    expect(handle).toHaveAccessibleDescription('Pressione espaço para pegar o card.')
+  })
+
+  it('uses cardRoleDescription for the aria-roledescription of each card', () => {
+    renderBoard({ cardRoleDescription: 'arrastável' })
+    for (const handle of screen.getAllByRole('button')) {
+      expect(handle).toHaveAttribute('aria-roledescription', 'arrastável')
+    }
+  })
+
+  it('calls dragStartAnnouncement and dragOverAnnouncement with the card, column and position', async () => {
+    const dragStartAnnouncement = vi.fn(() => 'pego')
+    const dragOverAnnouncement = vi.fn(() => 'Ana Souza sobre Novo, posição 1.')
+    const handle = renderBoard({ dragStartAnnouncement, dragOverAnnouncement })
+    handle.focus()
+    await press(handle, space)
+    expect(dragStartAnnouncement).toHaveBeenCalledWith(ana, 'Novo')
+    expect(dragOverAnnouncement).toHaveBeenCalledWith(ana, 'Novo', 1)
+    expect(liveRegion()).toBe('Ana Souza sobre Novo, posição 1.')
+  })
+
+  it('uses dragEndAnnouncement with the card, column and position when the card is dropped', async () => {
+    const dragEndAnnouncement = vi.fn(
+      (card: LeadCard, column: string, position: number) =>
+        `${card.name} solto em ${column}, posição ${position}.`,
+    )
+    const handle = renderBoard({ dragEndAnnouncement })
+    handle.focus()
+    await press(handle, space)
+    await press(handle, space)
+    expect(dragEndAnnouncement).toHaveBeenCalledWith(ana, 'Novo', 1)
+    expect(liveRegion()).toBe('Ana Souza solto em Novo, posição 1.')
+  })
+
+  it('uses dragCancelAnnouncement with the column the card returns to', async () => {
+    const handle = renderBoard({
+      dragCancelAnnouncement: (card, column) =>
+        `Movimento cancelado. ${card.name} voltou para ${column}.`,
+    })
+    handle.focus()
+    await press(handle, space)
+    await press(document, escape)
+    expect(liveRegion()).toBe('Movimento cancelado. Ana Souza voltou para Novo.')
+  })
+
+  it('announces with the card label and column by default, not the card id', async () => {
+    render(<KanbanBoard columns={buildColumns()} renderCard={renderCard} onCardMove={() => {}} />)
+    const handle = screen.getByRole('button', { name: 'Card lead-1' })
+    handle.focus()
+    await press(handle, space)
+    expect(liveRegion()).toBe('Card lead-1 is over Novo, position 1.')
+    await press(handle, space)
+    expect(liveRegion()).toBe('Card lead-1 was dropped in Novo, position 1.')
+  })
+
+  it('keeps the default keyboard instructions and role description', () => {
+    render(<KanbanBoard columns={buildColumns()} renderCard={renderCard} onCardMove={() => {}} />)
+    const handle = screen.getByRole('button', { name: 'Card lead-1' })
+    expect(handle).toHaveAttribute('aria-roledescription', 'sortable')
+    expect(handle).toHaveAccessibleDescription(/To pick up a draggable item, press the space bar/)
   })
 })

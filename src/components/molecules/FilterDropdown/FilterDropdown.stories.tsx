@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
+import { userEvent, within } from 'storybook/test'
 import { FilterDropdown } from './FilterDropdown'
 import type { FilterDropdownOption, FilterDropdownProps } from './FilterDropdown'
 
@@ -90,5 +91,19 @@ export const InOverflowContainer: Story = {
     options: statusOptions,
     value: [],
     onApply: () => {},
+  },
+}
+
+export const CustomLabels: Story = {
+  ...Default,
+  args: {
+    ...Default.args,
+    selectAllLabel: 'Selecionar todos',
+    clearLabel: 'Limpar',
+    applyLabel: 'Aplicar',
+  },
+  // Opens the panel, so the a11y addon also checks its buttons.
+  play: async ({ canvasElement }) => {
+    await userEvent.click(within(canvasElement).getByRole('button', { name: 'Status' }))
   },
 }

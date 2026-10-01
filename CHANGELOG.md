@@ -6,6 +6,48 @@ Todas as mudanças relevantes do base-ds são registradas aqui. O formato segue 
 mudança que exige ajuste nos apps sobe o _minor_ (`0.1.0 → 0.2.0`); correções e componentes
 novos sem impacto sobem o _patch_.
 
+## [0.5.0] - 2026-10-01
+
+Último lote da [#58](https://github.com/indianous/base-ds/issues/58). Com ele, todo texto que os
+componentes mostram ou leem por conta própria pode ser trocado por uma prop.
+
+### Alterado
+
+- `FilterDropdown`: os botões do painel tinham textos fixos em português. Agora são props com
+  padrão em inglês: `selectAllLabel` ("Select all"), `clearLabel` ("Clear") e `applyLabel`
+  ("Apply").
+- `MultiSelect`: o "Nenhum resultado" fixo da lista virou a prop `emptyMessage`, com padrão "No
+  results".
+- `KanbanBoard`: os anúncios de arrastar e soltar lidos pelo leitor de tela usavam o `id` do card
+  ("Picked up draggable item lead-1."). Agora usam o `getCardAriaLabel` e o título da coluna
+  ("Picked up Card lead-1 in Novo.", "Card lead-1 was dropped in Contatado, position 1.").
+
+### Adicionado
+
+- `KanbanBoard`: props para os textos que vinham do `@dnd-kit` em inglês:
+  - `dragInstructions`: as instruções de teclado;
+  - `cardRoleDescription`: o `aria-roledescription` de cada card, com padrão `sortable`;
+  - `dragStartAnnouncement(card, column)`, `dragOverAnnouncement(card, column, position)`,
+    `dragEndAnnouncement(card, column, position)` e `dragCancelAnnouncement(card, column)`: os
+    anúncios, que recebem o card e o título da coluna. A posição começa em 1.
+
+### Corrigido
+
+- `KanbanBoard`: soltar um card numa coluna vazia chamava o `onCardMove` com o índice 1, e não 0,
+  porque o próprio card entrava na contagem. Agora o índice ignora o próprio card.
+
+### Ajustes necessários nos apps
+
+- `FilterDropdown`: em sites em português, passar `selectAllLabel="Selecionar todos"`,
+  `clearLabel="Limpar"` e `applyLabel="Aplicar"`. Sem isso, os botões passam a aparecer em inglês.
+- `MultiSelect`: em sites em português, passar `emptyMessage="Nenhum resultado"`.
+- `KanbanBoard`: em sites em português, passar as props de anúncio. Sem elas, os anúncios continuam
+  em inglês, agora com o nome do card em vez do `id`.
+- Hoje usam esses componentes o `ecommerce-frontend` (`FilterDropdown` nas telas do painel e
+  `MultiSelect` no `ProductForm`) e o `lead-system-frontend` (`FilterDropdown`, `MultiSelect` e
+  `KanbanBoard`). A série muda de 0.4 para 0.5, então o `npm update` não instala esta versão
+  sozinho: ela entra quando o app atualizar de propósito, junto com esses ajustes.
+
 ## [0.4.15] - 2026-10-01
 
 ### Adicionado

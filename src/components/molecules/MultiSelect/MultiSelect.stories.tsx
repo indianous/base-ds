@@ -82,5 +82,6 @@ export const CustomLabels: Story = {
     'aria-label': 'Categorias',
     placeholder: 'Escolha as categorias...',
     removeLabel: (optionLabel) => `Remover ${optionLabel}`,
+    emptyMessage: 'Nenhum resultado',
   },
 }

@@ -25,6 +25,12 @@ export interface FilterDropdownProps {
   align?: DropdownAlign
   disabled?: boolean
   className?: string
+  /** Text of the button that checks every option. */
+  selectAllLabel?: string
+  /** Text of the button that unchecks every option. */
+  clearLabel?: string
+  /** Text of the button that applies the selection and closes the panel. */
+  applyLabel?: string
 }
 
 export function FilterDropdown({
@@ -35,6 +41,9 @@ export function FilterDropdown({
   align = 'start',
   disabled = false,
   className,
+  selectAllLabel = 'Select all',
+  clearLabel = 'Clear',
+  applyLabel = 'Apply',
 }: FilterDropdownProps) {
   const [open, setOpen] = useState(false)
   const [draft, setDraft] = useState<string[]>(value)
@@ -142,10 +151,10 @@ export function FilterDropdown({
           >
             <div className="flex items-center justify-between gap-2 border-b border-border px-3 py-2">
               <Button type="button" variant="ghost" size="sm" onClick={handleSelectAll}>
-                Selecionar todos
+                {selectAllLabel}
               </Button>
               <Button type="button" variant="ghost" size="sm" onClick={handleClear}>
-                Limpar
+                {clearLabel}
               </Button>
             </div>
 
@@ -173,7 +182,7 @@ export function FilterDropdown({
                 className="w-full"
                 onClick={handleApply}
               >
-                Aplicar
+                {applyLabel}
               </Button>
             </div>
           </div>,

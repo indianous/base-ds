@@ -43,7 +43,7 @@ describe('MultiSelect', () => {
   it('shows a "no results" message when filter matches nothing', async () => {
     render(<MultiSelect id="categories" options={options} value={[]} onChange={vi.fn()} />)
     await userEvent.type(screen.getByRole('combobox'), 'zzz')
-    expect(screen.getByText('Nenhum resultado')).toBeInTheDocument()
+    expect(screen.getByText('No results')).toBeInTheDocument()
   })
 
   it('calls onChange with the option added when clicking an unselected option', async () => {
@@ -216,6 +216,21 @@ describe('MultiSelect', () => {
 })
 
 describe('MultiSelect custom labels', () => {
+  it('uses emptyMessage when the filter matches nothing', async () => {
+    render(
+      <MultiSelect
+        id="categorias"
+        aria-label="Categorias"
+        options={options}
+        value={[]}
+        onChange={vi.fn()}
+        emptyMessage="Nenhum resultado"
+      />,
+    )
+    await userEvent.type(screen.getByRole('combobox'), 'zzz')
+    expect(screen.getByText('Nenhum resultado')).toBeInTheDocument()
+  })
+
   it('uses removeLabel with the option label for the remove button of each chip', () => {
     render(
       <MultiSelect

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
+import { expect, fn, userEvent, waitFor, within } from 'storybook/test'
 import { KanbanBoard } from './KanbanBoard'
 import type { KanbanColumn } from './KanbanBoard'
 import { Avatar } from '../../atoms/Avatar/Avatar'
@@ -182,5 +183,40 @@ export const CustomLabels: Story = {
     ...EmptyColumn.args,
     getCardAriaLabel: (card) => `Mover lead ${card.name}`,
     cardCountLabel: (count) => `${count} ${count === 1 ? 'cartão' : 'cartões'}`,
+    dragInstructions:
+      'Para pegar um card, pressione espaço. Use as setas para mover e espaço de novo para soltar, ou Esc para cancelar.',
+    cardRoleDescription: 'arrastável',
+    dragStartAnnouncement: (card, column) => `${card.name} pego em ${column}.`,
+    dragOverAnnouncement: (card, column, position) =>
+      `${card.name} sobre ${column}, posição ${position}.`,
+    dragEndAnnouncement: (card, column, position) =>
+      `${card.name} solto em ${column}, posição ${position}.`,
+    dragCancelAnnouncement: (card, column) =>
+      `Movimento cancelado. ${card.name} voltou para ${column}.`,
+  },
+}
+
+// Moving a card to another column by keyboard needs real layout (dnd-kit measures the columns),
+// so this runs here, in Chromium, rather than in the jsdom unit tests.
+export const KeyboardMoveAnnouncement: Story = {
+  args: { ...CustomLabels.args, onCardMove: fn() },
+  play: async ({ args, canvasElement }) => {
+    const canvas = within(canvasElement)
+    const handle = canvas.getByRole('button', { name: 'Mover lead Ana Souza' })
+    const announcement = () => document.querySelector('[aria-live]')?.textContent
+    handle.focus()
+    // Each key waits for its announcement: dnd-kit handles the next key only once it's ready.
+    await userEvent.keyboard(' ')
+    await waitFor(() => expect(announcement()).toBe('Ana Souza sobre Contatado, posição 1.'))
+    // The first arrow can stop on the card's own column (its edge is to the card's left).
+    for (let i = 0; i < 3 && announcement() !== 'Ana Souza sobre Novo, posição 1.'; i++) {
+      await userEvent.keyboard('{ArrowLeft}')
+      await new Promise((resolve) => setTimeout(resolve, 100))
+    }
+    await expect(announcement()).toBe('Ana Souza sobre Novo, posição 1.')
+    await userEvent.keyboard(' ')
+    await waitFor(() => expect(announcement()).toBe('Ana Souza solto em Novo, posição 1.'))
+
+    await expect(args.onCardMove).toHaveBeenCalledWith('lead-1', 'contacted', 'new', 0)
   },
 }
