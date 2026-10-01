@@ -78,6 +78,20 @@ export default {
           border: 'var(--color-info-border)',
         },
 
+        code: {
+          background: 'var(--color-code-background)',
+          foreground: 'var(--color-code-foreground)',
+          'token-comment': 'var(--color-code-token-comment)',
+          'token-keyword': 'var(--color-code-token-keyword)',
+          'token-string': 'var(--color-code-token-string)',
+          'token-string-expression': 'var(--color-code-token-string-expression)',
+          'token-constant': 'var(--color-code-token-constant)',
+          'token-function': 'var(--color-code-token-function)',
+          'token-parameter': 'var(--color-code-token-parameter)',
+          'token-punctuation': 'var(--color-code-token-punctuation)',
+          'token-link': 'var(--color-code-token-link)',
+        },
+
         chart: {
           1: 'var(--color-chart-1)',
           2: 'var(--color-chart-2)',

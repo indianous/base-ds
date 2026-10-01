@@ -278,6 +278,46 @@ import { StoreImage } from './StoreImage'
 - O `fetchPriority` foi verificado com o React 19. Com o React 18, o React pode avisar no console
   e ignorar o atributo. O resto continua funcionando.
 
+## Realce de código
+
+O base-ds tem tokens para realce de sintaxe, nos dois temas e com contraste verificado contra o
+fundo do bloco: `--color-code-background`, `--color-code-foreground` e
+`--color-code-token-<tipo>` (`comment`, `keyword`, `string`, `string-expression`, `constant`,
+`function`, `parameter`, `punctuation` e `link`). No Tailwind, eles viram utilitários como
+`bg-code-background` e `text-code-token-keyword`.
+
+Os nomes seguem as variáveis do tema `css-variables` do [Shiki](https://shiki.style). Assim, o
+realce roda no build, sem JS no cliente, e acompanha o tema escuro. O base-ds não depende do Shiki:
+o app cria o tema com o prefixo dos tokens.
+
+```ts
+import { codeToHtml, createCssVariablesTheme } from 'shiki'
+
+const baseDsTheme = createCssVariablesTheme({
+  name: 'base-ds',
+  variablePrefix: '--color-code-',
+  fontStyle: true,
+})
+
+const html = await codeToHtml(code, { lang: 'ts', theme: baseDsTheme })
+```
+
+```tsx
+import { Code, CodeBlock } from '@indianous/base-ds'
+
+<CodeBlock html={html} language="TypeScript" label="Exemplo de código" />
+<CodeBlock language="Bash">npm run build</CodeBlock>  {/* sem realce */}
+<p>Rode <Code>npm install</Code> antes.</p>
+```
+
+- O `html` é inserido como HTML: passe só a saída do realçador, gerada no build, **nunca** texto
+  vindo de usuários.
+- Para Markdown, o `@shikijs/rehype` aceita o mesmo tema
+  (`rehypePlugins: [[rehypeShiki, { theme: baseDsTheme }]]`). O `<pre>` que ele gera pode ser
+  mapeado para o `CodeBlock`, ou estilizado com os mesmos tokens.
+- O tema `css-variables` tem só 9 tipos de token, menos que os temas comuns do Shiki, e as cores
+  ANSI (da linguagem `ansi`) ficam de fora.
+
 ## Trecho para o `CLAUDE.md` dos apps
 
 Copie para o `CLAUDE.md` de cada app que usa o base-ds:

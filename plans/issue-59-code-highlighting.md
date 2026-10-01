@@ -159,3 +159,20 @@ nenhum.
 `npm run lint`, `format:check`, `typecheck`, `npm test`, `npm run test:stories`, `npm run build` +
 `npm run check:dist` (o `CodeBlock` e o `Code` precisam aparecer como arquivos próprios e não podem
 levar o Shiki para o bundle).
+
+## Resultado (implementação)
+
+Entregue como planejado:
+
+- O teste com o Shiki 4.5 confirmou os nomes. Nos trechos de TypeScript, CSS, Bash e Markdown, ele
+  usou 10 das 11 variáveis (`token-parameter` não apareceu nesses trechos), todas declaradas nos
+  dois temas. A saída é um `<pre class="shiki">` com `tabindex="0"` e o fundo e a cor nas
+  variáveis do base-ds.
+- O `CodeBlock` é uma `<figure>` com `aria-label` e um `<figcaption>` para a linguagem, sem
+  violações no axe. No caso do `children`, o `<pre>` tem `tabIndex={0}`, o que exige um
+  `eslint-disable` do `jsx-a11y/no-noninteractive-tabindex`: o lint proíbe `tabIndex` em `<pre>`,
+  e o axe exige que a área rolável receba foco.
+- Conferi no Chromium que as classes de descendente (`[&_pre]:p-4` …) chegam ao `<pre>` do Shiki
+  nos dois temas: padding, rolagem, fonte e fundo, e as cores dos trechos são as da paleta.
+- O `Code` não fixa tamanho de fonte: herda o do texto em volta, sem valor literal.
+- O `dist` ganhou `Code.js` e `CodeBlock.js` próprios, e nenhum arquivo dele contém o Shiki.

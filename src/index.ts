@@ -23,6 +23,9 @@ export type { ButtonProps } from './components/atoms/Button/Button'
 export { Checkbox } from './components/atoms/Checkbox/Checkbox'
 export type { CheckboxProps } from './components/atoms/Checkbox/Checkbox'
 
+export { Code } from './components/atoms/Code/Code'
+export type { CodeProps } from './components/atoms/Code/Code'
+
 export { Container } from './components/atoms/Container/Container'
 export type { ContainerProps } from './components/atoms/Container/Container'
 
@@ -62,6 +65,9 @@ export { Alert } from './components/molecules/Alert/Alert'
 export type { AlertProps, AlertVariant, AlertLayout } from './components/molecules/Alert/Alert'
 
 export { Breadcrumb } from './components/molecules/Breadcrumb/Breadcrumb'
+
+export { CodeBlock } from './components/molecules/CodeBlock/CodeBlock'
+export type { CodeBlockProps } from './components/molecules/CodeBlock/CodeBlock'
 
 export { DropdownMenu } from './components/molecules/DropdownMenu/DropdownMenu'
 export type {

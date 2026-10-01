@@ -173,6 +173,20 @@
   --color-ring: var(--color-blue-600);
   --color-overlay: rgb(0 0 0 / 0.5);
 
+  /* Code — realce de sintaxe (issue #59). Os nomes seguem as variáveis do tema
+     `css-variables` do Shiki com `variablePrefix: '--color-code-'`. */
+  --color-code-background: var(--color-neutral-100);
+  --color-code-foreground: var(--color-neutral-900);
+  --color-code-token-comment: var(--color-neutral-600);
+  --color-code-token-keyword: var(--color-violet-700);
+  --color-code-token-string: var(--color-green-800);
+  --color-code-token-string-expression: var(--color-green-900);
+  --color-code-token-constant: var(--color-amber-800);
+  --color-code-token-function: var(--color-blue-700);
+  --color-code-token-parameter: var(--color-sky-800);
+  --color-code-token-punctuation: var(--color-neutral-700);
+  --color-code-token-link: var(--color-blue-700);
+
   /* --------------------------------------------------------------------------
      CORES — Chart (BarChart, Funnel)
      Paleta dedicada a data viz, validada com o six-checks validator (CVD-safe,
@@ -383,4 +397,17 @@
   --color-border: var(--color-neutral-800);
   --color-input: var(--color-neutral-700);
   --color-ring: var(--color-blue-400);
+
+  /* Code */
+  --color-code-background: var(--color-neutral-900);
+  --color-code-foreground: var(--color-neutral-100);
+  --color-code-token-comment: var(--color-neutral-400);
+  --color-code-token-keyword: var(--color-violet-300);
+  --color-code-token-string: var(--color-green-300);
+  --color-code-token-string-expression: var(--color-green-200);
+  --color-code-token-constant: var(--color-amber-300);
+  --color-code-token-function: var(--color-blue-300);
+  --color-code-token-parameter: var(--color-sky-300);
+  --color-code-token-punctuation: var(--color-neutral-300);
+  --color-code-token-link: var(--color-blue-300);
 }

@@ -60,6 +60,18 @@
   --color-info-muted-fg: var(--color-info-muted-fg);
   --color-info-border: var(--color-info-border);
 
+  --color-code-background: var(--color-code-background);
+  --color-code-foreground: var(--color-code-foreground);
+  --color-code-token-comment: var(--color-code-token-comment);
+  --color-code-token-keyword: var(--color-code-token-keyword);
+  --color-code-token-string: var(--color-code-token-string);
+  --color-code-token-string-expression: var(--color-code-token-string-expression);
+  --color-code-token-constant: var(--color-code-token-constant);
+  --color-code-token-function: var(--color-code-token-function);
+  --color-code-token-parameter: var(--color-code-token-parameter);
+  --color-code-token-punctuation: var(--color-code-token-punctuation);
+  --color-code-token-link: var(--color-code-token-link);
+
   --color-chart-1: var(--color-chart-1);
   --color-chart-2: var(--color-chart-2);
   --color-chart-3: var(--color-chart-3);

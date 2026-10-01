@@ -6,6 +6,26 @@ Todas as mudanças relevantes do base-ds são registradas aqui. O formato segue 
 mudança que exige ajuste nos apps sobe o _minor_ (`0.1.0 → 0.2.0`); correções e componentes
 novos sem impacto sobem o _patch_.
 
+## [0.5.1] - 2026-10-01
+
+### Adicionado
+
+- Tokens de realce de código, nos dois temas
+  ([#59](https://github.com/indianous/base-ds/issues/59)): `--color-code-background`,
+  `--color-code-foreground` e nove `--color-code-token-*`. Os nomes seguem o tema `css-variables`
+  do Shiki com `variablePrefix: '--color-code-'`. O teste de contraste cobre cada token sobre o
+  fundo do bloco, e um teste com o Shiki confere que toda variável que ele escreve existe. O
+  Tailwind (v3 e v4) ganha o grupo de cores `code`.
+- `Code`: código inline.
+- `CodeBlock`: bloco de código com `children` (sem realce) ou `html` (a saída de um realçador),
+  `language` num cabeçalho e `label` acessível (padrão `'Code'`). Dá para rolar o bloco pelo
+  teclado.
+- README: seção "Realce de código", com o Shiki.
+
+### Ajustes necessários nos apps
+
+- Nenhum.
+
 ## [0.5.0] - 2026-10-01
 
 Último lote da [#58](https://github.com/indianous/base-ds/issues/58). Com ele, todo texto que os

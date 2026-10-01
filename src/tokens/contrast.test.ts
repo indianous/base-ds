@@ -62,6 +62,21 @@ function contrastRatio(foreground: string, background: string): number {
 
 const statuses = ['primary', 'secondary', 'success', 'warning', 'destructive', 'info']
 
+const codeTextTokens = [
+  'code-foreground',
+  ...[
+    'comment',
+    'keyword',
+    'string',
+    'string-expression',
+    'constant',
+    'function',
+    'parameter',
+    'punctuation',
+    'link',
+  ].map((token) => `code-token-${token}`),
+]
+
 const textPairs: [foreground: string, background: string][] = [
   ['foreground', 'background'],
   ['muted-foreground', 'background'],
@@ -71,6 +86,8 @@ const textPairs: [foreground: string, background: string][] = [
   ...statuses.map((status): [string, string] => [`${status}-muted-fg`, `${status}-muted`]),
   // Statuses used as text (`text-primary`, `text-destructive` …) on the page background.
   ...statuses.map((status): [string, string] => [status, 'background']),
+  // Code highlighting (issue #59): every token is text on the code block's background.
+  ...codeTextTokens.map((token): [string, string] => [token, 'code-background']),
 ]
 
 // Same in both themes, so `.dark` doesn't redefine them.
