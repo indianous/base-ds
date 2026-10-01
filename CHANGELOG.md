@@ -6,6 +6,38 @@ Todas as mudanças relevantes do base-ds são registradas aqui. O formato segue 
 mudança que exige ajuste nos apps sobe o _minor_ (`0.1.0 → 0.2.0`); correções e componentes
 novos sem impacto sobem o _patch_.
 
+## [0.4.12] - 2026-09-30
+
+### Adicionado
+
+- `Image`: props `loading`, `priority`, `sizes`, `width`, `height` e `imageComponent`
+  ([#56](https://github.com/indianous/base-ds/issues/56)). O `priority` vira `loading="eager"` e
+  `fetchPriority="high"`. O `imageComponent` troca o `<img>` pelo componente de imagem do app,
+  como um wrapper do `next/image` com `fill`, e recebe só atributos padrão de `<img>`. O tipo
+  `ImageComponent` é exportado.
+- `ImageGallery`: props `imageComponent` (repassada à imagem principal e às miniaturas),
+  `priority` (padrão `true`, para a imagem principal) e `sizes` (para a imagem principal). As
+  miniaturas usam `sizes="64px"`.
+
+### Alterado
+
+- `Image`: carrega em modo lazy (`loading="lazy"`) e com `decoding="async"` por padrão. Antes,
+  toda imagem carregava na hora.
+
+### Corrigido
+
+- README: o exemplo do `linkComponent` (v0.4.9) passava o `Link` do `next/link` direto num
+  Server Component, o que falha no build do Next.js (`Functions cannot be passed directly to Client
+Components`). O exemplo agora reexporta o `Link` de um arquivo `'use client'` (`AppLink`).
+
+### Ajustes necessários nos apps
+
+- Nada obrigatório.
+- Recomendado: marcar a imagem principal de cada página com `priority` (`<Image priority />`), já
+  que, sem isso, ela passa a carregar em modo lazy. No `ImageGallery`, a imagem principal já tem
+  `priority` por padrão.
+- Quem passa `linkComponent={Link}` num Server Component: usar o `AppLink` do README.
+
 ## [0.4.11] - 2026-09-30
 
 ### Alterado

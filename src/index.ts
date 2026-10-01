@@ -8,6 +8,7 @@
 // Utilities
 export { cn } from './utils/cn'
 export type { LinkComponent } from './utils/linkComponent'
+export type { ImageComponent } from './utils/imageComponent'
 
 // ── Atoms ────────────────────────────────────────────────────────────────────
 

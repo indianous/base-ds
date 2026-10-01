@@ -212,18 +212,71 @@ página inteira a cada clique. Para navegar pelo roteador do app, passe o compon
 `linkComponent`:
 
 ```tsx
-import Link from 'next/link'
-import { Footer, Navbar } from '@indianous/base-ds'
-
-<Navbar linkComponent={Link} items={[{ label: 'Projetos', href: '/projects', active: true }]} />
-<Footer linkComponent={Link} columns={[...]} />
+// app/AppLink.tsx
+'use client'
+export { default as AppLink } from 'next/link'
 ```
+
+```tsx
+// em qualquer página ou layout, inclusive Server Components
+import { Footer, Navbar } from '@indianous/base-ds'
+import { AppLink } from './AppLink'
+
+<Navbar linkComponent={AppLink} items={[{ label: 'Projetos', href: '/projects', active: true }]} />
+<Footer linkComponent={AppLink} columns={[...]} />
+```
+
+O arquivo `'use client'` é necessário. O `Navbar` e o `Footer` são client components, e um Server
+Component só consegue passar a eles um componente que venha de um arquivo `'use client'`. O
+`import Link from 'next/link'` direto num Server Component falha no build, com
+`Functions cannot be passed directly to Client Components`. Dentro de um client component, o
+`Link` pode ser passado direto.
 
 O componente recebe `href`, `className`, `children` e os atributos `aria-*` e `on*` de um `<a>`, e
 precisa renderizar um `<a>` (o `Link` do Next.js já faz isso). O `Navbar` repassa o `linkComponent`
 aos menus dropdown e fecha o drawer do celular quando um item é clicado.
 
 O `Sidebar` resolve o mesmo problema com a prop `asChild` em cada item.
+
+## Imagens com o Next.js
+
+O `Image` carrega em modo lazy (`loading="lazy"`) e decodifica de forma assíncrona por padrão.
+Marque a imagem principal da página (o banner, a foto do produto) com `priority`, que vira
+`loading="eager"` e `fetchPriority="high"`. Sem isso, ela espera o layout e o LCP piora. Passe
+também `sizes`, para o navegador escolher a resolução certa.
+
+Para otimizar as imagens com o `next/image` (redimensionamento, WebP/AVIF, `srcset`), passe um
+componente de imagem em `imageComponent`. Como no `linkComponent`, ele fica num arquivo
+`'use client'`:
+
+```tsx
+// app/StoreImage.tsx
+'use client'
+import NextImage from 'next/image'
+import type { ImageComponent } from '@indianous/base-ds'
+
+export const StoreImage: ImageComponent = (props) => <NextImage {...props} fill />
+```
+
+```tsx
+import { Image, ImageGallery } from '@indianous/base-ds'
+import { StoreImage } from './StoreImage'
+
+<Image imageComponent={StoreImage} src={url} alt="Blusa" aspectRatio="square" sizes="25vw" />
+<ImageGallery imageComponent={StoreImage} images={images} sizes="(min-width: 768px) 50vw, 100vw" />
+```
+
+- O componente recebe só atributos padrão de `<img>` (`src`, `alt`, `className`, `onError`,
+  `loading`, `decoding`, `fetchPriority`, `sizes`, `width` e `height`). Não há `priority`, que o
+  `next/image` do Next.js 16 descontinuou.
+- Com `fill`, a imagem ocupa a `<div>` do `Image`, que precisa ter altura: use `aspectRatio` ou dê
+  um tamanho no `className`. Não passe `width`/`height` junto com `fill`.
+- Imagens de outro domínio precisam estar em `images.remotePatterns` no `next.config`.
+- No `ImageGallery`, a imagem principal tem `priority` por padrão (use `priority={false}` se a
+  galeria ficar abaixo da dobra), e as miniaturas carregam em modo lazy com `sizes="64px"`. O zoom
+  continua um `<img>` com a imagem original.
+- O `fetchPriority` foi verificado com o React 19. Com o React 18, o React pode avisar no console
+  e ignorar o atributo. O resto continua funcionando.
 
 ## Trecho para o `CLAUDE.md` dos apps
 

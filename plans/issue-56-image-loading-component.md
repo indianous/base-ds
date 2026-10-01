@@ -172,3 +172,25 @@ com `priority`, porque sem isso ela passa a carregar em modo lazy.
 
 `npm run lint`, `format:check`, `typecheck`, `npm test`, `npm run test:stories`, `npm run build` +
 `npm run check:dist`, e a verificação com o `next/image`.
+
+## Resultado (implementação)
+
+Verificação num app Next.js 16.3.6 mínimo, com Tailwind v4 (`@source` na pasta `dist`) e o base-ds
+pelo tarball:
+
+- O typecheck do `StoreImage` reprovou o primeiro tipo `ImageComponent`. O `width`/`height` do
+  `ImgHTMLAttributes` é `string | number`, e o `next/image` só aceita número. O tipo passou a
+  declarar `width?: number` e `height?: number`.
+- O `StoreImage` precisa ficar num arquivo `'use client'`. Definido dentro de um Server Component,
+  ele não pode ser passado ao `Image`, que é um client component.
+- **O mesmo vale para o `linkComponent` da #54**: `<Navbar linkComponent={Link}>` com o `Link`
+  importado num Server Component falha no build (`Functions cannot be passed directly to Client
+Components`), e o README da v0.4.9 ensinava esse uso. A correção é reexportar o `Link` de um
+  arquivo `'use client'` (`export { default as AppLink } from 'next/link'`), e assim a navegação no
+  cliente funcionou. O README foi corrigido nesta versão.
+- No Chromium: as imagens vêm de `/_next/image` com `srcset`. As miniaturas são lazy, com
+  `sizes="64px"` e 64×64 px. A principal tem `loading="eager"` e `fetchpriority="high"`, e o card
+  abaixo da dobra é lazy. Não há erros nem avisos no console.
+
+Correção do plano: ele dizia que o `fetchPriority` em camelCase existe a partir do React 18.3, mas
+isso não foi verificado. Só o React 19 foi testado, e o README diz isso.

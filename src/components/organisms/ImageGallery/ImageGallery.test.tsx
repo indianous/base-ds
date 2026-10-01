@@ -1,5 +1,6 @@
 import { describe, it, expect, afterEach, vi } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
+import type { ImgHTMLAttributes } from 'react'
 import userEvent from '@testing-library/user-event'
 import { axe } from 'jest-axe'
 import { ImageGallery } from './ImageGallery'
@@ -181,5 +182,58 @@ describe('ImageGallery', () => {
   it('has no accessibility violations', async () => {
     const { container } = render(<ImageGallery images={images} />)
     expect(await axe(container)).toHaveNoViolations()
+  })
+})
+
+describe('ImageGallery loading', () => {
+  const mainImage = () =>
+    within(screen.getByRole('button', { name: /Zoom image/ })).getByRole('img')
+  const thumbnails = () =>
+    screen
+      .getAllByRole('button', { name: /View image/ })
+      .map((button) => within(button).getByRole('img'))
+
+  it('loads thumbnails lazily, sized for their 64px width', () => {
+    render(<ImageGallery images={images} />)
+    for (const thumbnail of thumbnails()) {
+      expect(thumbnail).toHaveAttribute('loading', 'lazy')
+      expect(thumbnail).toHaveAttribute('sizes', '64px')
+    }
+  })
+
+  it('gives the main image priority by default', () => {
+    render(<ImageGallery images={images} />)
+    expect(mainImage()).toHaveAttribute('loading', 'eager')
+    expect(mainImage()).toHaveAttribute('fetchpriority', 'high')
+  })
+
+  it('loads the main image lazily with priority={false}', () => {
+    render(<ImageGallery images={images} priority={false} />)
+    expect(mainImage()).toHaveAttribute('loading', 'lazy')
+    expect(mainImage()).not.toHaveAttribute('fetchpriority')
+  })
+
+  it('passes sizes to the main image', () => {
+    render(<ImageGallery images={images} sizes="(min-width: 768px) 50vw, 100vw" />)
+    expect(mainImage()).toHaveAttribute('sizes', '(min-width: 768px) 50vw, 100vw')
+  })
+
+  it('uses imageComponent for the thumbnails and the main image, but not for the zoom', async () => {
+    function TestImage({
+      src,
+      alt,
+      ...props
+    }: ImgHTMLAttributes<HTMLImageElement> & { src: string; alt: string }) {
+      return <img {...props} src={src} alt={alt} data-custom-image="" />
+    }
+
+    render(<ImageGallery images={images} imageComponent={TestImage} />)
+    expect(mainImage()).toHaveAttribute('data-custom-image')
+    for (const thumbnail of thumbnails()) expect(thumbnail).toHaveAttribute('data-custom-image')
+
+    await userEvent.click(screen.getByRole('button', { name: /Zoom image/ }))
+    const zoomed = within(screen.getByRole('dialog')).getByRole('img')
+    expect(zoomed).not.toHaveAttribute('data-custom-image')
+    expect(zoomed).toHaveAttribute('decoding', 'async')
   })
 })

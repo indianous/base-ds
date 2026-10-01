@@ -5,6 +5,7 @@ import { useBodyScrollLock } from '../../../utils/useBodyScrollLock'
 import { useStackedEscape } from '../../../utils/useStackedEscape'
 import { Image } from '../../atoms/Image/Image'
 import type { ImageProps } from '../../atoms/Image/Image'
+import type { ImageComponent } from '../../../utils/imageComponent'
 import { Button } from '../../atoms/Button/Button'
 import { IconBase } from '../../atoms/Icon/IconBase'
 import { ChevronLeftIcon, ChevronRightIcon, XIcon } from 'lucide-react'
@@ -23,6 +24,12 @@ export interface ImageGalleryProps {
   aspectRatio?: ImageGalleryAspectRatio
   objectFit?: ImageGalleryObjectFit
   className?: string
+  /** Loads the main image right away with high fetch priority. Turn off below the fold. */
+  priority?: boolean
+  /** `sizes` of the main image. Thumbnails are always `64px`. */
+  sizes?: string
+  /** Component rendered in place of `<img>` for the main image and the thumbnails. */
+  imageComponent?: ImageComponent
 }
 
 export function ImageGallery({
@@ -31,6 +38,9 @@ export function ImageGallery({
   aspectRatio = 'square',
   objectFit = 'cover',
   className,
+  priority = true,
+  sizes,
+  imageComponent,
 }: ImageGalleryProps) {
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [zoomOpen, setZoomOpen] = useState(false)
@@ -90,7 +100,14 @@ export function ImageGallery({
                 isSelected ? 'border-primary' : 'border-transparent',
               )}
             >
-              <Image src={image.src} alt={image.alt} aspectRatio="square" className="w-16" />
+              <Image
+                src={image.src}
+                alt={image.alt}
+                aspectRatio="square"
+                sizes="64px"
+                imageComponent={imageComponent}
+                className="w-16"
+              />
             </button>
           )
         })}
@@ -108,6 +125,9 @@ export function ImageGallery({
             alt={selected.alt}
             aspectRatio={aspectRatio}
             objectFit={objectFit}
+            priority={priority}
+            sizes={sizes}
+            imageComponent={imageComponent}
           />
         </button>
 
@@ -169,9 +189,12 @@ export function ImageGallery({
                 <IconBase icon={XIcon} size="sm" />
               </Button>
 
+              {/* Plain <img> on purpose: the zoom shows the original image, and its layout has no
+                  fixed-size container for an image component that fills it. */}
               <img
                 src={selected.src}
                 alt={selected.alt}
+                decoding="async"
                 className="max-h-[90vh] w-full rounded-md object-contain"
               />
 
