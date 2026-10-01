@@ -124,3 +124,11 @@ describe('NumberInput', () => {
     expect(await axe(container)).toHaveNoViolations()
   })
 })
+
+describe('NumberInput custom labels', () => {
+  it('uses decrementLabel and incrementLabel for the step buttons', () => {
+    render(<NumberInput id="quantidade" decrementLabel="Diminuir" incrementLabel="Aumentar" />)
+    expect(screen.getByRole('button', { name: 'Diminuir' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Aumentar' })).toBeInTheDocument()
+  })
+})

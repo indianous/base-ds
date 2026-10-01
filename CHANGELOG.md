@@ -6,6 +6,26 @@ Todas as mudanças relevantes do base-ds são registradas aqui. O formato segue 
 mudança que exige ajuste nos apps sobe o _minor_ (`0.1.0 → 0.2.0`); correções e componentes
 novos sem impacto sobem o _patch_.
 
+## [0.4.14] - 2026-10-01
+
+### Adicionado
+
+Props para os textos que os componentes mostravam ou liam em inglês, sem como trocar (lote 2 da
+[#58](https://github.com/indianous/base-ds/issues/58)). Os padrões são os textos de antes.
+
+- `Breadcrumb`: `label` (o `<nav>`).
+- `NumberInput`: `decrementLabel` e `incrementLabel`.
+- `Rating`: `label` (o grupo) e `starLabel: (value) => string`.
+- `ImageGallery`: `label` (o grupo), `previousLabel` e `nextLabel` (na galeria e no zoom),
+  `thumbnailLabel: (index, alt) => string`, `zoomLabel: (alt) => string`, `zoomCloseLabel` e
+  `zoomDismissLabel`.
+- `ConversationThread`: `label` (a lista de mensagens), `sendLabel` e
+  `mediaLabel: (mediaType) => string` (o nome da mídia anexada).
+
+### Ajustes necessários nos apps
+
+- Nenhum. Sites em português podem passar as props novas.
+
 ## [0.4.13] - 2026-09-30
 
 ### Adicionado

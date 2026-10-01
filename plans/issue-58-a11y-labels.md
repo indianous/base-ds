@@ -209,3 +209,9 @@ existem.
 O `ToastViewport` não tinha props, e o tipo novo `ToastViewportProps` foi exportado. A `Table`
 ganhou uma segunda story, `CustomEmptyMessage`, porque o `emptyMessage` só aparece sem dados, e o
 `FileUpload` ganhou a `CustomLabelsNoDragDrop`, para o `selectFilesLabel`.
+
+## Resultado do lote 2 (implementação)
+
+Entregue como planejado, sem textos a mais. No `ConversationThread`, o mapa interno dos nomes de
+mídia virou o padrão do `mediaLabel`. No `NumberInput`, as props novas ficam antes do
+`...ariaProps` na desestruturação.

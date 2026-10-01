@@ -237,3 +237,51 @@ describe('ImageGallery loading', () => {
     expect(zoomed).toHaveAttribute('decoding', 'async')
   })
 })
+
+describe('ImageGallery custom labels', () => {
+  it('uses label for the gallery group', () => {
+    render(<ImageGallery images={images} label="Galeria de fotos do produto" />)
+    expect(screen.getByRole('group', { name: 'Galeria de fotos do produto' })).toBeInTheDocument()
+  })
+
+  it('uses previousLabel and nextLabel for the navigation buttons, in the gallery and the zoom', async () => {
+    render(
+      <ImageGallery images={images} previousLabel="Imagem anterior" nextLabel="Próxima imagem" />,
+    )
+    expect(screen.getByRole('button', { name: 'Imagem anterior' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Próxima imagem' })).toBeInTheDocument()
+
+    await userEvent.click(screen.getByRole('button', { name: /Zoom image/ }))
+    const zoom = within(screen.getByRole('dialog'))
+    expect(zoom.getByRole('button', { name: 'Imagem anterior' })).toBeInTheDocument()
+    expect(zoom.getByRole('button', { name: 'Próxima imagem' })).toBeInTheDocument()
+  })
+
+  it('uses thumbnailLabel with the image number and alt for each thumbnail', () => {
+    render(
+      <ImageGallery
+        images={images}
+        thumbnailLabel={(index, alt) => `Ver imagem ${index}: ${alt}`}
+      />,
+    )
+    expect(screen.getByRole('button', { name: 'Ver imagem 2: Shoe side view' })).toBeInTheDocument()
+  })
+
+  it('uses zoomLabel with the alt for the zoom button', () => {
+    render(<ImageGallery images={images} zoomLabel={(alt) => `Ampliar: ${alt}`} />)
+    expect(screen.getByRole('button', { name: 'Ampliar: Shoe front view' })).toBeInTheDocument()
+  })
+
+  it('uses zoomCloseLabel and zoomDismissLabel in the zoom', async () => {
+    render(
+      <ImageGallery
+        images={images}
+        zoomCloseLabel="Fechar ampliação"
+        zoomDismissLabel="Sair da ampliação"
+      />,
+    )
+    await userEvent.click(screen.getByRole('button', { name: /Zoom image/ }))
+    expect(screen.getByRole('button', { name: 'Fechar ampliação' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Sair da ampliação' })).toBeInTheDocument()
+  })
+})

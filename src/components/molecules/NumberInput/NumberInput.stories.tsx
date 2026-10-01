@@ -29,3 +29,13 @@ export const InFormField: Story = {
   ),
   args: { id: 'qty-field', value: 12, onChange: () => {} },
 }
+
+export const CustomLabels: Story = {
+  args: {
+    id: 'quantidade',
+    defaultValue: 1,
+    'aria-label': 'Quantidade',
+    decrementLabel: 'Diminuir',
+    incrementLabel: 'Aumentar',
+  },
+}

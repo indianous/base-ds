@@ -225,3 +225,36 @@ describe('ConversationThread', () => {
     expect(screen.getByText('Image').parentElement).not.toHaveClass('opacity-80')
   })
 })
+
+describe('ConversationThread custom labels', () => {
+  it('uses label for the message log', () => {
+    render(<ConversationThread messages={baseMessages} onSend={() => {}} label="Mensagens" />)
+    expect(screen.getByRole('log', { name: 'Mensagens' })).toBeInTheDocument()
+  })
+
+  it('uses sendLabel for the send button', () => {
+    render(<ConversationThread messages={baseMessages} onSend={() => {}} sendLabel="Enviar" />)
+    expect(screen.getByRole('button', { name: 'Enviar' })).toBeInTheDocument()
+  })
+
+  it('uses mediaLabel with the media type for the media indicator', () => {
+    const names = { image: 'Imagem', audio: 'Áudio', document: 'Documento' } as const
+    render(
+      <ConversationThread
+        messages={[
+          {
+            id: '1',
+            direction: 'INBOUND',
+            content: 'Olha isto',
+            timestamp: '10:00',
+            mediaUrl: 'https://example.com/file',
+            mediaType: 'audio',
+          },
+        ]}
+        onSend={() => {}}
+        mediaLabel={(mediaType) => names[mediaType]}
+      />,
+    )
+    expect(screen.getByText('Áudio')).toBeInTheDocument()
+  })
+})

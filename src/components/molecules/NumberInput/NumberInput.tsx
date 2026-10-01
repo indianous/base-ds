@@ -16,6 +16,10 @@ interface NumberInputProps extends Pick<
   disabled?: boolean
   onChange?: (value: number) => void
   className?: string
+  /** `aria-label` of the button that decreases the value. */
+  decrementLabel?: string
+  /** `aria-label` of the button that increases the value. */
+  incrementLabel?: string
 }
 
 export function NumberInput({
@@ -28,6 +32,8 @@ export function NumberInput({
   disabled = false,
   onChange,
   className,
+  decrementLabel = 'Decrement',
+  incrementLabel = 'Increment',
   ...ariaProps
 }: NumberInputProps) {
   const [internalValue, setInternalValue] = useState<number>(value ?? defaultValue ?? 0)
@@ -79,7 +85,7 @@ export function NumberInput({
       <Button
         variant="outline"
         size="md"
-        aria-label="Decrement"
+        aria-label={decrementLabel}
         onClick={handleDecrement}
         disabled={isDecrementDisabled}
         className="rounded-r-none focus:z-10"
@@ -102,7 +108,7 @@ export function NumberInput({
       <Button
         variant="outline"
         size="md"
-        aria-label="Increment"
+        aria-label={incrementLabel}
         onClick={handleIncrement}
         disabled={isIncrementDisabled}
         className="rounded-l-none focus:z-10"

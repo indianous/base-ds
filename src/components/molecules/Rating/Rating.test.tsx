@@ -89,3 +89,16 @@ describe('Rating', () => {
     expect(await axe(container)).toHaveNoViolations()
   })
 })
+
+describe('Rating custom labels', () => {
+  it('uses label for the radio group', () => {
+    render(<Rating label="Avaliação" />)
+    expect(screen.getByRole('radiogroup', { name: 'Avaliação' })).toBeInTheDocument()
+  })
+
+  it('uses starLabel with the star value for each star', () => {
+    render(<Rating starLabel={(value) => `${value} ${value > 1 ? 'estrelas' : 'estrela'}`} />)
+    expect(screen.getByRole('radio', { name: '1 estrela' })).toBeInTheDocument()
+    expect(screen.getByRole('radio', { name: '5 estrelas' })).toBeInTheDocument()
+  })
+})

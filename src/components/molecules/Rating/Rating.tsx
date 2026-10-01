@@ -12,6 +12,10 @@ interface RatingProps {
   readOnly?: boolean
   size?: RatingSize
   className?: string
+  /** `aria-label` of the radio group. */
+  label?: string
+  /** `aria-label` of each star, from its value. */
+  starLabel?: (value: number) => string
 }
 
 const iconSize: Record<RatingSize, 'sm' | 'md' | 'lg'> = {
@@ -27,11 +31,13 @@ export function Rating({
   readOnly = false,
   size = 'md',
   className,
+  label = 'Rating',
+  starLabel = (value) => `${value} star${value > 1 ? 's' : ''}`,
 }: RatingProps) {
   const [hovered, setHovered] = useState<number>(0)
 
   return (
-    <div role="radiogroup" aria-label="Rating" className={cn('flex flex-row', className)}>
+    <div role="radiogroup" aria-label={label} className={cn('flex flex-row', className)}>
       {Array.from({ length: max }, (_, index) => {
         const i = index + 1
         const isFilled = (hovered || value) >= i
@@ -42,7 +48,7 @@ export function Rating({
             type="button"
             role="radio"
             aria-checked={value === i}
-            aria-label={`${i} star${i > 1 ? 's' : ''}`}
+            aria-label={starLabel(i)}
             onClick={() => !readOnly && onChange?.(i)}
             onMouseEnter={() => !readOnly && setHovered(i)}
             onMouseLeave={() => !readOnly && setHovered(0)}

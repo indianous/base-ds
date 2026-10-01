@@ -75,3 +75,16 @@ export const Disabled: Story = {
     </div>
   ),
 }
+
+const mediaNames = { image: 'Imagem', audio: 'Áudio', document: 'Documento' } as const
+
+export const CustomLabels: Story = {
+  ...Default,
+  args: {
+    ...Default.args,
+    composerPlaceholder: 'Digite uma mensagem',
+    label: 'Mensagens da conversa',
+    sendLabel: 'Enviar mensagem',
+    mediaLabel: (mediaType) => mediaNames[mediaType],
+  },
+}

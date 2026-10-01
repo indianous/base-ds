@@ -36,6 +36,12 @@ interface ConversationThreadProps {
   composerPlaceholder?: string
   composerDisabled?: boolean
   className?: string
+  /** `aria-label` of the message log. */
+  label?: string
+  /** `aria-label` of the send button. */
+  sendLabel?: string
+  /** Name shown on a message's media attachment, from its type. */
+  mediaLabel?: (mediaType: MessageMediaType) => string
 }
 
 const SCROLL_BOTTOM_THRESHOLD = 40
@@ -62,7 +68,7 @@ const mediaIconMap: Record<MessageMediaType, LucideIcon> = {
   document: FileTextIcon,
 }
 
-const mediaLabelMap: Record<MessageMediaType, string> = {
+const defaultMediaLabels: Record<MessageMediaType, string> = {
   image: 'Image',
   audio: 'Audio',
   document: 'Document',
@@ -81,6 +87,9 @@ export function ConversationThread({
   composerPlaceholder = 'Type a message',
   composerDisabled = false,
   className,
+  label = 'Conversation messages',
+  sendLabel = 'Send message',
+  mediaLabel = (mediaType) => defaultMediaLabels[mediaType],
 }: ConversationThreadProps) {
   const [draft, setDraft] = useState('')
   const listRef = useRef<HTMLDivElement>(null)
@@ -123,7 +132,7 @@ export function ConversationThread({
         ref={listRef}
         onScroll={handleScroll}
         role="log"
-        aria-label="Conversation messages"
+        aria-label={label}
         // Focusable so keyboard users can scroll the history, which has no focusable children
         // (axe: scrollable-region-focusable).
         // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- a scrollable region must be reachable by keyboard
@@ -148,7 +157,7 @@ export function ConversationThread({
                 {message.mediaUrl !== undefined && message.mediaType !== undefined && (
                   <div className="mt-1 flex items-center gap-1 text-xs">
                     <IconBase icon={mediaIconMap[message.mediaType]} size="sm" />
-                    <span>{mediaLabelMap[message.mediaType]}</span>
+                    <span>{mediaLabel(message.mediaType)}</span>
                   </div>
                 )}
               </div>
@@ -181,7 +190,7 @@ export function ConversationThread({
         <Button
           onClick={handleSend}
           disabled={composerDisabled || trimmed.length === 0}
-          aria-label="Send message"
+          aria-label={sendLabel}
           iconOnly
         >
           <IconBase icon={SendIcon} size="sm" />

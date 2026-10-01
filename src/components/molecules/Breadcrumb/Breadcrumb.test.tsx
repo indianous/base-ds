@@ -88,3 +88,10 @@ describe('Breadcrumb', () => {
     expect(await axe(container)).toHaveNoViolations()
   })
 })
+
+describe('Breadcrumb custom labels', () => {
+  it('uses label for the navigation landmark', () => {
+    render(<Breadcrumb items={items} label="Trilha de navegação" />)
+    expect(screen.getByRole('navigation', { name: 'Trilha de navegação' })).toBeInTheDocument()
+  })
+})

@@ -14,15 +14,17 @@ interface BreadcrumbProps {
   items: BreadcrumbItem[]
   separator?: React.ReactNode
   className?: string
+  /** `aria-label` of the `<nav>`. */
+  label?: string
 }
 
-export function Breadcrumb({ items, separator, className }: BreadcrumbProps) {
+export function Breadcrumb({ items, separator, className, label = 'Breadcrumb' }: BreadcrumbProps) {
   const defaultSeparator = (
     <IconBase icon={ChevronRightIcon} size="sm" className="text-muted-foreground" />
   )
 
   return (
-    <nav aria-label="Breadcrumb" className={className}>
+    <nav aria-label={label} className={className}>
       <ol className="flex items-center flex-wrap gap-1">
         {items.map((item, index) => {
           const isLast = index === items.length - 1

@@ -16,3 +16,11 @@ export const ReadOnly: Story = { args: { value: 4, readOnly: true } }
 export const Small: Story = { args: { value: 3, size: 'sm' } }
 export const Large: Story = { args: { value: 2, size: 'lg' } }
 export const TenStars: Story = { args: { value: 7, max: 10 } }
+
+export const CustomLabels: Story = {
+  args: {
+    value: 3,
+    label: 'Avaliação',
+    starLabel: (value) => `${value} ${value > 1 ? 'estrelas' : 'estrela'}`,
+  },
+}

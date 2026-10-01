@@ -64,3 +64,16 @@ export const CustomImageComponent: Story = {
     imageComponent: DemoImage,
   },
 }
+
+export const CustomLabels: Story = {
+  args: {
+    images: sneakerImages,
+    label: 'Galeria de fotos do produto',
+    previousLabel: 'Imagem anterior',
+    nextLabel: 'Próxima imagem',
+    thumbnailLabel: (index, alt) => `Ver imagem ${index}: ${alt}`,
+    zoomLabel: (alt) => `Ampliar: ${alt}`,
+    zoomCloseLabel: 'Fechar ampliação',
+    zoomDismissLabel: 'Sair da ampliação',
+  },
+}

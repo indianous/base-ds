@@ -30,6 +30,20 @@ export interface ImageGalleryProps {
   sizes?: string
   /** Component rendered in place of `<img>` for the main image and the thumbnails. */
   imageComponent?: ImageComponent
+  /** `aria-label` of the gallery group. */
+  label?: string
+  /** `aria-label` of the previous image buttons (gallery and zoom). */
+  previousLabel?: string
+  /** `aria-label` of the next image buttons (gallery and zoom). */
+  nextLabel?: string
+  /** `aria-label` of each thumbnail button, from the image number (starting at 1) and alt. */
+  thumbnailLabel?: (index: number, alt: string) => string
+  /** `aria-label` of the button that opens the zoom, from the selected image's alt. */
+  zoomLabel?: (alt: string) => string
+  /** `aria-label` of the zoom's close button. */
+  zoomCloseLabel?: string
+  /** `aria-label` of the zoom's backdrop button that closes it. */
+  zoomDismissLabel?: string
 }
 
 export function ImageGallery({
@@ -41,6 +55,13 @@ export function ImageGallery({
   priority = true,
   sizes,
   imageComponent,
+  label = 'Product image gallery',
+  previousLabel = 'Previous image',
+  nextLabel = 'Next image',
+  thumbnailLabel = (index, alt) => `View image ${index}: ${alt}`,
+  zoomLabel = (alt) => `Zoom image: ${alt}`,
+  zoomCloseLabel = 'Close zoom',
+  zoomDismissLabel = 'Dismiss zoomed image',
 }: ImageGalleryProps) {
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [zoomOpen, setZoomOpen] = useState(false)
@@ -73,7 +94,7 @@ export function ImageGallery({
   return (
     <div
       role="group"
-      aria-label="Product image gallery"
+      aria-label={label}
       className={cn(
         'flex gap-3',
         thumbnailPosition === 'side' ? 'flex-row' : 'flex-col-reverse',
@@ -94,7 +115,7 @@ export function ImageGallery({
               type="button"
               onClick={() => setSelectedIndex(index)}
               aria-current={isSelected ? 'true' : undefined}
-              aria-label={`View image ${index + 1}: ${image.alt}`}
+              aria-label={thumbnailLabel(index + 1, image.alt)}
               className={cn(
                 'shrink-0 overflow-hidden rounded-md border-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
                 isSelected ? 'border-primary' : 'border-transparent',
@@ -117,7 +138,7 @@ export function ImageGallery({
         <button
           type="button"
           onClick={() => setZoomOpen(true)}
-          aria-label={`Zoom image: ${selected.alt}`}
+          aria-label={zoomLabel(selected.alt)}
           className="block w-full cursor-zoom-in"
         >
           <Image
@@ -139,7 +160,7 @@ export function ImageGallery({
               size="sm"
               onClick={goPrev}
               disabled={isFirst}
-              aria-label="Previous image"
+              aria-label={previousLabel}
               className="absolute left-2 top-1/2 -translate-y-1/2 bg-background shadow-md"
             >
               <IconBase icon={ChevronLeftIcon} size="sm" />
@@ -150,7 +171,7 @@ export function ImageGallery({
               size="sm"
               onClick={goNext}
               disabled={isLast}
-              aria-label="Next image"
+              aria-label={nextLabel}
               className="absolute right-2 top-1/2 -translate-y-1/2 bg-background shadow-md"
             >
               <IconBase icon={ChevronRightIcon} size="sm" />
@@ -164,7 +185,7 @@ export function ImageGallery({
           <div className="fixed inset-0 z-50 flex items-center justify-center">
             <button
               type="button"
-              aria-label="Dismiss zoomed image"
+              aria-label={zoomDismissLabel}
               onClick={() => setZoomOpen(false)}
               className="absolute inset-0 cursor-default bg-overlay"
             />
@@ -183,7 +204,7 @@ export function ImageGallery({
                 variant="ghost"
                 size="sm"
                 onClick={() => setZoomOpen(false)}
-                aria-label="Close zoom"
+                aria-label={zoomCloseLabel}
                 className="absolute right-2 top-2 z-10 bg-background shadow-md"
               >
                 <IconBase icon={XIcon} size="sm" />
@@ -206,7 +227,7 @@ export function ImageGallery({
                     size="sm"
                     onClick={goPrev}
                     disabled={isFirst}
-                    aria-label="Previous image"
+                    aria-label={previousLabel}
                     className="absolute left-2 top-1/2 -translate-y-1/2 bg-background shadow-md"
                   >
                     <IconBase icon={ChevronLeftIcon} size="sm" />
@@ -217,7 +238,7 @@ export function ImageGallery({
                     size="sm"
                     onClick={goNext}
                     disabled={isLast}
-                    aria-label="Next image"
+                    aria-label={nextLabel}
                     className="absolute right-2 top-1/2 -translate-y-1/2 bg-background shadow-md"
                   >
                     <IconBase icon={ChevronRightIcon} size="sm" />

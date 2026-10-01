@@ -33,3 +33,14 @@ export const WithClick: Story = {
 export const TwoItems: Story = {
   args: { items: [{ label: 'Home', href: '/' }, { label: 'Current page' }] },
 }
+
+export const CustomLabels: Story = {
+  args: {
+    items: [
+      { label: 'Início', href: '/' },
+      { label: 'Produtos', href: '/produtos' },
+      { label: 'Notebook Pro X' },
+    ],
+    label: 'Trilha de navegação',
+  },
+}
