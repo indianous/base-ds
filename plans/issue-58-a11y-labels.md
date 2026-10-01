@@ -130,7 +130,7 @@ No `ImageGallery`, o `index` do `thumbnailLabel` começa em 1, como o texto de h
 | `KanbanBoard`  | `` `${n} cards` ``        | `cardCountLabel: (count: number) => string`    |
 | `TransferList` | `Empty` (visível)         | `emptyMessage`                                 |
 
-## Lote 4: padrões em português viram inglês (v0.5.0)
+## Lote 4: padrões em português viram inglês e textos do `@dnd-kit` (v0.5.0)
 
 | componente       | texto atual (português) | prop             | novo padrão  |
 | ---------------- | ----------------------- | ---------------- | ------------ |
@@ -147,6 +147,42 @@ mostrar os textos em inglês.
 Os testes atuais que buscam "Selecionar todos", "Limpar", "Aplicar" e "Nenhum resultado" passam a
 buscar os textos em inglês, que viram os novos padrões protegidos. Os testes das props usam os
 textos em português.
+
+### `KanbanBoard`: os textos do `@dnd-kit` (acrescentado depois do lote 3)
+
+O `@dnd-kit` lê três tipos de texto em inglês, que o app não consegue trocar hoje:
+
+| texto atual (`@dnd-kit`)                                       | prop nova                                                  |
+| -------------------------------------------------------------- | ---------------------------------------------------------- |
+| instruções de teclado ("To pick up a draggable item, press …") | `dragInstructions`                                         |
+| `aria-roledescription="draggable"` em cada card                | `cardRoleDescription`                                      |
+| "Picked up draggable item lead-1."                             | `dragStartAnnouncement: (card, column) => string`          |
+| "Draggable item lead-1 was moved over droppable area …"        | `dragOverAnnouncement: (card, column, position) => string` |
+| "Draggable item lead-1 was dropped over droppable area …"      | `dragEndAnnouncement: (card, column, position) => string`  |
+| "Dragging was cancelled. Draggable item lead-1 was dropped."   | `dragCancelAnnouncement: (card, column) => string`         |
+
+- **As instruções e o `cardRoleDescription` mantêm o texto atual como padrão.** Eles vão para o
+  `accessibility.screenReaderInstructions` do `DndContext` e para o `attributes.roleDescription`
+  do `useSortable`.
+- **Os anúncios recebem o card (`TCard`) e o título da coluna**, em vez do `id` que o `@dnd-kit`
+  anuncia hoje. Assim o app pode montar o texto com o que fizer sentido, por exemplo
+  `` (card, column) => `${card.name} pego em ${column}` ``. O `position` começa em 1 e é a
+  posição do card na coluna de destino. No cancelamento, a coluna é a de origem, para onde o card
+  volta.
+- **Os padrões em inglês dos anúncios mudam**: passam a usar o `getCardAriaLabel(card)` e o título
+  da coluna, por exemplo "Picked up Card lead-1 in Novo." / "Card lead-1 was dropped in Contatado,
+  position 1.". O texto de hoje, com o `id`, não serve para quem ouve. Como é uma mudança de
+  padrão, ela vai neste lote, que já é _minor_.
+- **Sem destino**: quando o card sai de todas as colunas, o `@dnd-kit` anuncia "Draggable item
+  lead-1 is no longer over a droppable area." Isso vira `dragOutAnnouncement: (card) => string`.
+  Soltar fora de qualquer coluna ("Draggable item lead-1 was dropped.") não move o card, que volta
+  para a coluna de origem, então usa o `dragCancelAnnouncement`.
+- Os anúncios vão para o `accessibility.announcements` do `DndContext`, que já tem uma região
+  `aria-live` própria.
+
+Testes: cada prop com um valor em português. Os anúncios são verificados pela região `aria-live`
+do `@dnd-kit` depois de pegar, mover e soltar um card pelo teclado (espaço e setas), já que o
+`KeyboardSensor` está ligado. A story `CustomLabels` do `KanbanBoard` ganha os textos novos.
 
 ## Testes e stories (em cada lote, TDD)
 
@@ -170,8 +206,9 @@ e sai no lote 4.
 - **Lotes 1 a 3**: props novas e opcionais, com o texto atual como padrão, sem ajuste nos apps.
   **Patch** em cada um (v0.4.13, v0.4.14 e v0.4.15). A entrada vai em "Adicionado", com as props
   por componente. "Ajustes necessários nos apps": nenhum. Sites em português passam as props.
-- **Lote 4**: os padrões do `FilterDropdown` e do `MultiSelect` mudam de português para inglês,
-  o que exige ajuste nos apps: **minor**, v0.5.0. "Adicionado" para as props e "Alterado" para os
+- **Lote 4**: os padrões do `FilterDropdown` e do `MultiSelect` mudam de português para inglês, e
+  os anúncios de arrastar e soltar do `KanbanBoard` passam a usar o nome do card e da coluna. Isso
+  exige ajuste nos apps: **minor**, v0.5.0. "Adicionado" para as props e "Alterado" para os
   padrões. "Ajustes necessários nos apps": passar `selectAllLabel`, `clearLabel` e `applyLabel` em
   cada `FilterDropdown` e `emptyMessage` em cada `MultiSelect`, com os textos em português, no
   `ecommerce-frontend` e no `lead-system-frontend`. Como a série muda de 0.4 para 0.5, o
