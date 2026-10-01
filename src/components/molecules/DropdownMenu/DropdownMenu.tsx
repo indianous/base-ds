@@ -1,6 +1,7 @@
 import { cloneElement, useEffect, useId, useRef, useState } from 'react'
 import type { KeyboardEvent as ReactKeyboardEvent, ReactElement, ReactNode } from 'react'
 import { cn } from '../../../utils/cn'
+import { useResolvedElement } from '../../../utils/useResolvedElement'
 import { Button } from '../../atoms/Button/Button'
 import type { TooltipSide } from '../../../utils/tooltipPosition'
 import type { LinkComponent } from '../../../utils/linkComponent'
@@ -53,6 +54,8 @@ export function DropdownMenu({
   const containerRef = useRef<HTMLDivElement>(null)
   const menuRef = useRef<HTMLDivElement>(null)
   const menuId = useId()
+  // The trigger may come from a Server Component as a lazy node (issue #60).
+  const resolvedTrigger = useResolvedElement(trigger)
 
   const setOpenState = (next: boolean) => {
     setOpen(next)
@@ -111,7 +114,7 @@ export function DropdownMenu({
     }
   }
 
-  const triggerAsClonable = trigger as ReactElement<Record<string, unknown>>
+  const triggerAsClonable = resolvedTrigger as ReactElement<Record<string, unknown>>
 
   const triggerElement = cloneElement(triggerAsClonable, {
     'aria-haspopup': 'menu',

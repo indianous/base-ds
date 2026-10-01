@@ -5,6 +5,7 @@ import { cn } from '../../../utils/cn'
 import { computeTooltipCoords } from '../../../utils/tooltipPosition'
 import type { TooltipCoords, TooltipSide } from '../../../utils/tooltipPosition'
 import { useStackedEscape } from '../../../utils/useStackedEscape'
+import { useResolvedElement } from '../../../utils/useResolvedElement'
 import { Spinner } from '../Spinner/Spinner'
 
 type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'outline' | 'danger'
@@ -72,6 +73,8 @@ export function Button(props: ButtonProps) {
   const [tooltipCoords, setTooltipCoords] = useState<TooltipCoords | null>(null)
   const triggerRef = useRef<HTMLButtonElement | HTMLAnchorElement>(null)
   const tooltipId = useId()
+  // With asChild, the child may come from a Server Component as a lazy node (issue #60).
+  const resolvedChildren = useResolvedElement(props.children)
 
   const ariaLabel = props['aria-label']
   const showTooltip = Boolean(props.iconOnly) && Boolean(ariaLabel)
@@ -138,13 +141,13 @@ export function Button(props: ButtonProps) {
       iconOnly = false,
       tooltipPosition: _tooltipPosition,
       loadingLabel: _loadingLabel,
-      children,
+      children: _children,
       className,
       onClick,
       ...rest
     } = props as ButtonAsButton
 
-    const child = children as ReactElement<Record<string, unknown>>
+    const child = resolvedChildren as ReactElement<Record<string, unknown>>
 
     return cloneElement(child, {
       ...rest,

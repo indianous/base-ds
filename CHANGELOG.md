@@ -6,6 +6,26 @@ Todas as mudanças relevantes do base-ds são registradas aqui. O formato segue 
 mudança que exige ajuste nos apps sobe o _minor_ (`0.1.0 → 0.2.0`); correções e componentes
 novos sem impacto sobem o _patch_.
 
+## [0.5.3] - 2026-10-01
+
+### Corrigido
+
+- Componentes que leem ou clonam um elemento passado pelo app quebravam quando esse elemento vinha
+  de um Server Component ([#60](https://github.com/indianous/base-ds/issues/60)). No `next dev`
+  (React 19), o elemento chega como "lazy", sem `props`, e a página caía com
+  `Cannot read properties of undefined (reading 'className')` ou
+  `Element type is invalid … got: undefined`. Agora o elemento é resolvido antes de ser lido ou
+  clonado, como no `Slot` do Radix. Os componentes afetados eram cinco:
+  - `Button` com `asChild` (por exemplo, `<Button asChild><AppLink … /></Button>`);
+  - `FormField` (por exemplo, `<FormField><Input /></FormField>`);
+  - `Tooltip`, no gatilho;
+  - `DropdownMenu`, no `trigger`;
+  - `Sidebar`, no `asChild` de cada item.
+
+### Ajustes necessários nos apps
+
+- Nenhum. Quem evitava esses componentes em Server Components pode voltar a usá-los.
+
 ## [0.5.2] - 2026-10-01
 
 ### Adicionado

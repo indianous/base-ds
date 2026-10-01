@@ -1,5 +1,6 @@
 import React from 'react'
 import { cn } from '../../../utils/cn'
+import { useResolvedElement } from '../../../utils/useResolvedElement'
 import { Text } from '../../atoms/Typography/Text'
 
 export interface FormFieldProps {
@@ -21,6 +22,8 @@ export function FormField({
   className,
   children,
 }: FormFieldProps) {
+  // The control may come from a Server Component as a lazy node (issue #60).
+  const control = useResolvedElement(children)
   // The hint is hidden while an error is shown, so it only gets an id (and is only referenced by
   // aria-describedby) when it is actually rendered
   const showHint = Boolean(hint) && !error
@@ -40,7 +43,7 @@ export function FormField({
       </label>
 
       {/* Control slot — clone child to inject id and aria attributes */}
-      {React.cloneElement(children as React.ReactElement<Record<string, unknown>>, {
+      {React.cloneElement(control as React.ReactElement<Record<string, unknown>>, {
         id,
         'aria-describedby': [hintId, errorId].filter(Boolean).join(' ') || undefined,
         'aria-invalid': error ? 'true' : undefined,

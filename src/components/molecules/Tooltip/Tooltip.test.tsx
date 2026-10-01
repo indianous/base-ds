@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event'
 import { axe } from 'jest-axe'
 import { Tooltip } from './Tooltip'
 import { Dialog } from '../../organisms/Dialog/Dialog'
+import { lazyElementForTests } from '../../../utils/lazyElementForTests'
 
 describe('Tooltip', () => {
   afterEach(() => {
@@ -398,5 +399,23 @@ describe('Tooltip', () => {
     expect(tooltip).toHaveClass('whitespace-normal')
     expect(tooltip).toHaveClass('max-w-[12rem]')
     expect(tooltip).not.toHaveClass('whitespace-nowrap')
+  })
+})
+
+describe('Tooltip with a lazy trigger from a Server Component', () => {
+  it('shows the tooltip and calls the trigger handler', async () => {
+    const onFocus = vi.fn()
+    render(
+      <Tooltip label="Ajuda">
+        {lazyElementForTests(
+          <button type="button" onFocus={onFocus}>
+            Passe o mouse
+          </button>,
+        )}
+      </Tooltip>,
+    )
+    await userEvent.tab()
+    expect(screen.getByRole('tooltip')).toHaveTextContent('Ajuda')
+    expect(onFocus).toHaveBeenCalledTimes(1)
   })
 })

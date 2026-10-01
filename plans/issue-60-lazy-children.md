@@ -115,3 +115,18 @@ cenário (Server Component passando um elemento client). "Ajustes necessários n
 `npm run check:dist`.
 
 [radix-slot]: https://github.com/radix-ui/primitives/blob/main/packages/react/slot/src/slot.tsx
+
+## Resultado (implementação)
+
+- **Reprodução**: no app Next.js 16.3.6 mínimo, com a v0.5.2, as 5 páginas (cada componente num
+  Server Component) quebraram no `next dev`. O `Button` com o erro da issue
+  (`Cannot read properties of undefined (reading 'className')`) e os outros 4 com
+  `Element type is invalid … got: undefined`, que é o `cloneElement` sobre o nó lazy.
+- **Testes**: o `lazyElementForTests` (em `src/utils`) monta o nó como o Flight. Os 5 testes novos
+  falharam com os mesmos dois erros do `next dev` antes da correção.
+- **Correção**: o hook `useResolvedElement` nos 5 componentes. No `Sidebar`, o ramo do `asChild`
+  virou o subcomponente `SidebarItemAsChild`.
+- **Verificação**: com o tarball da correção, as 5 páginas renderizam no `next dev` sem erro no
+  console e sem o diálogo de erro do Next. O link do `Button` tem as classes do botão, o input do
+  `FormField` tem o `aria-describedby`, e o tooltip, o menu e o link do `Sidebar` funcionam. A
+  mesma checagem com a v0.5.2 mostra o diálogo de erro.

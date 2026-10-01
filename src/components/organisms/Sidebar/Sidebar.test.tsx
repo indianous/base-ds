@@ -3,6 +3,7 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { axe } from 'jest-axe'
 import { Sidebar } from './Sidebar'
+import { lazyElementForTests } from '../../../utils/lazyElementForTests'
 
 const defaultItems = [
   { label: 'Home', href: '/' },
@@ -261,5 +262,23 @@ describe('Sidebar custom labels', () => {
   it('uses toggleLabel for the collapse button', () => {
     render(<Sidebar items={defaultItems} toggleLabel="Recolher menu" />)
     expect(screen.getByRole('button', { name: 'Recolher menu' })).toBeInTheDocument()
+  })
+})
+
+describe('Sidebar with a lazy asChild item from a Server Component', () => {
+  it('renders the item element with the item content', () => {
+    render(
+      <Sidebar
+        items={[
+          {
+            label: 'Pedidos',
+            asChild: lazyElementForTests(<a href="/pedidos" aria-label="Pedidos" />),
+          },
+        ]}
+      />,
+    )
+    const link = screen.getByRole('link', { name: 'Pedidos' })
+    expect(link).toHaveAttribute('href', '/pedidos')
+    expect(link).toHaveTextContent('Pedidos')
   })
 })

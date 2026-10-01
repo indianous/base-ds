@@ -6,6 +6,7 @@ import type {
   ReactElement,
 } from 'react'
 import { cn } from '../../../utils/cn'
+import { useResolvedElement } from '../../../utils/useResolvedElement'
 import { computeTooltipCoords } from '../../../utils/tooltipPosition'
 import type { TooltipCoords, TooltipSide } from '../../../utils/tooltipPosition'
 import { useStackedEscape } from '../../../utils/useStackedEscape'
@@ -28,6 +29,8 @@ export interface TooltipProps {
 }
 
 export function Tooltip({ label, position = 'top', children, className, ...rest }: TooltipProps) {
+  // The trigger may come from a Server Component as a lazy node (issue #60).
+  const resolvedChild = useResolvedElement(children)
   const [visible, setVisible] = useState(false)
   const [coords, setCoords] = useState<TooltipCoords | null>(null)
   const containerRef = useRef<HTMLSpanElement>(null)
@@ -65,7 +68,7 @@ export function Tooltip({ label, position = 'top', children, className, ...rest 
 
   useStackedEscape(visible, hide)
 
-  const child = children as ReactElement<Record<string, unknown>>
+  const child = resolvedChild as ReactElement<Record<string, unknown>>
 
   const triggerElement = cloneElement(child, {
     ...rest,

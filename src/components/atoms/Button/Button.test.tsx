@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event'
 import { axe } from 'jest-axe'
 import { Button } from './Button'
 import { Dialog } from '../../organisms/Dialog/Dialog'
+import { lazyElementForTests } from '../../../utils/lazyElementForTests'
 
 describe('Button', () => {
   it('renders a button element', () => {
@@ -741,5 +742,26 @@ describe('Button custom labels', () => {
       </Button>,
     )
     expect(screen.getByLabelText('Carregando')).toBeInTheDocument()
+  })
+})
+
+describe('Button with a lazy child from a Server Component', () => {
+  it('renders the asChild child with the button classes and calls both onClick handlers', async () => {
+    const onButtonClick = vi.fn()
+    const onLinkClick = vi.fn()
+    render(
+      <Button asChild size="lg" onClick={onButtonClick}>
+        {lazyElementForTests(
+          <a href="#projects" className="custom-link" onClick={onLinkClick}>
+            Ver projetos
+          </a>,
+        )}
+      </Button>,
+    )
+    const link = screen.getByRole('link', { name: 'Ver projetos' })
+    expect(link).toHaveClass('inline-flex', 'custom-link')
+    await userEvent.click(link)
+    expect(onButtonClick).toHaveBeenCalledTimes(1)
+    expect(onLinkClick).toHaveBeenCalledTimes(1)
   })
 })

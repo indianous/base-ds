@@ -6,6 +6,7 @@ import { axe } from 'jest-axe'
 import { DropdownMenu, type DropdownMenuItem } from './DropdownMenu'
 import { Button } from '../../atoms/Button/Button'
 import { Tooltip } from '../Tooltip/Tooltip'
+import { lazyElementForTests } from '../../../utils/lazyElementForTests'
 
 const items: DropdownMenuItem[] = [
   { label: 'Edit', onClick: vi.fn() },
@@ -292,5 +293,18 @@ describe('DropdownMenu linkComponent', () => {
     )
     await userEvent.click(screen.getByRole('button', { name: 'Options' }))
     expect(await axe(container)).toHaveNoViolations()
+  })
+})
+
+describe('DropdownMenu with a lazy trigger from a Server Component', () => {
+  it('opens the menu when the trigger is clicked', async () => {
+    render(
+      <DropdownMenu
+        trigger={lazyElementForTests(<button type="button">Opções</button>)}
+        items={[{ label: 'Destino', href: '/destino' }]}
+      />,
+    )
+    await userEvent.click(screen.getByRole('button', { name: 'Opções' }))
+    expect(screen.getByRole('menuitem', { name: 'Destino' })).toBeInTheDocument()
   })
 })

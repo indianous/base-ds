@@ -3,6 +3,7 @@ import { render, screen } from '@testing-library/react'
 import { axe } from 'jest-axe'
 import { FormField } from './FormField'
 import type { FormFieldProps } from './FormField'
+import { lazyElementForTests } from '../../../utils/lazyElementForTests'
 
 describe('FormField', () => {
   it('renders the label text', () => {
@@ -155,5 +156,18 @@ describe('FormField', () => {
       </FormField>,
     )
     expect(await axe(container)).toHaveNoViolations()
+  })
+})
+
+describe('FormField with a lazy control from a Server Component', () => {
+  it('passes the id and aria-describedby to the control', () => {
+    render(
+      <FormField label="Nome" id="nome" hint="Seu nome completo">
+        {lazyElementForTests(<input type="text" />)}
+      </FormField>,
+    )
+    const input = screen.getByRole('textbox', { name: 'Nome' })
+    expect(input).toHaveAttribute('id', 'nome')
+    expect(input).toHaveAttribute('aria-describedby', 'nome-hint')
   })
 })

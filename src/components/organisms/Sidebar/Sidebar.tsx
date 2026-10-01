@@ -1,6 +1,7 @@
 import type { ReactElement, ReactNode } from 'react'
 import { cloneElement, useState } from 'react'
 import { cn } from '../../../utils/cn'
+import { useResolvedElement } from '../../../utils/useResolvedElement'
 import { Button } from '../../atoms/Button/Button'
 import { IconBase } from '../../atoms/Icon/IconBase'
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
@@ -31,6 +32,30 @@ function buildRows(items: SidebarItem[]): SidebarRow[] {
   })
 
   return rows
+}
+
+interface SidebarItemAsChildProps {
+  element: ReactElement
+  onClick?: (() => void) | undefined
+  className: string
+  'aria-current'?: 'page'
+  children: ReactNode
+}
+
+// The item's `asChild` element may come from a Server Component as a lazy node (issue #60). It's
+// resolved with a hook, which can't run inside the items' map, so this branch is its own component.
+function SidebarItemAsChild({
+  element,
+  children,
+  onClick,
+  ...buttonProps
+}: SidebarItemAsChildProps) {
+  const resolved = useResolvedElement(element) as ReactElement
+  return (
+    <Button asChild variant="ghost" size="sm" {...(onClick && { onClick })} {...buttonProps}>
+      {cloneElement(resolved, {}, children)}
+    </Button>
+  )
 }
 
 interface SidebarProps {
@@ -126,16 +151,14 @@ export function Sidebar({
           return (
             <li key={row.key}>
               {item.asChild ? (
-                <Button
-                  asChild
+                <SidebarItemAsChild
+                  element={item.asChild}
                   onClick={item.onClick}
-                  variant="ghost"
-                  size="sm"
                   className={itemClasses}
                   {...activeProps}
                 >
-                  {cloneElement(item.asChild, {}, itemContent)}
-                </Button>
+                  {itemContent}
+                </SidebarItemAsChild>
               ) : item.href ? (
                 <Button
                   as="a"
