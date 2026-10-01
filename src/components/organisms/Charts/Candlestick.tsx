@@ -13,6 +13,20 @@ export interface CandlestickProps {
   data: CandlestickDatum[]
   valueFormatter?: (value: number) => string
   className?: string
+  /** `aria-label` of the chart image. */
+  label?: string
+  /** Caption of the visually hidden data table. */
+  tableTitle?: string
+  /** Header of the label column of the hidden data table. */
+  labelColumnTitle?: string
+  /** Header of the opening price column of the hidden data table. */
+  openColumnTitle?: string
+  /** Header of the highest price column of the hidden data table. */
+  highColumnTitle?: string
+  /** Header of the lowest price column of the hidden data table. */
+  lowColumnTitle?: string
+  /** Header of the closing price column of the hidden data table. */
+  closeColumnTitle?: string
 }
 
 const defaultFormatter = (value: number) => String(value)
@@ -30,6 +44,13 @@ export function Candlestick({
   data,
   valueFormatter = defaultFormatter,
   className,
+  label = 'Candlestick chart',
+  tableTitle = 'Candlestick chart data',
+  labelColumnTitle = 'Label',
+  openColumnTitle = 'Open',
+  highColumnTitle = 'High',
+  lowColumnTitle = 'Low',
+  closeColumnTitle = 'Close',
 }: CandlestickProps) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
 
@@ -49,7 +70,7 @@ export function Candlestick({
           viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
           className="h-60 w-full"
           role="img"
-          aria-label="Candlestick chart"
+          aria-label={label}
         >
           {[0, 0.25, 0.5, 0.75, 1].map((fraction) => (
             <line
@@ -122,14 +143,14 @@ export function Candlestick({
 
       <div className="sr-only">
         <table>
-          <caption>Candlestick chart data</caption>
+          <caption>{tableTitle}</caption>
           <thead>
             <tr>
-              <th>Label</th>
-              <th>Open</th>
-              <th>High</th>
-              <th>Low</th>
-              <th>Close</th>
+              <th>{labelColumnTitle}</th>
+              <th>{openColumnTitle}</th>
+              <th>{highColumnTitle}</th>
+              <th>{lowColumnTitle}</th>
+              <th>{closeColumnTitle}</th>
             </tr>
           </thead>
           <tbody>

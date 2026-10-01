@@ -89,3 +89,31 @@ describe('Pagination', () => {
     expect(await axe(container)).toHaveNoViolations()
   })
 })
+
+describe('Pagination custom labels', () => {
+  const renderPagination = (props: Partial<Parameters<typeof Pagination>[0]> = {}) =>
+    render(<Pagination currentPage={3} totalPages={10} onPageChange={vi.fn()} {...props} />)
+
+  it('uses label for the navigation landmark', () => {
+    renderPagination({ label: 'Paginação' })
+    expect(screen.getByRole('navigation', { name: 'Paginação' })).toBeInTheDocument()
+  })
+
+  it('uses firstLabel, previousLabel, nextLabel and lastLabel for the step buttons', () => {
+    renderPagination({
+      firstLabel: 'Primeira página',
+      previousLabel: 'Página anterior',
+      nextLabel: 'Próxima página',
+      lastLabel: 'Última página',
+    })
+    for (const name of ['Primeira página', 'Página anterior', 'Próxima página', 'Última página']) {
+      expect(screen.getByRole('button', { name })).toBeInTheDocument()
+    }
+  })
+
+  it('uses pageLabel with the page number for each page button', () => {
+    renderPagination({ pageLabel: (page) => `Página ${page}` })
+    expect(screen.getByRole('button', { name: 'Página 3' })).toHaveAttribute('aria-current', 'page')
+    expect(screen.getByRole('button', { name: 'Página 10' })).toBeInTheDocument()
+  })
+})

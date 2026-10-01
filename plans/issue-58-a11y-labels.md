@@ -189,3 +189,23 @@ e sai no lote 4.
 
 Em cada lote: `npm run lint`, `format:check`, `typecheck`, `npm test`, `npm run test:stories`,
 `npm run build` + `npm run check:dist`.
+
+## Resultado do lote 1 (implementação)
+
+Entregue como planejado, com três textos a mais nos gráficos, achados durante a implementação
+(fallbacks que a varredura inicial não pegou):
+
+- `BarChart`: `` `Series ${n}` `` (legenda e tabela oculta), quando falta nome em `seriesNames` →
+  `seriesLabel: (index: number) => string`, com o índice começando em 1.
+- `Correlation`: `` `Point ${n}` ``, na tabela oculta, para um ponto sem `label` →
+  `pointLabel: (index: number) => string`.
+- `PieChart`: `Other`, a fatia que agrupa as menores → `otherLabel`.
+
+O "Other" do `Correlation` também se chama `otherLabel`, e não `otherGroupLabel` como no plano,
+porque é o mesmo conceito do `PieChart`. O `X`/`Y`, que o `Correlation` usa quando falta
+`xLabel`/`yLabel`, ficou de fora: é igual em português, e o app já pode trocá-lo pelas props que
+existem.
+
+O `ToastViewport` não tinha props, e o tipo novo `ToastViewportProps` foi exportado. A `Table`
+ganhou uma segunda story, `CustomEmptyMessage`, porque o `emptyMessage` só aparece sem dados, e o
+`FileUpload` ganhou a `CustomLabelsNoDragDrop`, para o `selectFilesLabel`.

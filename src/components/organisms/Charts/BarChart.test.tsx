@@ -93,3 +93,20 @@ describe('BarChart', () => {
     })
   })
 })
+
+describe('BarChart custom labels', () => {
+  it('uses tableTitle and labelColumnTitle for the hidden data table', () => {
+    render(
+      <BarChart data={singleSeriesData} tableTitle="Dados do gráfico" labelColumnTitle="Mês" />,
+    )
+    const table = screen.getByRole('table', { name: 'Dados do gráfico' })
+    expect(within(table).getByRole('columnheader', { name: 'Mês' })).toBeInTheDocument()
+  })
+
+  it('uses seriesLabel with the series number for unnamed series', () => {
+    render(<BarChart data={multiSeriesData} seriesLabel={(index) => `Série ${index}`} />)
+    const table = screen.getByRole('table')
+    expect(within(table).getByRole('columnheader', { name: 'Série 1' })).toBeInTheDocument()
+    expect(within(table).getByRole('columnheader', { name: 'Série 2' })).toBeInTheDocument()
+  })
+})

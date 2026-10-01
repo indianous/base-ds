@@ -196,5 +196,6 @@ export type {
 } from './components/organisms/Toast/ToastProvider'
 
 export { ToastViewport } from './components/organisms/Toast/ToastViewport'
+export type { ToastViewportProps } from './components/organisms/Toast/ToastViewport'
 
 export { useToast } from './components/organisms/Toast/useToast'

@@ -38,3 +38,15 @@ export const ByPlanTier: Story = {
     ],
   },
 }
+
+export const CustomLabels: Story = {
+  args: {
+    ...ByPlanTier.args,
+    label: 'Gráfico de dispersão',
+    tableTitle: 'Dados do gráfico de dispersão',
+    labelColumnTitle: 'Ponto',
+    groupColumnTitle: 'Grupo',
+    otherLabel: 'Outros',
+    pointLabel: (index) => `Ponto ${index}`,
+  },
+}

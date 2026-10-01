@@ -32,3 +32,15 @@ export const WithOtherBucket: Story = {
     ],
   },
 }
+
+export const CustomLabels: Story = {
+  args: {
+    ...WithOtherBucket.args,
+    label: 'Gráfico de pizza',
+    tableTitle: 'Dados do gráfico de pizza',
+    labelColumnTitle: 'Categoria',
+    valueColumnTitle: 'Valor',
+    percentColumnTitle: 'Porcentagem',
+    otherLabel: 'Outros',
+  },
+}

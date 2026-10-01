@@ -133,3 +133,17 @@ export const ExpandableRows: Story = {
     },
   } as unknown as NonNullable<Story['args']>,
 }
+
+export const CustomLabels: Story = {
+  args: {
+    ...ExpandableRows.args,
+    caption: 'Pedidos',
+    expandColumnTitle: 'Expandir linha',
+    expandRowLabel: 'Expandir linha',
+    collapseRowLabel: 'Recolher linha',
+  },
+}
+
+export const CustomEmptyMessage: Story = {
+  args: { columns, data: [], caption: 'Lista de usuários', emptyMessage: 'Nenhum registro' },
+}

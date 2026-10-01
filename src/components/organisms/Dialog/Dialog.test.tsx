@@ -194,3 +194,15 @@ describe('Dialog', () => {
     expect(await axe(document.body)).toHaveNoViolations()
   })
 })
+
+describe('Dialog custom labels', () => {
+  it('uses closeLabel for the close button', () => {
+    render(<Dialog open onClose={() => {}} title="Excluir" closeLabel="Fechar" />)
+    expect(screen.getByRole('button', { name: 'Fechar' })).toBeInTheDocument()
+  })
+
+  it('uses dismissLabel for the backdrop button', () => {
+    render(<Dialog open onClose={() => {}} title="Excluir" dismissLabel="Fechar diálogo" />)
+    expect(screen.getByRole('button', { name: 'Fechar diálogo' })).toBeInTheDocument()
+  })
+})

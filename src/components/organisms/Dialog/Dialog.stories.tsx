@@ -93,3 +93,14 @@ function StackedDialogs() {
 export const Stacked: Story = {
   render: () => <StackedDialogs />,
 }
+
+export const CustomLabels: Story = {
+  args: {
+    ...Open.args,
+    title: 'Excluir item',
+    description: 'Esta ação não pode ser desfeita.',
+    footer: undefined,
+    closeLabel: 'Fechar',
+    dismissLabel: 'Fechar diálogo',
+  },
+}

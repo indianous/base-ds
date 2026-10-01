@@ -68,3 +68,44 @@ describe('Correlation', () => {
     expect(await axe(container)).toHaveNoViolations()
   })
 })
+
+describe('Correlation custom labels', () => {
+  it('uses label for the chart image', () => {
+    render(<Correlation points={ungroupedPoints} label="Gráfico de dispersão" />)
+    expect(screen.getByRole('img', { name: 'Gráfico de dispersão' })).toBeInTheDocument()
+  })
+
+  it('uses tableTitle and the column titles for the hidden data table', () => {
+    render(
+      <Correlation
+        points={ungroupedPoints}
+        tableTitle="Dados do gráfico"
+        labelColumnTitle="Ponto"
+        groupColumnTitle="Grupo"
+      />,
+    )
+    const table = screen.getByRole('table', { name: 'Dados do gráfico' })
+    for (const name of ['Ponto', 'Grupo']) {
+      expect(within(table).getByRole('columnheader', { name })).toBeInTheDocument()
+    }
+  })
+
+  it('uses otherLabel for the legend bucket of extra groups', () => {
+    render(<Correlation points={groupedPoints} otherLabel="Outros" />)
+    expect(screen.getByText('Outros')).toBeInTheDocument()
+  })
+
+  it('uses pointLabel with the point number for points without a label', () => {
+    render(
+      <Correlation
+        points={[
+          { x: 1, y: 2 },
+          { x: 3, y: 4 },
+        ]}
+        pointLabel={(index) => `Ponto ${index}`}
+      />,
+    )
+    const table = screen.getByRole('table')
+    expect(within(table).getByRole('rowheader', { name: 'Ponto 2' })).toBeInTheDocument()
+  })
+})

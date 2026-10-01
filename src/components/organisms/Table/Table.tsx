@@ -19,6 +19,14 @@ interface TableProps<T extends object> {
   onSort?: (key: string, direction: 'asc' | 'desc') => void
   renderExpandedRow?: (row: T, rowIndex: number) => ReactNode
   className?: string
+  /** Visually hidden header of the expand/collapse column. */
+  expandColumnTitle?: string
+  /** `aria-label` of a row's toggle button while the row is collapsed. */
+  expandRowLabel?: string
+  /** `aria-label` of a row's toggle button while the row is expanded. */
+  collapseRowLabel?: string
+  /** Text shown when `data` is empty. */
+  emptyMessage?: string
 }
 
 export function Table<T extends object>({
@@ -28,6 +36,10 @@ export function Table<T extends object>({
   onSort,
   renderExpandedRow,
   className,
+  expandColumnTitle = 'Expand row',
+  expandRowLabel = 'Expand row',
+  collapseRowLabel = 'Collapse row',
+  emptyMessage = 'No data',
 }: TableProps<T>) {
   const [sortState, setSortState] = useState<{ key: string; dir: 'asc' | 'desc' } | null>(null)
   const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set())
@@ -61,7 +73,7 @@ export function Table<T extends object>({
           <tr>
             {renderExpandedRow && (
               <th className="px-4 py-3 text-left font-semibold text-foreground">
-                <span className="sr-only">Expand row</span>
+                <span className="sr-only">{expandColumnTitle}</span>
               </th>
             )}
             {columns.map((col) => (
@@ -94,7 +106,7 @@ export function Table<T extends object>({
           {data.length === 0 ? (
             <tr>
               <td colSpan={colSpan} className="text-center py-8 text-muted-foreground">
-                No data
+                {emptyMessage}
               </td>
             </tr>
           ) : (
@@ -113,7 +125,7 @@ export function Table<T extends object>({
                           size="sm"
                           aria-expanded={isExpanded}
                           aria-controls={detailId}
-                          aria-label={`${isExpanded ? 'Collapse' : 'Expand'} row`}
+                          aria-label={isExpanded ? collapseRowLabel : expandRowLabel}
                           onClick={() => toggleExpanded(ri)}
                         >
                           <IconBase

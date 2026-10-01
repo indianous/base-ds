@@ -251,3 +251,15 @@ describe('Sidebar', () => {
     })
   })
 })
+
+describe('Sidebar custom labels', () => {
+  it('uses label for the navigation landmark', () => {
+    render(<Sidebar items={defaultItems} label="Menu lateral" />)
+    expect(screen.getByRole('navigation', { name: 'Menu lateral' })).toBeInTheDocument()
+  })
+
+  it('uses toggleLabel for the collapse button', () => {
+    render(<Sidebar items={defaultItems} toggleLabel="Recolher menu" />)
+    expect(screen.getByRole('button', { name: 'Recolher menu' })).toBeInTheDocument()
+  })
+})

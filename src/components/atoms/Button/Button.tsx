@@ -28,6 +28,8 @@ interface ButtonCommonProps {
   iconOnly?: boolean
   asChild?: boolean
   tooltipPosition?: TooltipSide
+  /** `aria-label` of the spinner shown while `isLoading`. */
+  loadingLabel?: string
 }
 
 type ButtonAsButton = ButtonCommonProps & { as?: 'button' } & Omit<
@@ -135,6 +137,7 @@ export function Button(props: ButtonProps) {
       size = 'md',
       iconOnly = false,
       tooltipPosition: _tooltipPosition,
+      loadingLabel: _loadingLabel,
       children,
       className,
       onClick,
@@ -169,6 +172,7 @@ export function Button(props: ButtonProps) {
       rightIcon,
       iconOnly = false,
       tooltipPosition: _tooltipPosition,
+      loadingLabel = 'Loading',
       children,
       className,
       href,
@@ -224,7 +228,7 @@ export function Button(props: ButtonProps) {
           )}
           {...rest}
         >
-          {isLoading ? <Spinner size="sm" aria-label="Loading" /> : leftIcon}
+          {isLoading ? <Spinner size="sm" aria-label={loadingLabel} /> : leftIcon}
           {children}
           {!isLoading && rightIcon}
         </a>
@@ -242,6 +246,7 @@ export function Button(props: ButtonProps) {
     rightIcon,
     iconOnly = false,
     tooltipPosition: _tooltipPosition,
+    loadingLabel = 'Loading',
     children,
     className,
     disabled,
@@ -283,7 +288,7 @@ export function Button(props: ButtonProps) {
         }}
         {...rest}
       >
-        {isLoading ? <Spinner size="sm" aria-label="Loading" /> : leftIcon}
+        {isLoading ? <Spinner size="sm" aria-label={loadingLabel} /> : leftIcon}
         {children}
         {!isLoading && rightIcon}
       </button>

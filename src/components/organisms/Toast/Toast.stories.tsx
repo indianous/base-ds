@@ -126,3 +126,13 @@ export const Interactive: Story = {
     </ToastProvider>
   ),
 }
+
+export const CustomLabels: Story = {
+  args: {
+    variant: 'default',
+    title: 'Atualização disponível',
+    description: 'Uma nova versão do app está pronta para instalar.',
+    onDismiss: () => {},
+    closeLabel: 'Fechar notificação',
+  },
+}

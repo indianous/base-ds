@@ -22,3 +22,16 @@ export const Default: Story = {
     valueFormatter: (v) => `$${v.toFixed(2)}`,
   },
 }
+
+export const CustomLabels: Story = {
+  args: {
+    ...Default.args,
+    label: 'Gráfico de candles',
+    tableTitle: 'Dados do gráfico de candles',
+    labelColumnTitle: 'Data',
+    openColumnTitle: 'Abertura',
+    highColumnTitle: 'Máxima',
+    lowColumnTitle: 'Mínima',
+    closeColumnTitle: 'Fechamento',
+  },
+}

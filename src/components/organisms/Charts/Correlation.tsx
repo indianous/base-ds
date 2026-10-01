@@ -14,6 +14,18 @@ export interface CorrelationProps {
   yLabel?: string
   valueFormatter?: (value: number) => string
   className?: string
+  /** `aria-label` of the chart image. */
+  label?: string
+  /** Caption of the visually hidden data table. */
+  tableTitle?: string
+  /** Header of the point label column of the hidden data table. */
+  labelColumnTitle?: string
+  /** Header of the group column of the hidden data table. */
+  groupColumnTitle?: string
+  /** Legend entry that groups the groups past the first three. */
+  otherLabel?: string
+  /** Name of a point without `label`, from its number (starting at 1). */
+  pointLabel?: (index: number) => string
 }
 
 const seriesFillClasses = ['fill-chart-1', 'fill-chart-2', 'fill-chart-3']
@@ -39,6 +51,12 @@ export function Correlation({
   yLabel,
   valueFormatter = defaultFormatter,
   className,
+  label = 'Scatter plot',
+  tableTitle = 'Scatter plot data',
+  labelColumnTitle = 'Label',
+  groupColumnTitle = 'Group',
+  otherLabel = 'Other',
+  pointLabel = (index) => `Point ${index}`,
 }: CorrelationProps) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
 
@@ -82,7 +100,7 @@ export function Correlation({
           {hasFold && (
             <li className="flex items-center gap-1.5 text-sm text-muted-foreground">
               <span className={cn('h-2.5 w-2.5 shrink-0 rounded-full', OTHER_SWATCH_CLASS)} />
-              Other
+              {otherLabel}
             </li>
           )}
         </ul>
@@ -93,7 +111,7 @@ export function Correlation({
           viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
           className="h-72 w-full"
           role="img"
-          aria-label="Scatter plot"
+          aria-label={label}
         >
           {[0, 0.25, 0.5, 0.75, 1].map((fraction) => (
             <line
@@ -176,19 +194,19 @@ export function Correlation({
 
       <div className="sr-only">
         <table>
-          <caption>Scatter plot data</caption>
+          <caption>{tableTitle}</caption>
           <thead>
             <tr>
-              <th>Label</th>
+              <th>{labelColumnTitle}</th>
               <th>{xLabel ?? 'X'}</th>
               <th>{yLabel ?? 'Y'}</th>
-              <th>Group</th>
+              <th>{groupColumnTitle}</th>
             </tr>
           </thead>
           <tbody>
             {points.map((point, index) => (
               <tr key={index}>
-                <th scope="row">{point.label ?? `Point ${index + 1}`}</th>
+                <th scope="row">{point.label ?? pointLabel(index + 1)}</th>
                 <td>{valueFormatter(point.x)}</td>
                 <td>{valueFormatter(point.y)}</td>
                 <td>{point.group ?? '—'}</td>

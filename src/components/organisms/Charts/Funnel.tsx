@@ -10,6 +10,14 @@ export interface FunnelProps {
   steps: FunnelStep[]
   valueFormatter?: (value: number) => string
   className?: string
+  /** Caption of the visually hidden data table. */
+  tableTitle?: string
+  /** Header of the step column of the hidden data table. */
+  stepColumnTitle?: string
+  /** Header of the value column of the hidden data table. */
+  valueColumnTitle?: string
+  /** Header of the column with each step's share of the first step, in the hidden data table. */
+  percentColumnTitle?: string
 }
 
 const sequentialColorClasses = [
@@ -41,7 +49,15 @@ function sampleColors(count: number): string[] {
 
 const defaultFormatter = (value: number) => String(value)
 
-export function Funnel({ steps, valueFormatter = defaultFormatter, className }: FunnelProps) {
+export function Funnel({
+  steps,
+  valueFormatter = defaultFormatter,
+  className,
+  tableTitle = 'Funnel data',
+  stepColumnTitle = 'Step',
+  valueColumnTitle = 'Value',
+  percentColumnTitle = '% of first step',
+}: FunnelProps) {
   const colors = sampleColors(steps.length)
   const firstValue = steps[0]?.value || 1
 
@@ -88,12 +104,12 @@ export function Funnel({ steps, valueFormatter = defaultFormatter, className }: 
 
       <div className="sr-only">
         <table>
-          <caption>Funnel data</caption>
+          <caption>{tableTitle}</caption>
           <thead>
             <tr>
-              <th>Step</th>
-              <th>Value</th>
-              <th>% of first step</th>
+              <th>{stepColumnTitle}</th>
+              <th>{valueColumnTitle}</th>
+              <th>{percentColumnTitle}</th>
             </tr>
           </thead>
           <tbody>

@@ -100,3 +100,7 @@ export const AllVariants: Story = {
     </div>
   ),
 }
+
+export const CustomLabels: Story = {
+  args: { children: 'Salvar', isLoading: true, loadingLabel: 'Carregando' },
+}

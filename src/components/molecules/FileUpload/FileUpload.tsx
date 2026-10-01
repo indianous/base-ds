@@ -13,6 +13,16 @@ interface FileUploadProps {
   disabled?: boolean
   dragAndDrop?: boolean
   className?: string
+  /** `aria-label` of the hidden file input. */
+  label?: string
+  /** Text of the drag and drop zone. */
+  dropzoneMessage?: string
+  /** Text of the button that opens the file picker, when `dragAndDrop` is off. */
+  selectFilesLabel?: string
+  /** `aria-label` of the button that removes a file, from the file name. */
+  removeFileLabel?: (fileName: string) => string
+  /** Error shown for a file over `maxSize`, from the formatted maximum size (e.g. `"2.0 MB"`). */
+  maxSizeMessage?: (maxSize: string) => string
 }
 
 const formatSize = (bytes: number): string => {
@@ -29,6 +39,11 @@ export function FileUpload({
   disabled = false,
   dragAndDrop = true,
   className,
+  label = 'File upload',
+  dropzoneMessage = 'Drag files here or click to select',
+  selectFilesLabel = 'Select files',
+  removeFileLabel = (fileName) => `Remove ${fileName}`,
+  maxSizeMessage = (maxSize) => `File exceeds maximum size of ${maxSize}`,
 }: FileUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null)
   const [files, setFiles] = useState<File[]>([])
@@ -82,7 +97,7 @@ export function FileUpload({
         disabled={disabled}
         onChange={handleInputChange}
         className="sr-only"
-        aria-label="File upload"
+        aria-label={label}
         tabIndex={-1}
       />
 
@@ -107,13 +122,13 @@ export function FileUpload({
           <div className="flex flex-col items-center gap-2">
             <IconBase icon={UploadIcon} size="lg" className="text-muted-foreground" />
             <Text size="sm" color="muted">
-              Drag files here or click to select
+              {dropzoneMessage}
             </Text>
           </div>
         </div>
       ) : (
         <Button variant="outline" onClick={() => inputRef.current?.click()} disabled={disabled}>
-          Select files
+          {selectFilesLabel}
         </Button>
       )}
 
@@ -137,14 +152,14 @@ export function FileUpload({
                   {exceedsMax && (
                     <Text size="xs" color="destructive">
                       <IconBase icon={AlertCircleIcon} size="sm" className="inline mr-1" />
-                      File exceeds maximum size of {formatSize(maxSize!)}
+                      {maxSizeMessage(formatSize(maxSize!))}
                     </Text>
                   )}
                 </div>
                 <button
                   type="button"
                   onClick={() => removeFile(i)}
-                  aria-label={`Remove ${file.name}`}
+                  aria-label={removeFileLabel(file.name)}
                   className="shrink-0 text-muted-foreground hover:text-foreground transition-colors"
                 >
                   <IconBase icon={XIcon} size="sm" />

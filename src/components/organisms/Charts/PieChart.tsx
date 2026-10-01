@@ -10,6 +10,18 @@ export interface PieChartProps {
   data: PieChartDatum[]
   valueFormatter?: (value: number) => string
   className?: string
+  /** `aria-label` of the chart image. */
+  label?: string
+  /** Caption of the visually hidden data table. */
+  tableTitle?: string
+  /** Header of the label column of the hidden data table. */
+  labelColumnTitle?: string
+  /** Header of the value column of the hidden data table. */
+  valueColumnTitle?: string
+  /** Header of the percent column of the hidden data table. */
+  percentColumnTitle?: string
+  /** Name of the slice that groups the smallest ones. */
+  otherLabel?: string
 }
 
 const seriesFillClasses = ['fill-chart-1', 'fill-chart-2', 'fill-chart-3', 'fill-chart-4']
@@ -53,7 +65,7 @@ interface Slice {
   colorIndex: number
 }
 
-function buildSlices(data: PieChartDatum[]): Slice[] {
+function buildSlices(data: PieChartDatum[], otherLabel: string): Slice[] {
   const sorted = [...data].sort((a, b) => b.value - a.value)
 
   if (sorted.length <= MAX_CATEGORICAL_SLICES) {
@@ -76,13 +88,23 @@ function buildSlices(data: PieChartDatum[]): Slice[] {
       isOther: false,
       colorIndex: index,
     })),
-    { label: 'Other', value: otherValue, isOther: true, colorIndex: -1 },
+    { label: otherLabel, value: otherValue, isOther: true, colorIndex: -1 },
   ]
 }
 
-export function PieChart({ data, valueFormatter = defaultFormatter, className }: PieChartProps) {
+export function PieChart({
+  data,
+  valueFormatter = defaultFormatter,
+  className,
+  label = 'Pie chart',
+  tableTitle = 'Pie chart data',
+  labelColumnTitle = 'Label',
+  valueColumnTitle = 'Value',
+  percentColumnTitle = 'Percent',
+  otherLabel = 'Other',
+}: PieChartProps) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
-  const slices = buildSlices(data)
+  const slices = buildSlices(data, otherLabel)
   const total = Math.max(
     1,
     slices.reduce((sum, slice) => sum + slice.value, 0),
@@ -104,12 +126,7 @@ export function PieChart({ data, valueFormatter = defaultFormatter, className }:
     <figure className={cn('w-full', className)}>
       <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-start">
         <div className="relative shrink-0">
-          <svg
-            viewBox={`0 0 ${SIZE} ${SIZE}`}
-            className="h-56 w-56"
-            role="img"
-            aria-label="Pie chart"
-          >
+          <svg viewBox={`0 0 ${SIZE} ${SIZE}`} className="h-56 w-56" role="img" aria-label={label}>
             {angledSlices.map((slice, index) => (
               <path
                 key={slice.label}
@@ -161,12 +178,12 @@ export function PieChart({ data, valueFormatter = defaultFormatter, className }:
 
       <div className="sr-only">
         <table>
-          <caption>Pie chart data</caption>
+          <caption>{tableTitle}</caption>
           <thead>
             <tr>
-              <th>Label</th>
-              <th>Value</th>
-              <th>Percent</th>
+              <th>{labelColumnTitle}</th>
+              <th>{valueColumnTitle}</th>
+              <th>{percentColumnTitle}</th>
             </tr>
           </thead>
           <tbody>

@@ -59,3 +59,28 @@ describe('Candlestick', () => {
     expect(await axe(container)).toHaveNoViolations()
   })
 })
+
+describe('Candlestick custom labels', () => {
+  it('uses label for the chart image', () => {
+    render(<Candlestick data={data} label="Gráfico de candles" />)
+    expect(screen.getByRole('img', { name: 'Gráfico de candles' })).toBeInTheDocument()
+  })
+
+  it('uses tableTitle and the column titles for the hidden data table', () => {
+    render(
+      <Candlestick
+        data={data}
+        tableTitle="Dados do gráfico"
+        labelColumnTitle="Data"
+        openColumnTitle="Abertura"
+        highColumnTitle="Máxima"
+        lowColumnTitle="Mínima"
+        closeColumnTitle="Fechamento"
+      />,
+    )
+    const table = screen.getByRole('table', { name: 'Dados do gráfico' })
+    for (const name of ['Data', 'Abertura', 'Máxima', 'Mínima', 'Fechamento']) {
+      expect(within(table).getByRole('columnheader', { name })).toBeInTheDocument()
+    }
+  })
+})

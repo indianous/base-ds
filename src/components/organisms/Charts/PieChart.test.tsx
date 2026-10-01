@@ -75,3 +75,32 @@ describe('PieChart', () => {
     expect(await axe(container)).toHaveNoViolations()
   })
 })
+
+describe('PieChart custom labels', () => {
+  it('uses label for the chart image', () => {
+    render(<PieChart data={fewSlices} label="Gráfico de pizza" />)
+    expect(screen.getByRole('img', { name: 'Gráfico de pizza' })).toBeInTheDocument()
+  })
+
+  it('uses tableTitle and the column titles for the hidden data table', () => {
+    render(
+      <PieChart
+        data={fewSlices}
+        tableTitle="Dados do gráfico"
+        labelColumnTitle="Categoria"
+        valueColumnTitle="Valor"
+        percentColumnTitle="Porcentagem"
+      />,
+    )
+    const table = screen.getByRole('table', { name: 'Dados do gráfico' })
+    for (const name of ['Categoria', 'Valor', 'Porcentagem']) {
+      expect(within(table).getByRole('columnheader', { name })).toBeInTheDocument()
+    }
+  })
+
+  it('uses otherLabel for the slice that groups the smallest ones', () => {
+    render(<PieChart data={manySlices} otherLabel="Outros" />)
+    expect(screen.getAllByText('Outros').length).toBeGreaterThan(0)
+    expect(screen.queryByText('Other')).not.toBeInTheDocument()
+  })
+})

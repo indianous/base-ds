@@ -89,3 +89,7 @@ export const AsChild: Story = {
     ],
   },
 }
+
+export const CustomLabels: Story = {
+  args: { items, label: 'Menu lateral', toggleLabel: 'Recolher menu' },
+}

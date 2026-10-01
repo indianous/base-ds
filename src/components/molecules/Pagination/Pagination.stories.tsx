@@ -39,3 +39,15 @@ function InteractivePagination() {
 export const Interactive: Story = {
   render: () => <InteractivePagination />,
 }
+
+export const CustomLabels: Story = {
+  args: {
+    ...Default.args,
+    label: 'Paginação',
+    firstLabel: 'Primeira página',
+    previousLabel: 'Página anterior',
+    nextLabel: 'Próxima página',
+    lastLabel: 'Última página',
+    pageLabel: (page) => `Página ${page}`,
+  },
+}

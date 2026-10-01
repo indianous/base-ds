@@ -16,6 +16,18 @@ interface PaginationProps {
   showEdges?: boolean
   siblings?: number
   className?: string
+  /** `aria-label` of the `<nav>`. */
+  label?: string
+  /** `aria-label` of the button that goes to the first page. */
+  firstLabel?: string
+  /** `aria-label` of the button that goes to the previous page. */
+  previousLabel?: string
+  /** `aria-label` of the button that goes to the next page. */
+  nextLabel?: string
+  /** `aria-label` of the button that goes to the last page. */
+  lastLabel?: string
+  /** `aria-label` of each page button, from its page number. */
+  pageLabel?: (page: number) => string
 }
 
 function getPageRange(current: number, total: number, siblings: number): (number | '...')[] {
@@ -39,18 +51,24 @@ export function Pagination({
   showEdges = true,
   siblings = 1,
   className,
+  label = 'Pagination',
+  firstLabel = 'First page',
+  previousLabel = 'Previous page',
+  nextLabel = 'Next page',
+  lastLabel = 'Last page',
+  pageLabel = (page) => `Page ${page}`,
 }: PaginationProps) {
   const pages = getPageRange(currentPage, totalPages, siblings)
 
   return (
-    <nav aria-label="Pagination" className={cn('flex items-center gap-1', className)}>
+    <nav aria-label={label} className={cn('flex items-center gap-1', className)}>
       {showEdges && (
         <Button
           variant="ghost"
           size="sm"
           disabled={currentPage === 1}
           onClick={() => onPageChange(1)}
-          aria-label="First page"
+          aria-label={firstLabel}
           leftIcon={<IconBase icon={ChevronsLeftIcon} size="sm" />}
         />
       )}
@@ -59,7 +77,7 @@ export function Pagination({
         size="sm"
         disabled={currentPage === 1}
         onClick={() => onPageChange(currentPage - 1)}
-        aria-label="Previous page"
+        aria-label={previousLabel}
         leftIcon={<IconBase icon={ChevronLeftIcon} size="sm" />}
       />
 
@@ -75,7 +93,7 @@ export function Pagination({
             size="sm"
             onClick={() => onPageChange(page)}
             aria-current={page === currentPage ? 'page' : undefined}
-            aria-label={`Page ${page}`}
+            aria-label={pageLabel(page)}
           >
             {page}
           </Button>
@@ -87,7 +105,7 @@ export function Pagination({
         size="sm"
         disabled={currentPage === totalPages}
         onClick={() => onPageChange(currentPage + 1)}
-        aria-label="Next page"
+        aria-label={nextLabel}
         rightIcon={<IconBase icon={ChevronRightIcon} size="sm" />}
       />
       {showEdges && (
@@ -96,7 +114,7 @@ export function Pagination({
           size="sm"
           disabled={currentPage === totalPages}
           onClick={() => onPageChange(totalPages)}
-          aria-label="Last page"
+          aria-label={lastLabel}
           rightIcon={<IconBase icon={ChevronsRightIcon} size="sm" />}
         />
       )}

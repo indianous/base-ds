@@ -12,6 +12,12 @@ export interface BarChartProps {
   orientation?: 'horizontal' | 'vertical'
   valueFormatter?: (value: number) => string
   className?: string
+  /** Caption of the visually hidden data table. */
+  tableTitle?: string
+  /** Header of the label column of the hidden data table. */
+  labelColumnTitle?: string
+  /** Name of a series without one in `seriesNames`, from its number (starting at 1). */
+  seriesLabel?: (index: number) => string
 }
 
 const seriesColorClasses = ['bg-chart-1', 'bg-chart-2', 'bg-chart-3', 'bg-chart-4']
@@ -21,16 +27,18 @@ const defaultFormatter = (value: number) => String(value)
 function Legend({
   seriesCount,
   seriesNames,
+  seriesLabel,
 }: {
   seriesCount: number
   seriesNames?: string[] | undefined
+  seriesLabel: (index: number) => string
 }) {
   return (
     <ul className="mb-3 flex flex-wrap gap-4">
       {Array.from({ length: seriesCount }, (_, i) => (
         <li key={i} className="flex items-center gap-1.5 text-sm text-muted-foreground">
           <span className={cn('h-2.5 w-2.5 shrink-0 rounded-sm', seriesColorClasses[i])} />
-          {seriesNames?.[i] ?? `Series ${i + 1}`}
+          {seriesNames?.[i] ?? seriesLabel(i + 1)}
         </li>
       ))}
     </ul>
@@ -41,22 +49,28 @@ function DataTable({
   data,
   seriesCount,
   seriesNames,
+  seriesLabel,
   valueFormatter,
+  tableTitle,
+  labelColumnTitle,
 }: {
   data: BarChartDatum[]
   seriesCount: number
   seriesNames?: string[] | undefined
+  seriesLabel: (index: number) => string
   valueFormatter: (value: number) => string
+  tableTitle: string
+  labelColumnTitle: string
 }) {
   return (
     <div className="sr-only">
       <table>
-        <caption>Bar chart data</caption>
+        <caption>{tableTitle}</caption>
         <thead>
           <tr>
-            <th>Label</th>
+            <th>{labelColumnTitle}</th>
             {Array.from({ length: seriesCount }, (_, i) => (
-              <th key={i}>{seriesNames?.[i] ?? `Series ${i + 1}`}</th>
+              <th key={i}>{seriesNames?.[i] ?? seriesLabel(i + 1)}</th>
             ))}
           </tr>
         </thead>
@@ -81,17 +95,30 @@ export function BarChart({
   orientation = 'horizontal',
   valueFormatter = defaultFormatter,
   className,
+  tableTitle = 'Bar chart data',
+  labelColumnTitle = 'Label',
+  seriesLabel = (index) => `Series ${index}`,
 }: BarChartProps) {
   const seriesCount = seriesNames?.length ?? data[0]?.values.length ?? 1
   const maxValue = Math.max(1, ...data.flatMap((datum) => datum.values))
   const hasLegend = seriesCount > 1
 
-  const tableProps = { data, seriesCount, seriesNames, valueFormatter }
+  const tableProps = {
+    data,
+    seriesCount,
+    seriesNames,
+    seriesLabel,
+    valueFormatter,
+    tableTitle,
+    labelColumnTitle,
+  }
 
   if (orientation === 'vertical') {
     return (
       <figure className={cn('w-full', className)}>
-        {hasLegend && <Legend seriesCount={seriesCount} seriesNames={seriesNames} />}
+        {hasLegend && (
+          <Legend seriesCount={seriesCount} seriesNames={seriesNames} seriesLabel={seriesLabel} />
+        )}
 
         <div
           data-testid="bar-chart-body"
@@ -136,7 +163,9 @@ export function BarChart({
 
   return (
     <figure className={cn('w-full', className)}>
-      {hasLegend && <Legend seriesCount={seriesCount} seriesNames={seriesNames} />}
+      {hasLegend && (
+        <Legend seriesCount={seriesCount} seriesNames={seriesNames} seriesLabel={seriesLabel} />
+      )}
 
       <div data-testid="bar-chart-body" className="flex flex-col gap-3">
         {data.map((datum) => (

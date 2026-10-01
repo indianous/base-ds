@@ -78,3 +78,10 @@ describe('Toast', () => {
     expect(await axe(container)).toHaveNoViolations()
   })
 })
+
+describe('Toast custom labels', () => {
+  it('uses closeLabel for the close button', () => {
+    render(<Toast title="Salvo" onDismiss={() => {}} closeLabel="Fechar notificação" />)
+    expect(screen.getByRole('button', { name: 'Fechar notificação' })).toBeInTheDocument()
+  })
+})

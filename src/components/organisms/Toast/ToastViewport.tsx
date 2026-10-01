@@ -5,7 +5,17 @@ import { useToast } from './useToast'
 
 const subscribeNever = () => () => {}
 
-export function ToastViewport() {
+interface ToastViewportProps {
+  /** `aria-label` of the notifications region. */
+  label?: string
+  /** `closeLabel` of each toast. */
+  toastCloseLabel?: string
+}
+
+export function ToastViewport({
+  label = 'Notifications',
+  toastCloseLabel = 'Close notification',
+}: ToastViewportProps = {}) {
   const { toasts, dismiss } = useToast()
 
   // document.body doesn't exist during SSR — defer the portal until after
@@ -21,7 +31,7 @@ export function ToastViewport() {
   return createPortal(
     <div
       role="region"
-      aria-label="Notifications"
+      aria-label={label}
       className="fixed bottom-4 right-4 z-50 flex w-full max-w-sm flex-col gap-2"
     >
       {toasts.map(({ id, variant, title, description, action }) => (
@@ -32,9 +42,12 @@ export function ToastViewport() {
           {...(description !== undefined ? { description } : {})}
           {...(action !== undefined ? { action } : {})}
           onDismiss={() => dismiss(id)}
+          closeLabel={toastCloseLabel}
         />
       ))}
     </div>,
     document.body,
   )
 }
+
+export type { ToastViewportProps }

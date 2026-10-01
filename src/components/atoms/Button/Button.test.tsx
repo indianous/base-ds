@@ -723,3 +723,23 @@ describe('Button', () => {
     })
   })
 })
+
+describe('Button custom labels', () => {
+  it('uses loadingLabel for the loading spinner', () => {
+    render(
+      <Button isLoading loadingLabel="Carregando">
+        Salvar
+      </Button>,
+    )
+    expect(screen.getByLabelText('Carregando')).toBeInTheDocument()
+  })
+
+  it('uses loadingLabel for the loading spinner of a link button', () => {
+    render(
+      <Button as="a" href="/salvar" isLoading loadingLabel="Carregando">
+        Salvar
+      </Button>,
+    )
+    expect(screen.getByLabelText('Carregando')).toBeInTheDocument()
+  })
+})

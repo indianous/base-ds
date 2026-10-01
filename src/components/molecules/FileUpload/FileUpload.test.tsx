@@ -86,3 +86,39 @@ describe('FileUpload', () => {
     expect(await axe(container)).toHaveNoViolations()
   })
 })
+
+describe('FileUpload custom labels', () => {
+  it('uses label for the file input', () => {
+    render(<FileUpload label="Enviar arquivos" />)
+    expect(screen.getByLabelText('Enviar arquivos')).toHaveAttribute('type', 'file')
+  })
+
+  it('uses dropzoneMessage for the drag and drop zone', () => {
+    render(<FileUpload dropzoneMessage="Arraste arquivos ou clique para escolher" />)
+    expect(
+      screen.getByRole('button', { name: 'Arraste arquivos ou clique para escolher' }),
+    ).toBeInTheDocument()
+  })
+
+  it('uses selectFilesLabel for the button without drag and drop', () => {
+    render(<FileUpload dragAndDrop={false} selectFilesLabel="Escolher arquivos" />)
+    expect(screen.getByRole('button', { name: 'Escolher arquivos' })).toBeInTheDocument()
+  })
+
+  it('uses removeFileLabel with the file name for the remove button', () => {
+    render(<FileUpload removeFileLabel={(fileName) => `Remover ${fileName}`} />)
+    selectFiles([makeFile('foto.png', 50)])
+    expect(screen.getByRole('button', { name: 'Remover foto.png' })).toBeInTheDocument()
+  })
+
+  it('uses maxSizeMessage with the formatted maximum size', () => {
+    render(
+      <FileUpload
+        maxSize={100}
+        maxSizeMessage={(maxSize) => `O arquivo passa do limite de ${maxSize}`}
+      />,
+    )
+    selectFiles([makeFile('grande.png', 200)])
+    expect(screen.getByText('O arquivo passa do limite de 100 B')).toBeInTheDocument()
+  })
+})

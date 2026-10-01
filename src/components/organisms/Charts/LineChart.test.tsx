@@ -83,3 +83,23 @@ describe('LineChart', () => {
     expect(await axe(container)).toHaveNoViolations()
   })
 })
+
+describe('LineChart custom labels', () => {
+  it('uses label for the chart image', () => {
+    render(<LineChart labels={labels} series={singleSeries} label="Gráfico de linhas" />)
+    expect(screen.getByRole('img', { name: 'Gráfico de linhas' })).toBeInTheDocument()
+  })
+
+  it('uses tableTitle and labelColumnTitle for the hidden data table', () => {
+    render(
+      <LineChart
+        labels={labels}
+        series={singleSeries}
+        tableTitle="Dados do gráfico"
+        labelColumnTitle="Mês"
+      />,
+    )
+    const table = screen.getByRole('table', { name: 'Dados do gráfico' })
+    expect(within(table).getByRole('columnheader', { name: 'Mês' })).toBeInTheDocument()
+  })
+})

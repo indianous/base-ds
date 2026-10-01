@@ -25,6 +25,8 @@ interface ToastProps {
   action?: ToastAction
   onDismiss: () => void
   className?: string
+  /** `aria-label` of the close button. */
+  closeLabel?: string
 }
 
 const iconMap: Record<ToastVariant, LucideIcon> = {
@@ -50,6 +52,7 @@ export function Toast({
   action,
   onDismiss,
   className,
+  closeLabel = 'Close notification',
 }: ToastProps) {
   const isDestructive = variant === 'destructive'
 
@@ -85,7 +88,7 @@ export function Toast({
         variant="ghost"
         size="sm"
         onClick={onDismiss}
-        aria-label="Close notification"
+        aria-label={closeLabel}
         className="flex-shrink-0 px-2"
       >
         <IconBase icon={XIcon} size="sm" />

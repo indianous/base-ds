@@ -61,3 +61,21 @@ describe('Funnel', () => {
     expect(await axe(container)).toHaveNoViolations()
   })
 })
+
+describe('Funnel custom labels', () => {
+  it('uses tableTitle and the column titles for the hidden data table', () => {
+    render(
+      <Funnel
+        steps={steps}
+        tableTitle="Dados do funil"
+        stepColumnTitle="Etapa"
+        valueColumnTitle="Valor"
+        percentColumnTitle="% da primeira etapa"
+      />,
+    )
+    const table = screen.getByRole('table', { name: 'Dados do funil' })
+    for (const name of ['Etapa', 'Valor', '% da primeira etapa']) {
+      expect(within(table).getByRole('columnheader', { name })).toBeInTheDocument()
+    }
+  })
+})

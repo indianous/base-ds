@@ -57,3 +57,13 @@ export const MultiSeries: Story = {
     seriesNames: ['This month', 'Last month'],
   },
 }
+
+export const CustomLabels: Story = {
+  args: {
+    ...MultiSeries.args,
+    seriesNames: undefined,
+    tableTitle: 'Dados do gráfico de barras',
+    labelColumnTitle: 'Canal',
+    seriesLabel: (index) => `Série ${index}`,
+  },
+}

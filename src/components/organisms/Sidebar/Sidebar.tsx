@@ -39,9 +39,21 @@ interface SidebarProps {
   onCollapse?: (v: boolean) => void
   footer?: ReactNode
   className?: string
+  /** `aria-label` of the `<nav>`. */
+  label?: string
+  /** `aria-label` of the button that collapses and expands the sidebar. */
+  toggleLabel?: string
 }
 
-export function Sidebar({ items, collapsed, onCollapse, footer, className }: SidebarProps) {
+export function Sidebar({
+  items,
+  collapsed,
+  onCollapse,
+  footer,
+  className,
+  label = 'Sidebar navigation',
+  toggleLabel = 'Toggle sidebar',
+}: SidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(collapsed ?? false)
 
   const handleToggle = () => {
@@ -53,7 +65,7 @@ export function Sidebar({ items, collapsed, onCollapse, footer, className }: Sid
   return (
     <nav
       role="navigation"
-      aria-label="Sidebar navigation"
+      aria-label={label}
       className={cn(
         'flex flex-col h-full bg-background border-r border-border transition-all duration-200',
         isCollapsed ? 'w-14' : 'w-56',
@@ -65,7 +77,7 @@ export function Sidebar({ items, collapsed, onCollapse, footer, className }: Sid
           type="button"
           onClick={handleToggle}
           aria-expanded={!isCollapsed}
-          aria-label="Toggle sidebar"
+          aria-label={toggleLabel}
           className="flex items-center justify-center w-8 h-8 rounded-md text-muted-foreground hover:bg-muted focus:ring-2 focus:ring-ring focus:outline-none"
         >
           <IconBase icon={isCollapsed ? ChevronRightIcon : ChevronLeftIcon} size="sm" />

@@ -12,6 +12,12 @@ export interface LineChartProps {
   series: LineChartSeriesData[]
   valueFormatter?: (value: number) => string
   className?: string
+  /** `aria-label` of the chart image. */
+  label?: string
+  /** Caption of the visually hidden data table. */
+  tableTitle?: string
+  /** Header of the label column of the hidden data table. */
+  labelColumnTitle?: string
 }
 
 const seriesColorClasses = ['stroke-chart-1', 'stroke-chart-2', 'stroke-chart-3', 'stroke-chart-4']
@@ -38,6 +44,9 @@ export function LineChart({
   series,
   valueFormatter = defaultFormatter,
   className,
+  label = 'Line chart',
+  tableTitle = 'Line chart data',
+  labelColumnTitle = 'Label',
 }: LineChartProps) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
   const hasLegend = series.length > 1
@@ -96,7 +105,7 @@ export function LineChart({
           className="h-60 w-full"
           tabIndex={0}
           role="img"
-          aria-label="Line chart"
+          aria-label={label}
           onMouseMove={handleMouseMove}
           onMouseLeave={() => setActiveIndex(null)}
           onFocus={() => setActiveIndex((i) => i ?? 0)}
@@ -184,10 +193,10 @@ export function LineChart({
 
       <div className="sr-only">
         <table>
-          <caption>Line chart data</caption>
+          <caption>{tableTitle}</caption>
           <thead>
             <tr>
-              <th>Label</th>
+              <th>{labelColumnTitle}</th>
               {series.map((s) => (
                 <th key={s.name}>{s.name}</th>
               ))}

@@ -30,3 +30,13 @@ export const FewSteps: Story = {
     ],
   },
 }
+
+export const CustomLabels: Story = {
+  args: {
+    ...ConversionFunnel.args,
+    tableTitle: 'Dados do funil',
+    stepColumnTitle: 'Etapa',
+    valueColumnTitle: 'Valor',
+    percentColumnTitle: '% da primeira etapa',
+  },
+}

@@ -16,6 +16,10 @@ interface DialogProps {
   children?: ReactNode
   footer?: ReactNode
   className?: string
+  /** `aria-label` of the close button. */
+  closeLabel?: string
+  /** `aria-label` of the backdrop button that closes the dialog. */
+  dismissLabel?: string
 }
 
 export function Dialog({
@@ -26,6 +30,8 @@ export function Dialog({
   children,
   footer,
   className,
+  closeLabel = 'Close dialog',
+  dismissLabel = 'Dismiss dialog',
 }: DialogProps) {
   const titleId = useId()
   const descId = useId()
@@ -45,7 +51,7 @@ export function Dialog({
     <div data-testid="dialog-backdrop" className="fixed inset-0 z-50 overflow-y-auto">
       <button
         type="button"
-        aria-label="Dismiss dialog"
+        aria-label={dismissLabel}
         onClick={onClose}
         className="fixed inset-0 cursor-default bg-overlay"
       />
@@ -68,7 +74,7 @@ export function Dialog({
                 {title}
               </h2>
             )}
-            <Button variant="ghost" size="sm" onClick={onClose} aria-label="Close dialog">
+            <Button variant="ghost" size="sm" onClick={onClose} aria-label={closeLabel}>
               <IconBase icon={XIcon} size="sm" />
             </Button>
           </div>

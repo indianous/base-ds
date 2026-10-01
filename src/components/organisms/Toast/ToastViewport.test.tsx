@@ -64,3 +64,27 @@ describe('ToastViewport', () => {
     expect(await axe(document.body)).toHaveNoViolations()
   })
 })
+
+describe('ToastViewport custom labels', () => {
+  it('uses label for the notifications region', () => {
+    render(
+      <ToastProvider>
+        <ToastViewport label="Notificações" />
+      </ToastProvider>,
+    )
+    expect(screen.getByRole('region', { name: 'Notificações' })).toBeInTheDocument()
+  })
+
+  it('passes toastCloseLabel to the close button of each toast', async () => {
+    const user = userEvent.setup()
+    render(
+      <ToastProvider>
+        <TestTrigger />
+        <ToastViewport toastCloseLabel="Fechar notificação" />
+      </ToastProvider>,
+    )
+    await user.click(screen.getByRole('button', { name: 'Add success' }))
+    await user.click(screen.getByRole('button', { name: 'Add destructive' }))
+    expect(screen.getAllByRole('button', { name: 'Fechar notificação' })).toHaveLength(2)
+  })
+})

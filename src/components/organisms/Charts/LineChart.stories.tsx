@@ -26,3 +26,12 @@ export const MultiSeries: Story = {
     ],
   },
 }
+
+export const CustomLabels: Story = {
+  args: {
+    ...MultiSeries.args,
+    label: 'Gráfico de linhas',
+    tableTitle: 'Dados do gráfico de linhas',
+    labelColumnTitle: 'Mês',
+  },
+}

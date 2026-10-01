@@ -189,3 +189,38 @@ describe('Table', () => {
     })
   })
 })
+
+describe('Table custom labels', () => {
+  const renderExpandedRow = (row: User) => <div>Detalhes de {row.name}</div>
+
+  it('uses expandColumnTitle for the hidden header of the toggle column', () => {
+    render(
+      <Table
+        columns={columns}
+        data={data}
+        renderExpandedRow={renderExpandedRow}
+        expandColumnTitle="Expandir linha"
+      />,
+    )
+    expect(screen.getByRole('columnheader', { name: 'Expandir linha' })).toBeInTheDocument()
+  })
+
+  it('uses expandRowLabel and collapseRowLabel for the toggle button', async () => {
+    render(
+      <Table
+        columns={columns}
+        data={[data[0]!]}
+        renderExpandedRow={renderExpandedRow}
+        expandRowLabel="Expandir linha"
+        collapseRowLabel="Recolher linha"
+      />,
+    )
+    await userEvent.click(screen.getByRole('button', { name: 'Expandir linha' }))
+    expect(screen.getByRole('button', { name: 'Recolher linha' })).toBeInTheDocument()
+  })
+
+  it('uses emptyMessage when there is no data', () => {
+    render(<Table columns={columns} data={[]} emptyMessage="Nenhum registro" />)
+    expect(screen.getByText('Nenhum registro')).toBeInTheDocument()
+  })
+})

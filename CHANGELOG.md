@@ -6,6 +6,37 @@ Todas as mudanças relevantes do base-ds são registradas aqui. O formato segue 
 mudança que exige ajuste nos apps sobe o _minor_ (`0.1.0 → 0.2.0`); correções e componentes
 novos sem impacto sobem o _patch_.
 
+## [0.4.13] - 2026-09-30
+
+### Adicionado
+
+Props para os textos que os componentes mostravam ou liam em inglês, sem como trocar (lote 1 da
+[#58](https://github.com/indianous/base-ds/issues/58)). Os padrões são os textos de antes.
+
+- `Button`: `loadingLabel` (o spinner do `isLoading`).
+- `Dialog`: `closeLabel` e `dismissLabel` (o botão de fechar e o fundo clicável).
+- `Pagination`: `label` (o `<nav>`), `firstLabel`, `previousLabel`, `nextLabel`, `lastLabel` e
+  `pageLabel: (page) => string`.
+- `Table`: `expandColumnTitle` (o cabeçalho oculto da coluna de expandir), `expandRowLabel`,
+  `collapseRowLabel` e `emptyMessage` (o "No data").
+- `FileUpload`: `label` (o input), `dropzoneMessage`, `selectFilesLabel`,
+  `removeFileLabel: (fileName) => string` e `maxSizeMessage: (maxSize) => string`.
+- `Toast`: `closeLabel`. `ToastViewport`: `label` (a região de notificações) e `toastCloseLabel`
+  (repassado a cada `Toast`). O tipo `ToastViewportProps` é exportado.
+- `Sidebar`: `label` (o `<nav>`) e `toggleLabel` (o botão de recolher).
+- Gráficos:
+  - `label`, o nome do gráfico: no `LineChart`, no `PieChart`, no `Candlestick` e no
+    `Correlation`;
+  - `tableTitle`, o título da tabela oculta lida por leitores de tela: nos seis gráficos;
+  - um `<coluna>ColumnTitle` para cada cabeçalho dessa tabela;
+  - `otherLabel`: no `PieChart` e no `Correlation`;
+  - `seriesLabel: (index) => string`: no `BarChart`;
+  - `pointLabel: (index) => string`: no `Correlation`.
+
+### Ajustes necessários nos apps
+
+- Nenhum. Sites em português podem passar as props novas.
+
 ## [0.4.12] - 2026-09-30
 
 ### Adicionado
