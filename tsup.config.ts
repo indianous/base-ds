@@ -20,10 +20,16 @@ function jsFiles(dir: string): string[] {
 
 // Plain data entries (issue #57): no React, no DOM and no 'use client' (React Native has no such
 // directive), so they stay out of the client-only step below.
-const dataEntries = { tokens: 'src/tokens/index.ts', 'tailwind-preset': 'src/tailwind-preset.ts' }
-const plainModules = ['index.js', ...Object.keys(dataEntries).map((name) => `${name}.js`)].map(
-  (file) => join('dist', file),
-)
+const dataEntries = {
+  tokens: 'src/tokens/index.ts',
+  'tailwind-preset': 'src/tailwind-preset.ts',
+  theme: 'src/theme/index.ts',
+}
+const plainModules = [
+  'index.js',
+  'theme-cli.js',
+  ...Object.keys(dataEntries).map((name) => `${name}.js`),
+].map((file) => join('dist', file))
 
 const shared: Options = {
   external: ['react', 'react-dom'],
@@ -105,5 +111,16 @@ export default defineConfig([
     cjsInterop: true,
     splitting: true,
     dts: true,
+  },
+  {
+    ...shared,
+    // `base-ds-theme` (the theme config command): a Node script, with no 'use client'.
+    entry: { 'theme-cli': 'src/theme/bin.ts' },
+    format: ['esm'],
+    platform: 'node',
+    target: 'node20',
+    splitting: false,
+    dts: false,
+    banner: { js: '#!/usr/bin/env node' },
   },
 ])

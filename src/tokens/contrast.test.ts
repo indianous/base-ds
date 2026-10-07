@@ -2,12 +2,10 @@
 /// <reference types="node" />
 import { readFileSync } from 'node:fs'
 import colors from './colors.json'
+import { contrastRatio, isThemeIndependent, MIN_TEXT_CONTRAST, textPairs } from '../theme/contrast'
 
 // Read from disk: Vitest stubs CSS imports (even `?raw`) to an empty string.
 const themeCss = readFileSync(new URL('../styles/theme.css', import.meta.url), 'utf8')
-
-// WCAG AA minimum for normal-size text.
-const MIN_TEXT_CONTRAST = 4.5
 
 // Declarations of a top-level rule in theme.css (`:root { … }`, `.dark { … }`), empty if missing.
 function parseBlock(selector: string): Map<string, string> {
@@ -45,54 +43,6 @@ function resolveToken(name: string, theme: Theme): string {
   return resolved.toLowerCase()
 }
 
-function relativeLuminance(hex: string): number {
-  const [r, g, b] = [1, 3, 5].map((start) => {
-    const channel = parseInt(hex.slice(start, start + 2), 16) / 255
-    return channel <= 0.03928 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4
-  }) as [number, number, number]
-  return 0.2126 * r + 0.7152 * g + 0.0722 * b
-}
-
-function contrastRatio(foreground: string, background: string): number {
-  const [lighter, darker] = [relativeLuminance(foreground), relativeLuminance(background)].sort(
-    (a, b) => b - a,
-  ) as [number, number]
-  return (lighter + 0.05) / (darker + 0.05)
-}
-
-const statuses = ['primary', 'secondary', 'success', 'warning', 'destructive', 'info']
-
-const codeTextTokens = [
-  'code-foreground',
-  ...[
-    'comment',
-    'keyword',
-    'string',
-    'string-expression',
-    'constant',
-    'function',
-    'parameter',
-    'punctuation',
-    'link',
-  ].map((token) => `code-token-${token}`),
-]
-
-const textPairs: [foreground: string, background: string][] = [
-  ['foreground', 'background'],
-  ['muted-foreground', 'background'],
-  ['muted-foreground', 'muted'],
-  ...statuses.map((status): [string, string] => [`${status}-foreground`, status]),
-  ...statuses.map((status): [string, string] => [`${status}-foreground`, `${status}-hover`]),
-  ...statuses.map((status): [string, string] => [`${status}-muted-fg`, `${status}-muted`]),
-  // Statuses used as text (`text-primary`, `text-destructive` …) on the page background.
-  ...statuses.map((status): [string, string] => [status, 'background']),
-  // Code highlighting (issue #59): every token is text on the code block's background.
-  ...codeTextTokens.map((token): [string, string] => [token, 'code-background']),
-]
-
-// Same in both themes, so `.dark` doesn't redefine them.
-const themeIndependent = (name: string) => name === 'overlay' || name.startsWith('chart-')
-
 const semanticDark: Record<string, string> = colors['semantic-dark']
 
 describe.each(['light', 'dark'] as const)('%s theme color tokens', (theme) => {
@@ -129,7 +79,7 @@ describe('color tokens', () => {
   })
 
   it('redefines every theme-dependent semantic color in the dark theme', () => {
-    const expected = Object.keys(colors.semantic).filter((name) => !themeIndependent(name))
+    const expected = Object.keys(colors.semantic).filter((name) => !isThemeIndependent(name))
     expect(Object.keys(semanticDark).sort()).toEqual(expected.sort())
   })
 

@@ -64,10 +64,10 @@ describe('bundle size', () => {
   })
 })
 
-describe('tokens entry', () => {
+describe.each(['src/tokens/index.ts', 'src/theme/index.ts'])('data entry %s', (entry) => {
   it('brings no React and no component code', async () => {
     const result = await build({
-      entryPoints: [`${root}src/tokens/index.ts`],
+      entryPoints: [`${root}${entry}`],
       bundle: true,
       write: false,
       format: 'esm',
@@ -78,6 +78,6 @@ describe('tokens entry', () => {
     const [output] = Object.values(result.metafile.outputs)
     const inputs = Object.keys(output?.inputs ?? {})
     expect(inputs.length).toBeGreaterThan(0)
-    expect(inputs.every((path) => path.startsWith('src/tokens/'))).toBe(true)
+    expect(inputs.every((path) => /^src\/(tokens|theme)\//.test(path))).toBe(true)
   })
 })

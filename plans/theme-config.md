@@ -185,3 +185,22 @@ funcionando e pode migrar para o config quando quiser.
 
 `npm run lint`, `format:check`, `typecheck`, `npm test`, `npm run test:stories`, `npm run build` +
 `npm run check:dist`.
+
+## Resultado (implementação)
+
+Entregue como planejado, com estas diferenças:
+
+- **Sem invalidar o cache do import**: a primeira versão do comando acrescentava a data de
+  modificação do config à URL do `import()`, para reler o arquivo num processo que roda várias
+  vezes. Dentro do Vitest, um `.ts` com parâmetro na URL não é transformado, e essa leitura não é
+  necessária: cada execução do comando é um processo novo. O parâmetro saiu. O teste do `--check`
+  com arquivo desatualizado usa um segundo arquivo de config (`--config`), em vez de reescrever o
+  primeiro.
+- **O preset virou função compartilhada** (`src/theme/preset.ts`): o
+  `@indianous/base-ds/tailwind-preset` e o `createTailwindPreset(theme)` saem do mesmo código.
+- **O `check:dist` roda o comando compilado** com o Node real, contra um config `.ts` numa pasta
+  temporária.
+- **Verificação de ponta a ponta** (fora do repositório): o tarball instalado num app no
+  scratchpad, com um `base-ds.config.ts` importando o `defineTheme` do pacote. O `npx base-ds-theme`
+  gerou os dois arquivos, o `--check` passou, o `createTailwindPreset` leu o JSON, e uma primária
+  `violet-300` falhou com `primary-foreground sobre primary (claro): 1,85:1, mínimo 4,50:1`.

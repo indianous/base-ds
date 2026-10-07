@@ -52,11 +52,15 @@ describe('package.json', () => {
   })
 
   it('exposes the tokens and the Tailwind preset as subpaths, for import and require', () => {
-    for (const name of ['tokens', 'tailwind-preset']) {
+    for (const name of ['tokens', 'tailwind-preset', 'theme']) {
       expect(pkg.exports).toHaveProperty(`./${name}`, {
         import: { types: `./dist/${name}.d.ts`, default: `./dist/${name}.js` },
         require: { types: `./dist/${name}.d.cts`, default: `./dist/${name}.cjs` },
       })
     }
+  })
+
+  it('ships the base-ds-theme command', () => {
+    expect(pkg.bin).toEqual({ 'base-ds-theme': './dist/theme-cli.js' })
   })
 })

@@ -6,6 +6,29 @@ Todas as mudanças relevantes do base-ds são registradas aqui. O formato segue 
 mudança que exige ajuste nos apps sobe o _minor_ (`0.1.0 → 0.2.0`); correções e componentes
 novos sem impacto sobem o _patch_.
 
+## [0.5.5] - 2026-10-07
+
+### Adicionado
+
+- Personalização do tema por arquivo de configuração. O app escreve um `base-ds.config.ts` com
+  `defineTheme(...)`, mudando cores (por tema, com nomes da paleta ou hex), fontes, tamanhos,
+  espaçamento, raios, bordas e sombras. O comando `npx base-ds-theme` valida e gera:
+  - `base-ds.theme.css`, para importar depois do base-ds;
+  - `base-ds.theme.json`, para o React Native.
+
+  A validação recusa tokens e cores inexistentes e qualquer combinação de texto e fundo abaixo de
+  4,5:1, com os mesmos pares que o base-ds garante. Ela avisa quando uma cor muda só no tema
+  claro. O `--check` barra arquivos desatualizados no CI.
+
+- `@indianous/base-ds/theme`: `defineTheme`, `buildTheme` (a validação e a geração, sem escrever
+  arquivos) e `createTailwindPreset(theme)`, que é o preset do NativeWind com os valores do tema.
+- README: seção "Personalizando o tema".
+
+### Ajustes necessários nos apps
+
+- Nenhum. Quem já sobrescreve variáveis à mão continua funcionando e pode migrar para o arquivo de
+  configuração quando quiser.
+
 ## [0.5.4] - 2026-10-01
 
 ### Adicionado

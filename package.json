@@ -1,6 +1,6 @@
 {
   "name": "@indianous/base-ds",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/indianous/base-ds.git"
@@ -39,7 +39,20 @@
         "types": "./dist/tailwind-preset.d.cts",
         "default": "./dist/tailwind-preset.cjs"
       }
+    },
+    "./theme": {
+      "import": {
+        "types": "./dist/theme.d.ts",
+        "default": "./dist/theme.js"
+      },
+      "require": {
+        "types": "./dist/theme.d.cts",
+        "default": "./dist/theme.cjs"
+      }
     }
+  },
+  "bin": {
+    "base-ds-theme": "./dist/theme-cli.js"
   },
   "files": [
     "dist",

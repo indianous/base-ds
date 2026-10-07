@@ -64,6 +64,61 @@ O Tailwind do app também precisa ler as classes usadas dentro dos componentes. 
 - Tailwind v4: `@source '../node_modules/@indianous/base-ds/dist';` (caminho relativo ao CSS)
 - Tailwind v3: `'./node_modules/@indianous/base-ds/dist/**/*.js'` no `content`
 
+### Personalizando o tema
+
+Um app pode trocar cores, fontes, espaçamento, raios, bordas e sombras do base-ds com um arquivo de
+configuração. O comando `base-ds-theme` valida esse arquivo e gera um CSS para a web e um JSON para
+o React Native.
+
+1. **`base-ds.config.ts`** na raiz do app:
+
+   ```ts
+   import { defineTheme } from '@indianous/base-ds/theme'
+
+   export default defineTheme({
+     colors: {
+       light: { primary: 'violet-700', 'primary-hover': 'violet-800' },
+       dark: { primary: 'violet-400', 'primary-hover': 'violet-300' },
+     },
+     fontFamily: { sans: "'Inter', ui-sans-serif, system-ui, sans-serif" },
+     spacing: { 4: '18px' },
+     radius: { md: '8px' },
+   })
+   ```
+
+   As chaves são os nomes dos tokens: o editor autocompleta e aponta um nome errado. As cores
+   aceitam um nome da paleta (`'violet-600'`) ou um hex (`'#5b21b6'`). Só tokens que já existem
+   podem ser personalizados.
+
+2. **`npx base-ds-theme`** gera o `base-ds.theme.css` e o `base-ds.theme.json` ao lado do config.
+   Coloque-o num script, como `"prebuild": "base-ds-theme"`, e use `base-ds-theme --check` no CI
+   para barrar arquivos desatualizados.
+
+3. **Importe o CSS depois do base-ds:**
+
+   ```css
+   @import '@indianous/base-ds/styles/v4';
+   @import './base-ds.theme.css';
+   ```
+
+O comando **falha** quando:
+
+- um token ou uma cor não existe;
+- uma combinação de texto e fundo fica abaixo de 4,5:1 em algum tema, usando os mesmos pares que o
+  base-ds garante para os próprios tokens. A mensagem diz o par, o tema e a razão, por exemplo
+  `primary-foreground sobre primary (claro): 1,85:1, mínimo 4,50:1`.
+
+Ele **avisa** quando uma cor que muda com o tema é personalizada só em `light`: o tema escuro
+continua com o valor do base-ds. Com `--strict`, o aviso vira erro. Os caminhos dos arquivos
+gerados podem mudar em `output: { css, json }`.
+
+O `.ts` é lido pelo próprio Node, que remove os tipos sozinho a partir da versão 22.18. Com Node
+mais antigo, use `base-ds.config.mjs`. Para chamar de um script próprio, `buildTheme(config)`, de
+`@indianous/base-ds/theme`, devolve o CSS, o JSON, os erros e os avisos sem escrever nada.
+
+Sobrescrever variáveis à mão num CSS depois do import continua funcionando, mas sem nenhuma dessas
+verificações.
+
 ### Tema escuro
 
 O tema claro é o padrão. Para o escuro, coloque a classe `dark` no `<html>`: os tokens de cor
@@ -359,6 +414,18 @@ O que não funciona igual no React Native:
 - `fontFamily`: o preset traz as pilhas de fonte da web, que o React Native não entende. Sobrescreva
   `theme.extend.fontFamily` com o nome das fontes carregadas no app.
 - Sombras (`shadow-*`): o NativeWind só aproveita parte delas, com diferenças entre iOS e Android.
+
+Com um tema personalizado (veja "Personalizando o tema"), use o JSON gerado no lugar do
+`themeVariables` e do preset padrão:
+
+```js
+// tailwind.config.js
+const { createTailwindPreset } = require('@indianous/base-ds/theme')
+const theme = require('./base-ds.theme.json')
+
+module.exports = { presets: [require('nativewind/preset'), createTailwindPreset(theme)] }
+// na raiz do app: vars(theme.themeVariables[colorScheme])
+```
 
 Esse fluxo segue a documentação do NativeWind v4 e não foi testado num app real.
 
