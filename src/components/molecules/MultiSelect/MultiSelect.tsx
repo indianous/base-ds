@@ -135,7 +135,7 @@ export function MultiSelect({
               onClick={() => removeOption(opt.value)}
               aria-label={removeLabel(opt.label)}
               disabled={disabled}
-              className="ml-1 hover:text-destructive-foreground focus:outline-none"
+              className="ml-1 rounded-sm hover:text-destructive focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               <IconBase icon={XIcon} size="sm" />
             </button>

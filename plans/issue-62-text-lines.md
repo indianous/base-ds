@@ -117,3 +117,14 @@ Em qualquer caso, é **patch**: uma prop nova e opcional mais duas correções. 
 
 `npm run lint`, `format:check`, `typecheck`, `npm test`, `npm run test:stories`, `npm run build` +
 `npm run check:dist`.
+
+## Resultado (implementação)
+
+Entregue como planejado, junto da v0.5.5 (opção A).
+
+- No Chromium, a story `Lines` confirmou que o texto longo é cortado em 2 linhas
+  (`-webkit-line-clamp: 2`, com conteúdo além da altura visível) e mede o dobro de uma linha. O
+  texto curto com `reserveLines` ficou com a mesma altura do cortado.
+- A verificação de contraste da story `Destructive` reprovou com contraste 1 nos dois temas ao
+  recolocar a classe antiga (`text-destructive-foreground`), e passou com a nova.
+- O `Text` mescla o `style` do app com a variável `--text-lines`.

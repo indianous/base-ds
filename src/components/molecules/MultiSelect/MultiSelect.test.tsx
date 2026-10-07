@@ -245,3 +245,25 @@ describe('MultiSelect custom labels', () => {
     expect(screen.getByRole('button', { name: 'Remover Books' })).toBeInTheDocument()
   })
 })
+
+describe('MultiSelect remove button', () => {
+  it('stays visible on hover and shows a focus ring', () => {
+    render(
+      <MultiSelect
+        id="categories"
+        aria-label="Categories"
+        options={options}
+        value={['books']}
+        onChange={vi.fn()}
+      />,
+    )
+    const remove = screen.getByRole('button', { name: 'Remove Books' })
+    // `text-destructive-foreground` (white) disappeared on the muted chip on hover.
+    expect(remove).toHaveClass(
+      'hover:text-destructive',
+      'focus-visible:ring-2',
+      'focus-visible:ring-ring',
+    )
+    expect(remove).not.toHaveClass('hover:text-destructive-foreground')
+  })
+})

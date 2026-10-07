@@ -159,3 +159,17 @@ describe('TagsInput custom labels', () => {
     expect(screen.getByRole('button', { name: 'Remover urgente' })).toBeInTheDocument()
   })
 })
+
+describe('TagsInput remove button', () => {
+  it('stays visible on hover and shows a focus ring', () => {
+    render(<TagsInput id="tags" aria-label="Tags" value={['React']} />)
+    const remove = screen.getByRole('button', { name: 'Remove React' })
+    // `text-destructive-foreground` (white) disappeared on the muted chip on hover.
+    expect(remove).toHaveClass(
+      'hover:text-destructive',
+      'focus-visible:ring-2',
+      'focus-visible:ring-ring',
+    )
+    expect(remove).not.toHaveClass('hover:text-destructive-foreground')
+  })
+})

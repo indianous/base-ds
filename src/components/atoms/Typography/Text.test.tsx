@@ -44,9 +44,12 @@ describe('Text', () => {
     expect(screen.getByText('Hello')).toHaveClass('text-muted-foreground')
   })
 
-  it('applies text-destructive-foreground class for color="destructive"', () => {
+  it('applies the destructive text color for color="destructive"', () => {
     render(<Text color="destructive">Hello</Text>)
-    expect(screen.getByText('Hello')).toHaveClass('text-destructive-foreground')
+    // `text-destructive-foreground` is for text on a destructive background: on the page it had
+    // the same color as the background, so error messages were invisible.
+    expect(screen.getByText('Hello')).toHaveClass('text-destructive')
+    expect(screen.getByText('Hello')).not.toHaveClass('text-destructive-foreground')
   })
 
   it('applies font-normal by default', () => {
@@ -72,5 +75,53 @@ describe('Text', () => {
   it('has no accessibility violations', async () => {
     const { container } = render(<Text>Accessible text</Text>)
     expect(await axe(container)).toHaveNoViolations()
+  })
+})
+
+describe('Text lines', () => {
+  const longText = 'A long summary that goes on for more lines than the card has room for.'
+
+  it('clamps to the given number of lines', () => {
+    render(<Text lines={2}>{longText}</Text>)
+    const text = screen.getByText(longText)
+    expect(text.style.getPropertyValue('--text-lines')).toBe('2')
+    expect(text).toHaveClass('line-clamp-[var(--text-lines)]')
+    expect(text).not.toHaveClass('min-h-[calc(var(--text-lines)*1lh)]')
+  })
+
+  it('reserves the height of those lines with reserveLines', () => {
+    render(
+      <Text lines={2} reserveLines>
+        Short
+      </Text>,
+    )
+    expect(screen.getByText('Short')).toHaveClass(
+      'line-clamp-[var(--text-lines)]',
+      'min-h-[calc(var(--text-lines)*1lh)]',
+    )
+  })
+
+  it('does nothing without lines, even with reserveLines', () => {
+    render(<Text reserveLines>{longText}</Text>)
+    const text = screen.getByText(longText)
+    expect(text.style.getPropertyValue('--text-lines')).toBe('')
+    expect(text.className).not.toContain('line-clamp')
+    expect(text.className).not.toContain('min-h-')
+  })
+
+  it.each([0, -1, 1.5])('ignores lines={%s}', (lines) => {
+    render(<Text lines={lines}>{longText}</Text>)
+    expect(screen.getByText(longText).className).not.toContain('line-clamp')
+  })
+
+  it('keeps a style passed by the app', () => {
+    render(
+      <Text lines={2} style={{ marginTop: 4 }}>
+        {longText}
+      </Text>,
+    )
+    const text = screen.getByText(longText)
+    expect(text.style.marginTop).toBe('4px')
+    expect(text.style.getPropertyValue('--text-lines')).toBe('2')
   })
 })

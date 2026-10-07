@@ -23,11 +23,26 @@ novos sem impacto sobem o _patch_.
 - `@indianous/base-ds/theme`: `defineTheme`, `buildTheme` (a validação e a geração, sem escrever
   arquivos) e `createTailwindPreset(theme)`, que é o preset do NativeWind com os valores do tema.
 - README: seção "Personalizando o tema".
+- `Text`: props `lines` e `reserveLines` ([#62](https://github.com/indianous/base-ds/issues/62)).
+  `lines={2}` corta o texto em 2 linhas com reticências, e `reserveLines` reserva a altura dessas
+  linhas mesmo com texto curto, para cards do mesmo tamanho.
+
+### Corrigido
+
+- `Text` com `color="destructive"`: o texto saía com a mesma cor do fundo da página nos dois temas
+  e ficava **invisível**. Ele usava a cor de texto sobre fundo vermelho, e não o vermelho de texto.
+  Isso escondia a mensagem de erro do `FormField` e o erro de tamanho do `FileUpload`. A story do
+  `Text` passou a conferir o contraste no navegador, porque o addon de a11y não pegou o problema.
+- `MultiSelect` e `TagsInput`: o "x" de remover de cada item sumia ao passar o mouse e não tinha
+  anel de foco. Agora fica vermelho no hover e mostra o foco pelo teclado.
 
 ### Ajustes necessários nos apps
 
 - Nenhum. Quem já sobrescreve variáveis à mão continua funcionando e pode migrar para o arquivo de
   configuração quando quiser.
+- Recomendado: os formulários com `FormField` passam a mostrar as mensagens de erro, que antes não
+  apareciam. Vale conferir as telas de erro. No `portfolio`, o `className="line-clamp-2
+min-h-[2lh]"` do `ProjectCard` pode virar `lines={2} reserveLines`.
 
 ## [0.5.4] - 2026-10-01
 

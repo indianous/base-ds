@@ -85,7 +85,7 @@ export function TagsInput({
             onClick={() => removeTag(tag)}
             aria-label={removeLabel(tag)}
             disabled={disabled}
-            className="ml-1 hover:text-destructive-foreground focus:outline-none"
+            className="ml-1 rounded-sm hover:text-destructive focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             <IconBase icon={XIcon} size="sm" />
           </button>
