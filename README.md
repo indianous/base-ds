@@ -260,6 +260,51 @@ import { MenuIcon } from 'lucide-react'
 ;<MenuIcon className="h-5 w-5" aria-hidden="true" />
 ```
 
+## Campos com máscara (CPF, CNPJ, CEP, telefone, data)
+
+O `MaskedInput` é um `Input` com máscara. Ele mostra o valor formatado, devolve o valor cru e
+funciona dentro do `FormField` como o `Input`:
+
+```tsx
+import { FormField, MaskedInput } from '@indianous/base-ds'
+
+;<FormField label="CPF" id="cpf">
+  <MaskedInput id="cpf" mask="cpf" value={cpf} onValueChange={(raw) => setCpf(raw)} />
+</FormField>
+```
+
+| `mask`  | formato                               | valor cru           |
+| ------- | ------------------------------------- | ------------------- |
+| `cpf`   | `000.000.000-00`                      | 11 dígitos          |
+| `cnpj`  | `00.000.000/0000-00`, com letras      | 14 letras e dígitos |
+| `cep`   | `00000-000`                           | 8 dígitos           |
+| `phone` | `(00) 0000-0000` ou `(00) 00000-0000` | 10 ou 11 dígitos    |
+| `date`  | `00/00/0000`                          | 8 dígitos           |
+
+- **Valor:** o `value` (ou `defaultValue`) aceita o valor cru ou já formatado. O
+  `onValueChange(raw, formatted)` entrega os dois. O `onChange` comum continua funcionando, com o
+  valor formatado em `e.target.value`.
+- **CNPJ alfanumérico:** desde 2026, o CNPJ pode ter letras nas 12 primeiras posições (IN RFB nº
+  2.229/2024). A máscara aceita letras, convertidas em maiúsculas, e usa o teclado de texto.
+- **Padrão próprio:** `mask="00.000-0"`, onde `0` é um dígito, `A` uma letra e `*` qualquer dos
+  dois.
+- O teclado do celular (`inputMode`), o `autoComplete`, o `maxLength` e o placeholder vêm da
+  máscara, e o app pode trocar qualquer um deles.
+
+Para formatar ou validar fora de um campo, inclusive no servidor (Server Component ou server
+action), use o `@indianous/base-ds/masks`:
+
+```ts
+import { formatMasked, isValidCnpj, isValidCpf, unmask } from '@indianous/base-ds/masks'
+
+isValidCpf('529.982.247-25') // true
+isValidCnpj('12.ABC.345/01DE-35') // true: numérico e alfanumérico
+formatMasked('01310100', 'cep') // '01310-100'
+```
+
+Essas funções não saem de `@indianous/base-ds`: tudo o que sai de lá é marcado como código de
+cliente, e o Next.js não deixa um Server Component ou uma server action chamá-las.
+
 ## Links com o roteador do app (Next.js)
 
 O `Navbar`, o `Footer`, o `DropdownMenu` e o `Breadcrumb` renderizam seus links como `<a href>`, o que recarrega a

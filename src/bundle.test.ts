@@ -58,26 +58,35 @@ describe('bundle size', () => {
     expect(bytesFrom(inputs, dndKit)).toBe(0)
   })
 
+  it('importing Input leaves out the mask engine of MaskedInput', async () => {
+    const inputs = await bundle(['Input'])
+    expect(bytesFrom(inputs, /src\/masks\//)).toBe(0)
+    expect(bytesFrom(await bundle(['MaskedInput']), /src\/masks\//)).toBeGreaterThan(0)
+  })
+
   it('importing KanbanBoard still brings drag and drop', async () => {
     const inputs = await bundle(['KanbanBoard'])
     expect(bytesFrom(inputs, dndKit)).toBeGreaterThan(0)
   })
 })
 
-describe.each(['src/tokens/index.ts', 'src/theme/index.ts'])('data entry %s', (entry) => {
-  it('brings no React and no component code', async () => {
-    const result = await build({
-      entryPoints: [`${root}${entry}`],
-      bundle: true,
-      write: false,
-      format: 'esm',
-      platform: 'neutral',
-      metafile: true,
-      logLevel: 'silent',
+describe.each(['src/tokens/index.ts', 'src/theme/index.ts', 'src/masks/index.ts'])(
+  'data entry %s',
+  (entry) => {
+    it('brings no React and no component code', async () => {
+      const result = await build({
+        entryPoints: [`${root}${entry}`],
+        bundle: true,
+        write: false,
+        format: 'esm',
+        platform: 'neutral',
+        metafile: true,
+        logLevel: 'silent',
+      })
+      const [output] = Object.values(result.metafile.outputs)
+      const inputs = Object.keys(output?.inputs ?? {})
+      expect(inputs.length).toBeGreaterThan(0)
+      expect(inputs.every((path) => /^src\/(tokens|theme|masks)\//.test(path))).toBe(true)
     })
-    const [output] = Object.values(result.metafile.outputs)
-    const inputs = Object.keys(output?.inputs ?? {})
-    expect(inputs.length).toBeGreaterThan(0)
-    expect(inputs.every((path) => /^src\/(tokens|theme)\//.test(path))).toBe(true)
-  })
-})
+  },
+)

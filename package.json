@@ -1,6 +1,6 @@
 {
   "name": "@indianous/base-ds",
-  "version": "0.5.5",
+  "version": "0.5.6",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/indianous/base-ds.git"
@@ -48,6 +48,16 @@
       "require": {
         "types": "./dist/theme.d.cts",
         "default": "./dist/theme.cjs"
+      }
+    },
+    "./masks": {
+      "import": {
+        "types": "./dist/masks.d.ts",
+        "default": "./dist/masks.js"
+      },
+      "require": {
+        "types": "./dist/masks.d.cts",
+        "default": "./dist/masks.cjs"
       }
     }
   },

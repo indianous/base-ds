@@ -6,6 +6,26 @@ Todas as mudanças relevantes do base-ds são registradas aqui. O formato segue 
 mudança que exige ajuste nos apps sobe o _minor_ (`0.1.0 → 0.2.0`); correções e componentes
 novos sem impacto sobem o _patch_.
 
+## [0.5.6] - 2026-10-07
+
+### Adicionado
+
+- `MaskedInput` ([#64](https://github.com/indianous/base-ds/issues/64)): um `Input` com máscara.
+  Mostra o valor formatado e entrega o cru por `onValueChange(raw, formatted)`. Aceita valor inicial
+  cru ou formatado e colar texto, mantém o cursor no lugar ao editar no meio e funciona dentro do
+  `FormField`.
+  - Máscaras prontas: `cpf`, `cnpj`, `cep`, `phone` (que muda para 9 dígitos no 11º) e `date`,
+    além de padrões próprios (`'00.000-0'`).
+  - O CNPJ aceita letras nas 12 primeiras posições, como o CNPJ alfanumérico da IN RFB nº
+    2.229/2024, e usa o teclado de texto.
+- `@indianous/base-ds/masks`: `formatMasked`, `unmask`, `isValidCpf` e `isValidCnpj` (numérico e
+  alfanumérico), sem `'use client'`, para funcionar também no servidor.
+- README: seção "Campos com máscara".
+
+### Ajustes necessários nos apps
+
+- Nenhum.
+
 ## [0.5.5] - 2026-10-07
 
 ### Adicionado

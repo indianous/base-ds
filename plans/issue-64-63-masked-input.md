@@ -169,3 +169,22 @@ Em cada lote: `npm run lint`, `format:check`, `typecheck`, `npm test`, `npm run 
 bundle de quem importa só o `Input`).
 
 [cnpj-rfb]: https://www.gov.br/receitafederal/pt-br/centrais-de-conteudo/publicacoes/perguntas-e-respostas/cnpj/cnpj-alfanumerico.pdf
+
+## Resultado do lote 1 (implementação)
+
+Entregue como planejado, com estas diferenças:
+
+- **As funções puras saem por um subpath próprio, `@indianous/base-ds/masks`**, e não pelo
+  `@indianous/base-ds`. Tudo o que sai da raiz vai para arquivos com `'use client'`, e o Next.js não
+  deixa um Server Component ou uma server action chamar uma função de um módulo de cliente. Validar
+  o CPF no servidor é um uso natural do `isValidCpf`. O `masks` é construído como o `tokens` e o
+  `theme`, sem `'use client'`. Só o `MaskedInput` sai da raiz.
+- **Backspace sobre um literal**: em vez de cancelar a tecla e montar o valor à mão, o componente
+  move o cursor para antes do literal e deixa o navegador apagar o caractere. Assim o `onChange`
+  nativo dispara normalmente.
+- **Edição no meio com o campo cheio**: o `maxLength` da máscara (pedido na issue) impede inserir
+  num campo completo, como em qualquer campo do navegador. O teste de edição no meio usa um CEP com
+  7 dígitos.
+- O dígito verificador do CNPJ alfanumérico confere com o exemplo da Receita
+  (`12.ABC.345/01DE-35`).
+- O bundle de quem importa só o `Input` não leva o mecanismo de máscara (teste em `bundle.test.ts`).

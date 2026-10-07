@@ -24,6 +24,7 @@ const dataEntries = {
   tokens: 'src/tokens/index.ts',
   'tailwind-preset': 'src/tailwind-preset.ts',
   theme: 'src/theme/index.ts',
+  masks: 'src/masks/index.ts',
 }
 const plainModules = [
   'index.js',

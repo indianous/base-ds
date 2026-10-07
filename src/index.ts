@@ -93,6 +93,13 @@ export type {
   MultiSelectOption,
 } from './components/molecules/MultiSelect/MultiSelect'
 
+export { MaskedInput } from './components/molecules/MaskedInput/MaskedInput'
+export type {
+  MaskedInputProps,
+  Mask,
+  MaskName,
+} from './components/molecules/MaskedInput/MaskedInput'
+
 export { NumberInput } from './components/molecules/NumberInput/NumberInput'
 
 export { Pagination } from './components/molecules/Pagination/Pagination'

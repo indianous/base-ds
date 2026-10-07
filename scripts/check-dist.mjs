@@ -36,7 +36,7 @@ if (leftover !== '') {
 
 // 2. The data entries (issue #57) are plain modules: React Native has no 'use client'. Besides
 // their own files, every .cjs but index.cjs belongs to them (the components' CJS is one file).
-const dataEntryFiles = ['tokens', 'tailwind-preset', 'theme'].flatMap((name) => [
+const dataEntryFiles = ['tokens', 'tailwind-preset', 'theme', 'masks'].flatMap((name) => [
   join(dist, `${name}.js`),
   join(dist, `${name}.cjs`),
 ])

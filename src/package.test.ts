@@ -52,7 +52,7 @@ describe('package.json', () => {
   })
 
   it('exposes the tokens and the Tailwind preset as subpaths, for import and require', () => {
-    for (const name of ['tokens', 'tailwind-preset', 'theme']) {
+    for (const name of ['tokens', 'tailwind-preset', 'theme', 'masks']) {
       expect(pkg.exports).toHaveProperty(`./${name}`, {
         import: { types: `./dist/${name}.d.ts`, default: `./dist/${name}.js` },
         require: { types: `./dist/${name}.d.cts`, default: `./dist/${name}.cjs` },
