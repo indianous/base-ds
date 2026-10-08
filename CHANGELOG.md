@@ -6,6 +6,30 @@ Todas as mudanças relevantes do base-ds são registradas aqui. O formato segue 
 mudança que exige ajuste nos apps sobe o _minor_ (`0.1.0 → 0.2.0`); correções e componentes
 novos sem impacto sobem o _patch_.
 
+## [0.5.9] - 2026-10-08
+
+### Adicionado
+
+- `PricingTable` e `PricingCard`: tabela de preços, com um cartão por plano.
+  - Assinaturas (`price: { monthly, yearly }`) e compras avulsas (`price: 497`, sem "/mês"), que
+    podem ficar lado a lado. O alternador mensal/anual só aparece quando algum plano tem preço por
+    período, e aceita um selo de desconto (`yearlyBadge`).
+  - Plano em destaque (`highlighted`, `badge`): borda primária, selo, CTA sólido e, no desktop,
+    um leve deslocamento para cima. Os outros planos usam o CTA com borda.
+  - Preço formatado por `locale` e `currency` (`Intl.NumberFormat`), com a moeda e os centavos
+    menores que o número. `customPrice` para planos sem preço ("Fale com vendas").
+  - Recursos incluídos com check e ausentes esmaecidos com um X, com o estado anunciado ao leitor
+    de tela, e tooltip de ajuda nos recursos com `description`.
+  - CTA como link (com `linkComponent`, para o `Link` do Next.js) ou botão.
+  - No celular, os cartões ficam empilhados, e a lista de recursos mostra os 4 primeiros com um
+    botão "Ver todos os recursos" (`collapsedFeatures`).
+  - Todos os textos são trocáveis (padrão em inglês).
+- README: seção "Tabela de preços".
+
+### Ajustes necessários nos apps
+
+- Nenhum.
+
 ## [0.5.8] - 2026-10-08
 
 ### Adicionado

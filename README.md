@@ -385,6 +385,79 @@ import { Stepper } from '@indianous/base-ds'
 - Abaixo do breakpoint `sm`, no lugar da lista aparece o texto de `progressMessage` com uma barra
   de progresso, sem rolagem horizontal. Nessa versão não há volta pelo `Stepper`.
 
+## Tabela de preços (`PricingTable`)
+
+A `PricingTable` mostra planos lado a lado, com um cartão por plano. O tipo de cada plano vem do
+`price`: um objeto por período é uma assinatura, e um número é uma compra avulsa.
+
+```tsx
+import { PricingTable } from '@indianous/base-ds'
+import type { PricingPlan } from '@indianous/base-ds'
+
+const plans: PricingPlan[] = [
+  {
+    id: 'basico',
+    name: 'Básico',
+    description: 'Para quem está começando',
+    price: { monthly: 49, yearly: 39.9 },
+    priceNote: { yearly: 'Cobrado R$ 478,80 por ano' },
+    features: [{ label: '1 projeto' }, { label: 'Acesso à API', included: false }],
+    cta: { label: 'Começar agora', href: '/cadastro?plano=basico' },
+  },
+  {
+    id: 'pro',
+    name: 'Pro',
+    price: { monthly: 99, yearly: 79 },
+    highlighted: true,
+    badge: 'Mais vendido',
+    features: [{ label: 'Acesso à API', description: 'Leia e grave seus dados pela API REST.' }],
+    cta: { label: 'Assinar plano', href: '/cadastro?plano=pro' },
+  },
+  {
+    id: 'vitalicio',
+    name: 'Vitalício',
+    price: 1997,
+    priceNote: 'Pagamento único',
+    features: [{ label: 'Tudo do Pro' }],
+    cta: { label: 'Comprar', href: '/comprar' },
+  },
+]
+
+;<PricingTable
+  plans={plans}
+  locale="pt-BR"
+  currency="BRL"
+  yearlyBadge="Economize 20%"
+  label="Planos"
+  billingLabel="Período de cobrança"
+  monthlyLabel="Mensal"
+  yearlyLabel="Anual"
+  monthlySuffix="/mês"
+  yearlySuffix="/mês"
+  includedLabel="Incluído"
+  notIncludedLabel="Não incluído"
+  featureHelpLabel={(feature) => `Saiba mais sobre ${feature}`}
+  showAllFeaturesLabel={(total) => `Ver todos os recursos (${total})`}
+  showFewerFeaturesLabel="Ver menos recursos"
+/>
+```
+
+- **Preço:** o componente mostra o valor que o app passa, sem calcular nada. Para mostrar o anual
+  como equivalente mensal ("R$ 79/mês, cobrado anualmente"), passe `yearlySuffix="/mês"` e o
+  total na `priceNote`. Sem preço (ou `null` no período), aparece o `customPrice`.
+- **Moeda:** `locale` e `currency` têm padrão `en-US` e `USD`; apps brasileiros passam `pt-BR` e
+  `BRL`. O padrão é fixo, e não o do navegador, para o servidor e o cliente formatarem igual.
+- **Período:** o alternador só aparece quando algum plano tem preço por período. Ele aceita
+  `period` + `onPeriodChange` (controlado) ou `defaultPeriod`, e `periods={['monthly']}` tira o
+  alternador.
+- **CTA:** com `href`, vira link (use `linkComponent={AppLink}` para o `Link` do Next.js, como
+  na seção abaixo); sem `href`, vira botão com o `onClick`. Num Server Component, o `onClick` e
+  o `linkComponent` precisam vir de um arquivo `'use client'`.
+- **Celular:** os cartões ficam empilhados na ordem do array. Cada cartão mostra os 4 primeiros
+  recursos e um botão para ver todos (`collapsedFeatures`, ou `false` para mostrar tudo). No
+  tablet e no desktop, a lista aparece inteira.
+- O `PricingCard` também é exportado, para montar um layout próprio com um `plan` e um `period`.
+
 ## Links com o roteador do app (Next.js)
 
 O `Navbar`, o `Footer`, o `DropdownMenu` e o `Breadcrumb` renderizam seus links como `<a href>`, o que recarrega a

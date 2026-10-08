@@ -236,3 +236,19 @@ português, com `pt-BR`/`BRL`). O addon de a11y confere tudo nos dois temas.
 
 Em cada lote: `npm run lint`, `format:check`, `typecheck`, `npm test`, `npm run test:stories`,
 `npm run build` + `npm run check:dist`.
+
+## Resultado do lote 1 (implementação)
+
+Entregue como planejado, com estas diferenças:
+
+- **O CTA fica logo depois do preço**, antes da lista de recursos, como no esboço do celular, e não
+  no rodapé do cartão. No celular, com o CTA no rodapé, ele ficaria longe do preço quando a lista
+  é aberta. Os cartões têm a mesma altura na grade.
+- **O botão "ver todos" fica depois da lista.** Ao abrir, os recursos novos aparecem antes do
+  botão, e não depois dele, como o plano dizia. Pôr o botão entre os recursos exigiria duas listas,
+  e o leitor de tela ouviria duas listas também no desktop. É o padrão comum de "mostrar mais": o
+  `aria-expanded` avisa que a lista abriu, e o foco continua no botão.
+- O `PricingCard` aceita as mesmas opções que a `PricingTable` repassa (`PricingCardOptions`,
+  também exportado).
+- O visual foi conferido no Storybook: desktop claro e escuro, celular (375 px) e os textos em
+  português.

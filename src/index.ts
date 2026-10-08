@@ -201,6 +201,19 @@ export type {
   GalleryImage,
 } from './components/organisms/ImageGallery/ImageGallery'
 
+export { PricingTable } from './components/organisms/PricingTable/PricingTable'
+export type {
+  PricingTableProps,
+  BillingPeriod,
+  PricingFeature,
+  PricingPlan,
+} from './components/organisms/PricingTable/PricingTable'
+export { PricingCard } from './components/organisms/PricingTable/PricingCard'
+export type {
+  PricingCardProps,
+  PricingCardOptions,
+} from './components/organisms/PricingTable/PricingCard'
+
 export { Navbar } from './components/organisms/Navbar/Navbar'
 export type { NavbarLogoAlign, NavbarProps, NavItem } from './components/organisms/Navbar/Navbar'
 
