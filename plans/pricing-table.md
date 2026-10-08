@@ -97,6 +97,12 @@ export interface PricingTableProps extends Omit<HTMLAttributes<HTMLElement>, 'ch
   includedLabel?: string // 'Included' — hidden text of an included feature
   notIncludedLabel?: string // 'Not included' — hidden text of a missing feature
   featureHelpLabel?: (feature: string) => string // (f) => `More about ${f}`
+  /** Features shown on small screens before "See all"; `false` shows all of them. */
+  collapsedFeatures?: number | false // 4
+  /** Text of the button that expands the feature list on small screens. */
+  showAllFeaturesLabel?: (total: number) => string // (n) => `See all features (${n})`
+  /** Text of the same button once the list is expanded. */
+  showFewerFeaturesLabel?: string // 'See fewer features'
 }
 ```
 
@@ -129,8 +135,24 @@ Decisões:
 ### Estrutura, visual e acessibilidade
 
 - **Seção:** `<section aria-label={label}>`, com o alternador no topo e os cartões numa grade:
-  uma coluna no celular e, a partir de `md`/`lg`, uma por plano (de 1 a 4 colunas, por uma tabela
-  `Record<number, string>` de classes). Os cartões têm a mesma altura e o CTA fica no rodapé.
+  uma coluna no celular, duas a partir de `md` e uma por plano a partir de `lg` (de 1 a 4 colunas,
+  por uma tabela `Record<number, string>` de classes). Os cartões têm a mesma altura e o CTA fica
+  no rodapé. Nunca há rolagem horizontal.
+- **Celular:** os cartões ficam empilhados, na ordem do array em todas as telas. Reordenar só
+  pelo CSS faria a ordem visual divergir da ordem de leitura e do foco; quem quiser o destaque
+  primeiro no celular muda a ordem do array. O alternador ocupa a largura toda, e o deslocamento do
+  plano em destaque só existe a partir de `lg` (no celular, o destaque é a borda, o selo e o CTA
+  sólido).
+- **Lista de recursos recolhida no celular:** abaixo de `md` (onde há uma coluna só), cada cartão
+  mostra os primeiros `collapsedFeatures` recursos (padrão 4) e um botão
+  `showAllFeaturesLabel(total)` ("See all features (10)"). O botão alterna a lista:
+  `aria-expanded` e `aria-controls` apontando para o `<ul>`, e o texto vira
+  `showFewerFeaturesLabel` quando a lista está aberta. Os recursos além do limite ficam com
+  `hidden md:flex` enquanto a lista está recolhida, e o botão com `md:hidden`: no tablet e no
+  desktop, a lista aparece inteira e o botão não existe. Ao abrir, o foco fica no botão, e os
+  recursos novos entram logo depois dele na ordem de leitura. O botão só aparece quando há mais
+  recursos que o limite, e `collapsedFeatures={false}` desliga o recolhimento. Os itens escondidos
+  ficam com `display: none`, então o leitor de tela também não os lê antes de abrir.
 - **Cartão:** `<article aria-labelledby={id do nome}>`. Nome como título (`headingLevel`),
   descrição em `text-muted-foreground`, preço, nota, CTA e a lista de recursos (`<ul>`).
 - **Destaque:** borda `border-2 border-primary`, sombra maior e, a partir de `lg`, um
@@ -167,13 +189,18 @@ Decisões:
 - CTA com `href` vira link (inclusive com um `linkComponent` de teste), sem `href` vira botão e
   chama o `onClick`;
 - recursos: o texto escondido de incluído e não incluído, e o botão de ajuda com o tooltip;
+- lista recolhida: com 10 recursos e o padrão 4, os 6 últimos com `hidden md:flex` e o botão
+  "See all features (10)" com `md:hidden`, `aria-expanded="false"` e `aria-controls` no `<ul>`;
+  clicar abre (sem as classes de esconder, `aria-expanded="true"`, texto de "ver menos") e clicar
+  de novo fecha; sem botão com 4 recursos ou menos e com `collapsedFeatures={false}`;
 - um teste por prop de texto, com valores em português;
 - `jest-axe` sem violações.
 
 **Stories:** `Default` (três planos, o do meio em destaque), `WithYearlyDiscount`,
 `CustomPrice` (Enterprise "Fale com vendas"), `SinglePeriod`, `OneTimePurchase` (pacotes de
 pagamento único, sem alternador), `MixedPlans` (mensal ao lado de vitalício), `CardAlone` (um `PricingCard`
-sozinho), `Interactive` (com `play`: trocar o período muda os preços) e `CustomLabels` (tudo em
+sozinho), `Interactive` (com `play`: trocar o período muda os preços), `Mobile` (viewport de celular do
+Storybook, com a lista recolhida e o `play` abrindo a lista de um cartão) e `CustomLabels` (tudo em
 português, com `pt-BR`/`BRL`). O addon de a11y confere tudo nos dois temas.
 
 ## Lote 2
