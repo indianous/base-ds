@@ -6,6 +6,33 @@ Todas as mudanças relevantes do base-ds são registradas aqui. O formato segue 
 mudança que exige ajuste nos apps sobe o _minor_ (`0.1.0 → 0.2.0`); correções e componentes
 novos sem impacto sobem o _patch_.
 
+## [0.5.7] - 2026-10-08
+
+### Adicionado
+
+- Campos de cartão de crédito ([#63](https://github.com/indianous/base-ds/issues/63)), sobre o
+  `MaskedInput`, cada um com o próprio `autoComplete` para o navegador preencher:
+  - `CardNumberInput`: agrupa os dígitos pela bandeira (Amex `4-6-5`, com 15 dígitos; Diners
+    `4-6-4`; as demais em grupos de 4, até 19). Mostra a bandeira como texto dentro do campo, avisa
+    a troca por `onBrandChange(brand)` e anuncia a bandeira ao leitor de tela numa região
+    `aria-live`, com o texto da prop `brandLabel`.
+  - `CardExpiryInput`: `MM/AA`. Uma validade digitada, colada ou preenchida como `MM/AAAA` vira
+    `MM/AA`, e um mês de um dígito ganha o zero (`5` → `05`).
+  - `CardCvcInput`: 3 dígitos, ou 4 com `brand="amex"`. O código fica escondido na impressão.
+
+  Os campos não guardam nada fora do `<input>`: nada em `localStorage`, `sessionStorage`,
+  `console` ou atributos.
+
+- `@indianous/base-ds/masks`: `detectCardBrand` (Visa, Mastercard, Amex, Elo, Hipercard e Diners)
+  e `isValidCardNumber` (Luhn).
+- `MaskedInput`: o `mask` também aceita uma definição completa (`MaskDefinition`), com padrões,
+  escolha do padrão pelo valor (`choose`) e normalização do que é digitado (`normalize`).
+- README: seção "Cartão de crédito".
+
+### Ajustes necessários nos apps
+
+- Nenhum.
+
 ## [0.5.6] - 2026-10-08
 
 ### Adicionado

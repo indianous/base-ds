@@ -64,6 +64,11 @@ describe('bundle size', () => {
     expect(bytesFrom(await bundle(['MaskedInput']), /src\/masks\//)).toBeGreaterThan(0)
   })
 
+  it('importing MaskedInput leaves out the card brands and Luhn check', async () => {
+    expect(bytesFrom(await bundle(['MaskedInput']), /src\/masks\/card/)).toBe(0)
+    expect(bytesFrom(await bundle(['CardNumberInput']), /src\/masks\/card/)).toBeGreaterThan(0)
+  })
+
   it('importing KanbanBoard still brings drag and drop', async () => {
     const inputs = await bundle(['KanbanBoard'])
     expect(bytesFrom(inputs, dndKit)).toBeGreaterThan(0)

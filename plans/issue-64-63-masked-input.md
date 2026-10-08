@@ -188,3 +188,23 @@ Entregue como planejado, com estas diferenças:
 - O dígito verificador do CNPJ alfanumérico confere com o exemplo da Receita
   (`12.ABC.345/01DE-35`).
 - O bundle de quem importa só o `Input` não leva o mecanismo de máscara (teste em `bundle.test.ts`).
+
+## Resultado do lote 2 (implementação)
+
+Entregue como planejado, com estas diferenças:
+
+- **Os três componentes ficam num único arquivo**, `molecules/CardInput/CardInput.tsx`, porque
+  compartilham as máscaras e os tipos. Eles também ficam num único arquivo do build, e quem importa
+  só o `MaskedInput` não leva a tabela de bandeiras nem o Luhn (teste em `bundle.test.ts`).
+- **O mecanismo de máscara aceita uma definição completa** (`MaskDefinition`, também pública no
+  `mask` do `MaskedInput`). Ela pode ter um `choose(raw)`, que escolhe o padrão (a bandeira do
+  cartão), um `normalize(value)`, que reescreve a validade, e um `maxLength`. A validade usa
+  `maxLength` 7, para o navegador não cortar um `MM/AAAA` colado antes da máscara encurtá-lo.
+- **Validade:** além de `MM/AAAA` → `MM/AA`, um mês que não pode começar com o dígito digitado
+  ganha o zero (`5` → `05`, `13` → `01/3`). O placeholder padrão é `MM/YY`, e o app troca pelo
+  `placeholder`.
+- **Bandeira:** o texto no campo é curto (`Amex`, `Diners`) e escondido do leitor de tela. A região
+  `aria-live` anuncia o `brandLabel`, que por padrão usa o nome completo
+  (`Card brand: American Express`).
+- **"Nada guardado":** o React espelha o valor de todo `<input>` controlado no atributo `value`, o
+  que vale para qualquer formulário React. O teste confere todos os outros atributos.

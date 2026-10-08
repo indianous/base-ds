@@ -97,8 +97,22 @@ export { MaskedInput } from './components/molecules/MaskedInput/MaskedInput'
 export type {
   MaskedInputProps,
   Mask,
+  MaskDefinition,
   MaskName,
 } from './components/molecules/MaskedInput/MaskedInput'
+
+export {
+  CardCvcInput,
+  CardExpiryInput,
+  CardNumberInput,
+} from './components/molecules/CardInput/CardInput'
+export type {
+  CardBrand,
+  CardCvcInputProps,
+  CardExpiryInputProps,
+  CardInputProps,
+  CardNumberInputProps,
+} from './components/molecules/CardInput/CardInput'
 
 export { NumberInput } from './components/molecules/NumberInput/NumberInput'
 

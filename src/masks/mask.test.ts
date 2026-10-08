@@ -58,3 +58,29 @@ describe('mask engine', () => {
     expect(caretAfter('123.456.789-00', 'cpf', 3)).toBe(3)
   })
 })
+
+describe('mask definitions', () => {
+  // A definition that picks its pattern from the value, like the card number by brand.
+  const byPrefix = {
+    patterns: ['00-00', '000-000'],
+    choose: (raw: string) => (raw.startsWith('9') ? '000-000' : '00-00'),
+    inputMode: 'numeric' as const,
+    placeholder: '00-00',
+  }
+
+  it('lets the definition choose the pattern from the raw value', () => {
+    expect(formatMasked('1234', byPrefix)).toBe('12-34')
+    expect(formatMasked('912345', byPrefix)).toBe('912-345')
+    expect(unmask('91-2345', byPrefix)).toBe('912345')
+  })
+
+  it('normalizes the value before applying the mask', () => {
+    const swapped = {
+      patterns: ['00/00'],
+      normalize: (value: string) => value.replace(/^(\d)(\d)/, '$2$1'),
+      inputMode: 'numeric' as const,
+      placeholder: '00/00',
+    }
+    expect(formatMasked('1234', swapped)).toBe('21/34')
+  })
+})

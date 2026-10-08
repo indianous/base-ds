@@ -87,4 +87,4 @@ export function MaskedInput({
   )
 }
 
-export type { Mask, MaskName } from '../../../masks/mask'
+export type { Mask, MaskDefinition, MaskName } from '../../../masks/mask'

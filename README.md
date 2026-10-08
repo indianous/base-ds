@@ -305,6 +305,54 @@ formatMasked('01310100', 'cep') // '01310-100'
 Essas funções não saem de `@indianous/base-ds`: tudo o que sai de lá é marcado como código de
 cliente, e o Next.js não deixa um Server Component ou uma server action chamá-las.
 
+### Cartão de crédito
+
+Três campos, um para cada dado, cada um com o `autoComplete` certo (`cc-number`, `cc-exp`,
+`cc-csc`) para o navegador preencher o cartão salvo:
+
+```tsx
+import { CardCvcInput, CardExpiryInput, CardNumberInput, FormField } from '@indianous/base-ds'
+import type { CardBrand } from '@indianous/base-ds'
+
+const [brand, setBrand] = useState<CardBrand>()
+
+;<>
+  <FormField label="Número do cartão" id="card-number">
+    <CardNumberInput
+      id="card-number"
+      onValueChange={(raw) => setNumber(raw)}
+      onBrandChange={setBrand}
+      brandLabel={(brand) => `Bandeira do cartão: ${brand}`}
+    />
+  </FormField>
+  <FormField label="Validade" id="card-expiry">
+    <CardExpiryInput id="card-expiry" placeholder="MM/AA" onValueChange={(raw) => setExpiry(raw)} />
+  </FormField>
+  <FormField label="Código de segurança" id="card-cvc">
+    <CardCvcInput id="card-cvc" brand={brand} onValueChange={(raw) => setCvc(raw)} />
+  </FormField>
+</>
+```
+
+- **Número:** agrupado pela bandeira (Amex `4-6-5`, Diners `4-6-4`, as demais de 4 em 4). A
+  bandeira aparece como texto no campo e é anunciada ao leitor de tela com o texto de `brandLabel`
+  (o padrão é em inglês: `Card brand: Visa`). O `onBrandChange` entrega `'visa'`, `'mastercard'`,
+  `'amex'`, `'elo'`, `'hipercard'`, `'diners'` ou `undefined`.
+- **Validade:** `MM/AA`, com o valor cru `MMAA`. `MM/AAAA` (colado ou preenchido pelo navegador)
+  vira `MM/AA`. Saber se o cartão venceu fica com o app e o gateway. O placeholder padrão é
+  `MM/YY`; troque pelo `placeholder`.
+- **Código de segurança:** 3 dígitos, ou 4 com `brand="amex"`. Fica escondido na impressão.
+- Os campos não guardam nada fora do `<input>` (nada em storage, console ou atributos `data-*`).
+
+No servidor, pelo `@indianous/base-ds/masks`:
+
+```ts
+import { detectCardBrand, isValidCardNumber } from '@indianous/base-ds/masks'
+
+detectCardBrand('4111 1111 1111 1111') // 'visa'
+isValidCardNumber('4111 1111 1111 1111') // true (Luhn)
+```
+
 ## Links com o roteador do app (Next.js)
 
 O `Navbar`, o `Footer`, o `DropdownMenu` e o `Breadcrumb` renderizam seus links como `<a href>`, o que recarrega a
