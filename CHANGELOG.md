@@ -6,7 +6,7 @@ Todas as mudanças relevantes do base-ds são registradas aqui. O formato segue 
 mudança que exige ajuste nos apps sobe o _minor_ (`0.1.0 → 0.2.0`); correções e componentes
 novos sem impacto sobem o _patch_.
 
-## [0.5.6] - 2026-10-07
+## [0.5.6] - 2026-10-08
 
 ### Adicionado
 
