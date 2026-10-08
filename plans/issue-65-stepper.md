@@ -117,3 +117,12 @@ a11y confere tudo nos dois temas.
 
 `npm run lint`, `format:check`, `typecheck`, `npm test`, `npm run test:stories`, `npm run build` +
 `npm run check:dist`.
+
+## Resultado (implementação)
+
+Entregue como planejado. Detalhes que o plano não fixava:
+
+- O sublinhado de hover vai só no rótulo das etapas clicáveis (`group-hover:underline`).
+- A linha entre as etapas vai de centro a centro dos círculos, por baixo deles. Fica `bg-primary`
+  até a etapa atual e `bg-border` depois dela.
+- O visual foi conferido no Storybook (claro, escuro e 375 px de largura).

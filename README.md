@@ -353,6 +353,38 @@ detectCardBrand('4111 1111 1111 1111') // 'visa'
 isValidCardNumber('4111 1111 1111 1111') // true (Luhn)
 ```
 
+## Etapas de um fluxo (`Stepper`)
+
+O `Stepper` mostra em que etapa de um fluxo a pessoa está (um checkout, por exemplo). O app
+controla a etapa atual pelo `current`, com o `id` da etapa:
+
+```tsx
+import { Stepper } from '@indianous/base-ds'
+
+;<Stepper
+  label="Etapas do pedido"
+  steps={[
+    { id: 'carrinho', label: 'Carrinho' },
+    { id: 'entrega', label: 'Entrega' },
+    { id: 'pagamento', label: 'Pagamento' },
+  ]}
+  current="entrega"
+  onStepClick={(id) => goTo(id)}
+  completedStepLabel="concluída"
+  currentStepLabel="atual"
+  upcomingStepLabel="não iniciada"
+  progressMessage={(step, total, label) => `Etapa ${step} de ${total} — ${label}`}
+/>
+```
+
+- Cada etapa fica **concluída** (com um check), **atual** ou **futura**. O leitor de tela ouve o
+  estado de cada uma, com os textos de `completedStepLabel`, `currentStepLabel` e
+  `upcomingStepLabel` (o padrão é em inglês).
+- Com `onStepClick`, as etapas concluídas viram botões para voltar a elas. A atual e as futuras
+  nunca são clicáveis.
+- Abaixo do breakpoint `sm`, no lugar da lista aparece o texto de `progressMessage` com uma barra
+  de progresso, sem rolagem horizontal. Nessa versão não há volta pelo `Stepper`.
+
 ## Links com o roteador do app (Next.js)
 
 O `Navbar`, o `Footer`, o `DropdownMenu` e o `Breadcrumb` renderizam seus links como `<a href>`, o que recarrega a

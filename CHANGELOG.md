@@ -6,6 +6,25 @@ Todas as mudanças relevantes do base-ds são registradas aqui. O formato segue 
 mudança que exige ajuste nos apps sobe o _minor_ (`0.1.0 → 0.2.0`); correções e componentes
 novos sem impacto sobem o _patch_.
 
+## [0.5.8] - 2026-10-08
+
+### Adicionado
+
+- `Stepper` ([#65](https://github.com/indianous/base-ds/issues/65)): indicador de etapas para
+  fluxos em passos, como o checkout. Recebe `steps` (`{ id, label }`) e `current` (o `id` da etapa
+  atual).
+  - Cada etapa fica concluída (com um check), atual (`aria-current="step"`) ou futura, e o estado é
+    anunciado ao leitor de tela.
+  - Com `onStepClick(id)`, as etapas concluídas viram botões para voltar a elas.
+  - Abaixo do breakpoint `sm`, vira o texto "Step 2 of 3 — Delivery" com uma barra de progresso.
+  - Textos trocáveis: `label`, `completedStepLabel`, `currentStepLabel`, `upcomingStepLabel` e
+    `progressMessage`.
+- README: seção "Etapas de um fluxo".
+
+### Ajustes necessários nos apps
+
+- Nenhum.
+
 ## [0.5.7] - 2026-10-08
 
 ### Adicionado

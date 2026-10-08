@@ -114,6 +114,9 @@ export type {
   CardNumberInputProps,
 } from './components/molecules/CardInput/CardInput'
 
+export { Stepper } from './components/molecules/Stepper/Stepper'
+export type { StepperProps, StepperStep } from './components/molecules/Stepper/Stepper'
+
 export { NumberInput } from './components/molecules/NumberInput/NumberInput'
 
 export { Pagination } from './components/molecules/Pagination/Pagination'
