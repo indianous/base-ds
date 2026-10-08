@@ -2,7 +2,8 @@
 
 ## Contexto
 
-Pedido direto, sem issue: um componente de tabela de preços para páginas de planos (SaaS), que
+Pedido direto, sem issue: um componente de tabela de preços para páginas de planos (SaaS) e de
+compras avulsas (um curso, um pacote, uma licença vitalícia), que
 ajude a pessoa a escolher um plano de forma clara. A especificação pede:
 
 1. **Estrutura:** um cartão por plano, lado a lado; um plano em destaque (borda colorida, selo
@@ -52,12 +53,15 @@ export interface PricingPlan {
   name: string
   /** Who the plan is for. */
   description?: string
-  /** Price per period, already the value to show. `null` or missing: the plan shows `customPrice`. */
-  price?: Partial<Record<BillingPeriod, number | null>>
+  /**
+   * A number: one-time price, shown without a period suffix. Per period: a subscription, shown
+   * with the selected period's suffix. `null` or missing: the plan shows `customPrice`.
+   */
+  price?: number | Partial<Record<BillingPeriod, number | null>>
   /** Text in place of the price, for plans without one ("Talk to us"). */
   customPrice?: string
-  /** Small text under the price, per period ("Billed R$ 960 yearly"). */
-  priceNote?: Partial<Record<BillingPeriod, string>>
+  /** Small text under the price: one text ("One-time payment") or one per period ("Billed R$ 960 yearly"). */
+  priceNote?: string | Partial<Record<BillingPeriod, string>>
   features: PricingFeature[]
   /** Highlights the plan: primary border, solid CTA, lifted on large screens. */
   highlighted?: boolean
@@ -72,7 +76,7 @@ export interface PricingTableProps extends Omit<HTMLAttributes<HTMLElement>, 'ch
   period?: BillingPeriod
   defaultPeriod?: BillingPeriod // 'monthly'
   onPeriodChange?: (period: BillingPeriod) => void
-  /** Periods offered in the toggle. With only one, there's no toggle. */
+  /** Periods offered in the toggle. With only one, or with no plan priced per period, there's no toggle. */
   periods?: BillingPeriod[] // ['monthly', 'yearly']
   /** Badge next to the yearly option ("Save 20%"). */
   yearlyBadge?: string
@@ -101,6 +105,11 @@ textos que fazem sentido para um cartão. A `PricingTable` repassa as dela.
 
 Decisões:
 
+- **Assinatura ou compra avulsa, pelo formato do `price`.** Um número (`price: 497`) é um
+  pagamento único: sai sem sufixo de período, não muda com o alternador, e a `priceNote` pode
+  dizer "Pagamento único" ou "Em até 12x". Um objeto por período é uma assinatura. Os dois podem
+  conviver na mesma tabela ("Mensal R$ 49/mês" ao lado de "Vitalício R$ 497"). Se nenhum plano
+  tem preço por período, o alternador não aparece: uma tabela só de compras avulsas fica sem ele.
 - **O preço anual é o que o app passa.** Uns sites mostram o anual como "R$ 80/mês, cobrado
   anualmente" e outros como "R$ 960/ano". O componente não calcula nada: mostra
   `price[period]` com o sufixo do período, e o app usa `priceNote` para a outra metade
@@ -152,6 +161,8 @@ Decisões:
 - a formatação: `pt-BR`/`BRL` (`R$ 49`, `R$ 49,90`), `en-US`/`USD`, valor inteiro sem centavos;
 - `customPrice` quando não há preço para o período, e a `priceNote` do período;
 - sem alternador quando `periods` tem um só período; o `yearlyBadge` dentro do rótulo do anual;
+- compra avulsa: `price` numérico sem sufixo, igual nos dois períodos, com a `priceNote` em texto
+  único; uma tabela só de compras avulsas sem alternador; uma tabela que mistura os dois;
 - destaque: o `badge`, a borda e o CTA `primary`; os outros com `outline`;
 - CTA com `href` vira link (inclusive com um `linkComponent` de teste), sem `href` vira botão e
   chama o `onClick`;
@@ -160,7 +171,8 @@ Decisões:
 - `jest-axe` sem violações.
 
 **Stories:** `Default` (três planos, o do meio em destaque), `WithYearlyDiscount`,
-`CustomPrice` (Enterprise "Fale com vendas"), `SinglePeriod`, `CardAlone` (um `PricingCard`
+`CustomPrice` (Enterprise "Fale com vendas"), `SinglePeriod`, `OneTimePurchase` (pacotes de
+pagamento único, sem alternador), `MixedPlans` (mensal ao lado de vitalício), `CardAlone` (um `PricingCard`
 sozinho), `Interactive` (com `play`: trocar o período muda os preços) e `CustomLabels` (tudo em
 português, com `pt-BR`/`BRL`). O addon de a11y confere tudo nos dois temas.
 
