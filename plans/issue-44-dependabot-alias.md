@@ -231,3 +231,56 @@ Dependabot) ou esperar a execução semanal. Eu confiro o log e a PR com o `gh`:
 ### Verificação
 
 `npm run format:check`.
+
+## Situação em 2026-11-17 e o que falta
+
+O Dependabot nunca abriu a PR. O app foi atualizado à mão a cada versão (0.4.10, 0.5.4, 0.5.7,
+0.5.8, 0.5.9) e ficou na 0.5.8 de 08/10 a 27/10, bem depois da carência da 0.5.9. Mesmo assim,
+nenhuma PR apareceu. A causa não é o alias nem a carência. **Toda execução do Dependabot desde
+2026-10-04 falha na autenticação**:
+
+```
+GET https://npm.pkg.github.com:443/@indianous%2Fbase-ds
+401 {"error":"unauthenticated: User cannot be authenticated with the token provided."}
+Handled error whilst updating @indianous/base-ds: private_source_authentication_failure
+```
+
+| execução (12:02 UTC, semanal) | resultado                               |
+| ----------------------------- | --------------------------------------- |
+| 2026-09-27                    | sucesso (o token funcionava)            |
+| 2026-10-04 até 2026-11-15     | falha, `401` em todas as sete execuções |
+
+O segredo `GH_PACKAGES_TOKEN` do Dependabot foi salvo em 2026-09-27 às 02:45 e começou a falhar
+exatamente uma semana depois. Tudo indica um PAT criado com **validade de 7 dias**, que expirou
+(ou foi revogado). O `.npmrc` e o `dependabot.yml` do app estão corretos.
+
+### Etapas
+
+1. **Token novo (manual, feito por você).** Criar um PAT classic só com `read:packages`, com uma
+   validade longa ou sem validade (é só leitura de pacotes), e salvar por cima do segredo do
+   Dependabot:
+
+   ```sh
+   gh secret set GH_PACKAGES_TOKEN --app dependabot --repo indianous/ecommerce-frontend
+   ```
+
+   Não vou ver nem manipular o token.
+
+2. **Disparar a verificação**: Insights → Dependency graph → Dependabot → "Check for updates", ou
+   esperar a execução de domingo. Eu confiro com `gh run view --log` que o `GET` voltou a dar
+   `200`. O app já está na 0.5.9, a última versão, então nenhuma PR é esperada ainda.
+3. **Confirmação final com a próxima publicação.** A primeira das issues #66, #68 e #67 a ser
+   publicada (v0.5.10) serve de teste. O app **não** deve ser atualizado à mão até a PR aparecer,
+   uns 3 dias depois da publicação (carência padrão). Se aparecer, comento na #44 e a fecho.
+
+### README
+
+Na seção **Atualizando → Dependabot**, acrescentar um aviso curto: o token vence conforme a
+validade escolhida no PAT, e um token vencido não gera e-mail nem PR, só execuções com
+`private_source_authentication_failure` na aba Actions do app ("Dependabot Updates"). Recomendar
+uma validade longa e onde conferir o log. É só Markdown: sem bump de versão, e a mudança segue no
+próximo tarball. Se sair junto de uma das outras issues, entra no mesmo CHANGELOG, em "Alterado".
+
+### Verificação
+
+`npm run format:check`.
