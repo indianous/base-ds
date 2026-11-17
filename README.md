@@ -493,6 +493,45 @@ aos menus dropdown e fecha o drawer do celular quando um item é clicado. O `Bad
 
 O `Sidebar` resolve o mesmo problema com a prop `asChild` em cada item.
 
+### Ações do `Navbar` no drawer do celular
+
+No celular, com mais de uma ação, o `Navbar` renderiza cada elemento de `actions` duas vezes: no
+header e no drawer de ações. Uma ação que precisa saber onde está, ou fechar o drawer depois de
+navegar, usa o `useNavbarAction`:
+
+```tsx
+'use client'
+import { DropdownMenu, useNavbarAction } from '@indianous/base-ds'
+
+export function UserMenu() {
+  const { inDrawer, closeDrawer } = useNavbarAction()
+  return (
+    <DropdownMenu
+      // no header o avatar fica na direita; no drawer, na esquerda da coluna
+      align={inDrawer ? 'start' : 'end'}
+      trigger={/* … */}
+      items={[
+        { label: 'Perfil', href: '/profile', onClick: closeDrawer },
+        {
+          label: 'Sair',
+          onClick: () => {
+            closeDrawer()
+            logout()
+          },
+        },
+      ]}
+    />
+  )
+}
+```
+
+- `inDrawer` é `true` só na cópia de dentro do drawer, já na primeira renderização.
+- `closeDrawer` fecha o drawer de ações. No header, não faz nada.
+- Fora de um `Navbar` (num teste do componente, por exemplo), o hook devolve
+  `{ inDrawer: false, closeDrawer: () => {} }` sem erro.
+- O componente que chama o hook precisa ser um client component (`'use client'`). O `actions`
+  continua um array de elementos, então o `Navbar` pode ser montado num Server Component.
+
 ## Imagens com o Next.js
 
 O `Image` carrega em modo lazy (`loading="lazy"`) e decodifica de forma assíncrona por padrão.

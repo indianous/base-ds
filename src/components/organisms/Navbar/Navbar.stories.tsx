@@ -1,8 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import type { AnchorHTMLAttributes } from 'react'
+import { expect, userEvent, waitFor, within } from 'storybook/test'
 import { Navbar } from './Navbar'
 import type { NavItem } from './Navbar'
+import { useNavbarAction } from './NavbarActionContext'
+import { Avatar } from '../../atoms/Avatar/Avatar'
 import { Button } from '../../atoms/Button/Button'
+import { DropdownMenu } from '../../molecules/DropdownMenu/DropdownMenu'
 import { Icon } from '../../atoms/Icon/Icon'
 import { SearchField } from '../../molecules/SearchField/SearchField'
 
@@ -169,6 +173,56 @@ export const MobileActionsDrawer: Story = {
       <Navbar {...args} />
     </div>
   ),
+}
+
+// An app's user menu: it opens towards the inside of whatever holds it (the right edge of the
+// header, the left of the drawer column) and closes the actions drawer after an action (#67).
+function UserMenu() {
+  const { inDrawer, closeDrawer } = useNavbarAction()
+  return (
+    <DropdownMenu
+      align={inDrawer ? 'start' : 'end'}
+      trigger={
+        <Button variant="ghost" size="sm" aria-label="User menu">
+          <Avatar alt="Ada Lovelace" fallback="A" size="sm" />
+        </Button>
+      }
+      items={[
+        { label: 'Profile', onClick: closeDrawer },
+        { type: 'separator' },
+        { label: 'Sign out', onClick: closeDrawer, danger: true },
+      ]}
+    />
+  )
+}
+
+export const ActionsAwareOfDrawer: Story = {
+  globals: { viewport: { value: 'mobile1', isRotated: false } },
+  args: {
+    logo,
+    items,
+    actions: [
+      <Button key="notifications" variant="ghost" size="sm">
+        Notifications
+      </Button>,
+      <UserMenu key="user" />,
+    ],
+  },
+  play: async ({ canvasElement }) => {
+    await userEvent.click(within(canvasElement).getByRole('button', { name: 'More actions' }))
+    const drawer = await within(document.body).findByRole('dialog')
+
+    await userEvent.click(within(drawer).getByRole('button', { name: 'User menu' }))
+    const menu = within(drawer).getByRole('menu')
+    // Aligned to the start of the trigger, the menu stays inside the drawer.
+    const drawerBox = drawer.getBoundingClientRect()
+    const menuBox = menu.getBoundingClientRect()
+    await expect(menuBox.left).toBeGreaterThanOrEqual(drawerBox.left)
+    await expect(menuBox.right).toBeLessThanOrEqual(drawerBox.right)
+
+    await userEvent.click(within(menu).getByRole('menuitem', { name: 'Sign out' }))
+    await waitFor(() => expect(within(document.body).queryByRole('dialog')).toBeNull())
+  },
 }
 
 export const CenteredLogo: Story = {

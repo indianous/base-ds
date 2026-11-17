@@ -129,6 +129,15 @@ for (const [name, pattern] of [
 const navbarIcons = bytesFrom(await inputsFor('Navbar'), /node_modules\/lucide-react\//)
 if (navbarIcons >= 30_000) failures.push(`importing Navbar brings ${navbarIcons} bytes of icons`)
 
+// 6. A hook exported apart from its component lives in its own file: Next.js ships a client module
+// whole, so `useNavbarAction` must not share a file with the Navbar (issue #67).
+const hookFile = clientFiles.find((file) =>
+  /function useNavbarAction\b/.test(readFileSync(file, 'utf8')),
+)
+if (hookFile === undefined) failures.push('useNavbarAction not found in dist')
+else if (/function Navbar\b/.test(readFileSync(hookFile, 'utf8')))
+  failures.push(`useNavbarAction shares ${hookFile} with the Navbar`)
+
 if (failures.length > 0) {
   console.error(`check:dist failed:\n${failures.map((failure) => `- ${failure}`).join('\n')}`)
   process.exit(1)

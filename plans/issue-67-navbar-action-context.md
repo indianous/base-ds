@@ -117,3 +117,26 @@ de que o contorno com `closest('[role="dialog"]')` pode sair.
 
 `npm run lint`, `format:check`, `typecheck`, `npm test`, `npm run test:stories`, `npm run build`
 e `npm run check:dist`.
+
+## Resultado (implementação)
+
+Entregue como planejado, com o nome `useNavbarAction`.
+
+- O contexto ficou em `NavbarActionContext.ts`. O `src/bundle.test.ts` ganhou um caso: importar só
+  o hook não traz o `Navbar.tsx`, o `Drawer` nem ícones do lucide.
+- Só o drawer de ações tem provider. As cópias do header usam o valor padrão do contexto
+  (`inDrawer: false` e um `closeDrawer` que não faz nada), o mesmo de fora do `Navbar`.
+- Com uma só ação, ela aparece duas vezes no DOM (linha do desktop e header do celular), e as duas
+  recebem `inDrawer: false`.
+- A story `ActionsAwareOfDrawer` roda no viewport `mobile1`, abre o menu do usuário dentro do
+  drawer, confere que ele cabe no drawer e que "Sign out" fecha o drawer. Com `align="end"`
+  forçado, a checagem falha (o menu sai 87px pela esquerda), então ela de fato pega o problema da
+  issue.
+- **Correção no build, achada na verificação do `dist`:** o plano supunha que o contexto num `.ts`
+  viraria um chunk próprio, mas o esbuild o colocou no chunk do `Navbar`, porque só o `Navbar.tsx`
+  o importava. O `bundle.test.ts` não percebe, porque lê o `src` com tree-shaking, e o Next.js
+  entrega um módulo `'use client'` inteiro. O `tsup.config.ts` passou a ter como entrada também os
+  `.ts` de `src/components` (menos os testes). Com isso, `NavbarActionContext.js` e `useToast.js`
+  ganham arquivos próprios, e o contexto fica num chunk de 238 bytes compartilhado com o `Navbar`.
+  O `check:dist` ganhou a guarda 6: o arquivo que define `useNavbarAction` não pode definir o
+  `Navbar`. Com a configuração antiga, ela falha.

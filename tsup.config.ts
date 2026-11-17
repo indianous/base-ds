@@ -56,6 +56,10 @@ export default defineConfig([
       'src/components/**/*.tsx',
       '!src/components/**/*.test.tsx',
       '!src/components/**/*.stories.tsx',
+      // Hooks and contexts in their own `.ts` files (`useNavbarAction`, `useToast`) get their own
+      // file too, so importing one doesn't ship the component next to it (issue #67).
+      'src/components/**/*.ts',
+      '!src/components/**/*.test.ts',
     ],
     format: ['esm'],
     splitting: true,

@@ -216,6 +216,8 @@ export type {
 
 export { Navbar } from './components/organisms/Navbar/Navbar'
 export type { NavbarLogoAlign, NavbarProps, NavItem } from './components/organisms/Navbar/Navbar'
+export { useNavbarAction } from './components/organisms/Navbar/NavbarActionContext'
+export type { NavbarActionContextValue } from './components/organisms/Navbar/NavbarActionContext'
 
 export { Sidebar } from './components/organisms/Sidebar/Sidebar'
 

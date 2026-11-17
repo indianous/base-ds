@@ -6,6 +6,23 @@ Todas as mudanças relevantes do base-ds são registradas aqui. O formato segue 
 mudança que exige ajuste nos apps sobe o _minor_ (`0.1.0 → 0.2.0`); correções e componentes
 novos sem impacto sobem o _patch_.
 
+## [0.5.12] - 2026-11-17
+
+### Adicionado
+
+- `useNavbarAction` ([#67](https://github.com/indianous/base-ds/issues/67)): hook para os
+  elementos passados em `actions` do `Navbar`. Devolve `inDrawer`, que é `true` só na cópia
+  renderizada dentro do drawer de ações do celular, já na primeira renderização, e `closeDrawer`,
+  que fecha esse drawer (no header, não faz nada). Fora de um `Navbar`, devolve
+  `{ inDrawer: false, closeDrawer: () => {} }` sem erro. Exporta também o tipo
+  `NavbarActionContextValue`.
+- README: seção "Ações do `Navbar` no drawer do celular".
+
+### Ajustes necessários nos apps
+
+- Nenhum. No ecommerce, o `UserMenu` pode trocar o `closest('[role="dialog"]')` e o clique no
+  botão "Fechar" do drawer pelo `useNavbarAction`.
+
 ## [0.5.11] - 2026-11-17
 
 ### Adicionado

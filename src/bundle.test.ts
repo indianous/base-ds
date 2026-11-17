@@ -58,6 +58,16 @@ describe('bundle size', () => {
     expect(bytesFrom(inputs, dndKit)).toBe(0)
   })
 
+  it('importing only useNavbarAction leaves out the Navbar, its drawers and icons', async () => {
+    const inputs = await bundle(['useNavbarAction'])
+    expect(
+      bytesFrom(inputs, /src\/components\/organisms\/Navbar\/NavbarActionContext/),
+    ).toBeGreaterThan(0)
+    expect(bytesFrom(inputs, /src\/components\/organisms\/Navbar\/Navbar\.tsx/)).toBe(0)
+    expect(bytesFrom(inputs, /src\/components\/organisms\/Drawer\//)).toBe(0)
+    expect(bytesFrom(inputs, lucide)).toBe(0)
+  })
+
   it('importing Input leaves out the mask engine of MaskedInput', async () => {
     const inputs = await bundle(['Input'])
     expect(bytesFrom(inputs, /src\/masks\//)).toBe(0)

@@ -1,10 +1,13 @@
 import { describe, it, expect, vi } from 'vitest'
+import { useRef } from 'react'
 import type { AnchorHTMLAttributes } from 'react'
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { axe } from 'jest-axe'
 import { Navbar } from './Navbar'
 import type { NavItem } from './Navbar'
+import { useNavbarAction } from '../../../index'
+import type { NavbarActionContextValue } from '../../../index'
 
 describe('Navbar', () => {
   it('renders with role="navigation" and aria-label="Main navigation"', () => {
@@ -495,6 +498,88 @@ describe('Navbar linkComponent', () => {
   it('has no accessibility violations with linkComponent', async () => {
     const { container } = render(<Navbar items={items} linkComponent={TestLink} />)
     await userEvent.click(screen.getByRole('button', { name: /open navigation menu/i }))
+    expect(await axe(container)).toHaveNoViolations()
+  })
+})
+
+describe('useNavbarAction', () => {
+  // Shows where it is rendered and closes the drawer, like an app's user menu would.
+  function PlacementAwareAction() {
+    const { inDrawer, closeDrawer }: NavbarActionContextValue = useNavbarAction()
+    return (
+      <button type="button" onClick={closeDrawer}>
+        {inDrawer ? 'Profile (drawer)' : 'Profile (header)'}
+      </button>
+    )
+  }
+
+  const twoActions = [<button key="a">Notifications</button>, <PlacementAwareAction key="b" />]
+
+  const openActionsDrawer = () =>
+    userEvent.click(screen.getByRole('button', { name: /more actions/i }))
+
+  it('reports inDrawer: false for an action in the header', () => {
+    render(<Navbar actions={twoActions} />)
+    expect(screen.getByRole('button', { name: 'Profile (header)' })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Profile (drawer)' })).not.toBeInTheDocument()
+  })
+
+  it('reports inDrawer: true for the copy inside the actions drawer, from the first render', async () => {
+    // The value each instance had on its very first render: an app that reads it in render
+    // (e.g. `align={inDrawer ? 'start' : 'end'}`) must not flash the header layout in the drawer.
+    const firstRenderValues: boolean[] = []
+    function RecordingAction() {
+      const { inDrawer } = useNavbarAction()
+      const first = useRef<boolean | null>(null)
+      if (first.current === null) {
+        first.current = inDrawer
+        firstRenderValues.push(inDrawer)
+      }
+      return <span>{inDrawer ? 'in drawer' : 'in header'}</span>
+    }
+    render(
+      <Navbar actions={[<button key="a">Notifications</button>, <RecordingAction key="b" />]} />,
+    )
+    expect(firstRenderValues).toEqual([false])
+
+    firstRenderValues.length = 0
+    await openActionsDrawer()
+    expect(within(screen.getByRole('dialog')).getByText('in drawer')).toBeInTheDocument()
+    expect(firstRenderValues).toEqual([true])
+  })
+
+  it('closes the actions drawer when closeDrawer is called from inside it', async () => {
+    render(<Navbar actions={twoActions} />)
+    await openActionsDrawer()
+    const dialog = screen.getByRole('dialog')
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Profile (drawer)' }))
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  })
+
+  it('does nothing when closeDrawer is called from the header', async () => {
+    render(<Navbar actions={twoActions} />)
+    await openActionsDrawer()
+    await userEvent.click(screen.getByRole('button', { name: 'Profile (header)' }))
+    expect(screen.getByRole('dialog')).toBeInTheDocument()
+  })
+
+  it('reports inDrawer: false for a single action, which stays in the header on mobile', () => {
+    render(<Navbar actions={[<PlacementAwareAction key="a" />]} />)
+    // Both copies (desktop row and mobile header) are in the header.
+    expect(screen.getAllByRole('button', { name: 'Profile (header)' })).toHaveLength(2)
+    expect(screen.queryByRole('button', { name: 'Profile (drawer)' })).not.toBeInTheDocument()
+  })
+
+  it('returns a no-op default outside a Navbar instead of throwing', async () => {
+    render(<PlacementAwareAction />)
+    const button = screen.getByRole('button', { name: 'Profile (header)' })
+    await userEvent.click(button)
+    expect(button).toBeInTheDocument()
+  })
+
+  it('has no accessibility violations with a placement-aware action in the open drawer', async () => {
+    const { container } = render(<Navbar actions={twoActions} />)
+    await openActionsDrawer()
     expect(await axe(container)).toHaveNoViolations()
   })
 })

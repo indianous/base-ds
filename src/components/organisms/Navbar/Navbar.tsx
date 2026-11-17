@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
 import { cn } from '../../../utils/cn'
 import type { LinkComponent } from '../../../utils/linkComponent'
@@ -7,6 +7,8 @@ import { ChevronDownIcon, MenuIcon, SettingsIcon } from 'lucide-react'
 import { Drawer } from '../Drawer/Drawer'
 import { DropdownMenu } from '../../molecules/DropdownMenu/DropdownMenu'
 import type { DropdownMenuItem } from '../../molecules/DropdownMenu/DropdownMenu'
+import { NavbarActionContext } from './NavbarActionContext'
+import type { NavbarActionContextValue } from './NavbarActionContext'
 
 export type NavItem =
   | { type?: 'link'; label: string; href?: string; active?: boolean; onClick?: () => void }
@@ -210,6 +212,13 @@ export function Navbar({
   const showMobileToggle = hasItems || hasSearch
   const hasMultipleActions = actions !== undefined && actions.length > 1
 
+  // Actions in the header get the default (not in a drawer, nothing to close); the copies inside
+  // the actions drawer can tell where they are and close it (issue #67).
+  const drawerActionContext = useMemo<NavbarActionContextValue>(
+    () => ({ inDrawer: true, closeDrawer: () => setIsActionsDrawerOpen(false) }),
+    [],
+  )
+
   const logoCell = (
     <div className={cn('flex flex-1 items-center', logoCellClasses[logoAlign])}>
       {logo !== undefined && <div className="flex-shrink-0">{logo}</div>}
@@ -348,11 +357,13 @@ export function Navbar({
           closeLabel={drawerCloseLabel}
           dismissLabel={drawerDismissLabel}
         >
-          <div className="flex flex-col gap-2">
-            {actions!.map((action, index) => (
-              <div key={index}>{action}</div>
-            ))}
-          </div>
+          <NavbarActionContext.Provider value={drawerActionContext}>
+            <div className="flex flex-col gap-2">
+              {actions!.map((action, index) => (
+                <div key={index}>{action}</div>
+              ))}
+            </div>
+          </NavbarActionContext.Provider>
         </Drawer>
       )}
     </header>
