@@ -6,6 +6,21 @@ Todas as mudanças relevantes do base-ds são registradas aqui. O formato segue 
 mudança que exige ajuste nos apps sobe o _minor_ (`0.1.0 → 0.2.0`); correções e componentes
 novos sem impacto sobem o _patch_.
 
+## [0.5.11] - 2026-11-17
+
+### Adicionado
+
+- `Badge` ([#68](https://github.com/indianous/base-ds/issues/68)): props `href` e `linkComponent`
+  para tags e categorias clicáveis. Com `href`, o `Badge` vira um link (`<a>`, ou o
+  `linkComponent`, como o `Link` do Next.js) com a mesma `variant` e o mesmo `size`, mais hover e
+  anel de foco visível pelo teclado. Sem `href`, continua um `<span>`, como antes.
+- README: o `Badge` na seção "Links com o roteador do app (Next.js)".
+
+### Ajustes necessários nos apps
+
+- Nenhum. No blog, o contorno com `ButtonLink` `sm`/`outline` nas tags pode virar
+  `<Badge href linkComponent={AppLink}>`.
+
 ## [0.5.10] - 2026-11-17
 
 ### Corrigido

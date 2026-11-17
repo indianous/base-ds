@@ -80,3 +80,18 @@ o contorno com `ButtonLink` no blog pode sair.
 
 `npm run lint`, `format:check`, `typecheck`, `npm test`, `npm run test:stories`, `npm run build`
 e `npm run check:dist`.
+
+## Resultado (implementação)
+
+Entregue como planejado, com dois ajustes no estilo do link:
+
+- **Hover do `default`:** o contraste de `muted-foreground` sobre `border` passa nos dois temas
+  (6,10:1 e 5,78:1), mas no tema escuro `border` e `muted` são a mesma cor (`#1f2937`), e o hover
+  só com fundo ficaria invisível. O `default` usa `hover:bg-border hover:text-foreground`
+  (`foreground` sobre `border` dá 14:1 nos dois temas). Não foi preciso criar token.
+- **Foco:** o anel ficou igual ao do `Button`, sem `ring-offset-2`:
+  `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring`. Nenhum componente usa
+  offset, e a cor padrão do offset no Tailwind é branco fixo, o que destoaria no tema escuro.
+
+Os pares `*-foreground` sobre `*-hover` já estavam em `src/theme/contrast.ts`, então o
+`contrast.test.ts` não mudou.

@@ -460,9 +460,9 @@ const plans: PricingPlan[] = [
 
 ## Links com o roteador do app (Next.js)
 
-O `Navbar`, o `Footer`, o `DropdownMenu` e o `Breadcrumb` renderizam seus links como `<a href>`, o que recarrega a
-página inteira a cada clique. Para navegar pelo roteador do app, passe o componente de link dele em
-`linkComponent`:
+O `Navbar`, o `Footer`, o `DropdownMenu`, o `Breadcrumb` e o `Badge` (com `href`) renderizam seus
+links como `<a href>`, o que recarrega a página inteira a cada clique. Para navegar pelo roteador
+do app, passe o componente de link dele em `linkComponent`:
 
 ```tsx
 // app/AppLink.tsx
@@ -472,11 +472,12 @@ export { default as AppLink } from 'next/link'
 
 ```tsx
 // em qualquer página ou layout, inclusive Server Components
-import { Footer, Navbar } from '@indianous/base-ds'
+import { Badge, Footer, Navbar } from '@indianous/base-ds'
 import { AppLink } from './AppLink'
 
 <Navbar linkComponent={AppLink} items={[{ label: 'Projetos', href: '/projects', active: true }]} />
 <Footer linkComponent={AppLink} columns={[...]} />
+<Badge href="/tags/react" linkComponent={AppLink} size="sm">React</Badge>
 ```
 
 O arquivo `'use client'` é necessário. O `Navbar` e o `Footer` são client components, e um Server
@@ -487,7 +488,8 @@ Component só consegue passar a eles um componente que venha de um arquivo `'use
 
 O componente recebe `href`, `className`, `children` e os atributos `aria-*` e `on*` de um `<a>`, e
 precisa renderizar um `<a>` (o `Link` do Next.js já faz isso). O `Navbar` repassa o `linkComponent`
-aos menus dropdown e fecha o drawer do celular quando um item é clicado.
+aos menus dropdown e fecha o drawer do celular quando um item é clicado. O `Badge` só vira link com
+`href`: sem ele, continua um `<span>`, e o `linkComponent` é ignorado.
 
 O `Sidebar` resolve o mesmo problema com a prop `asChild` em cada item.
 
