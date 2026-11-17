@@ -6,6 +6,20 @@ Todas as mudanças relevantes do base-ds são registradas aqui. O formato segue 
 mudança que exige ajuste nos apps sobe o _minor_ (`0.1.0 → 0.2.0`); correções e componentes
 novos sem impacto sobem o _patch_.
 
+## [0.5.10] - 2026-11-17
+
+### Corrigido
+
+- `Select` ([#66](https://github.com/indianous/base-ds/issues/66)): com `placeholder`, o React
+  avisava no console em toda renderização:
+  `Use the defaultValue or value props on <select> instead of setting selected on <option>`.
+  O placeholder passa a ser marcado pelo valor do próprio `<select>`: sem `value` nem
+  `defaultValue`, o campo começa nele, como antes, e um `defaultValue` do app continua valendo.
+
+### Ajustes necessários nos apps
+
+- Nenhum.
+
 ## [0.5.9] - 2026-10-08
 
 ### Adicionado

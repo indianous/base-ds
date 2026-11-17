@@ -11,6 +11,15 @@ const options = [
 ]
 
 describe('Select', () => {
+  // Must stay the first test in this file: React logs each warning only once per module instance,
+  // so a placeholder rendered by an earlier test would hide it.
+  it('does not trigger React warnings when a placeholder is rendered', () => {
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {})
+    render(<Select id="s" options={options} placeholder="Choose..." aria-label="Pick" />)
+    expect(consoleError).not.toHaveBeenCalled()
+    consoleError.mockRestore()
+  })
+
   it('renders a select element', () => {
     render(<Select id="s" options={options} />)
     expect(screen.getByRole('combobox')).toBeInTheDocument()
@@ -68,6 +77,65 @@ describe('Select', () => {
     render(<Select id="s" options={options} onChange={onChange} aria-label="Pick option" />)
     await userEvent.selectOptions(screen.getByRole('combobox'), 'a')
     expect(onChange).toHaveBeenCalled()
+  })
+
+  describe('placeholder selection', () => {
+    const noop = () => {}
+
+    it('selects the placeholder when uncontrolled without defaultValue', () => {
+      render(<Select id="s" options={options} placeholder="Choose..." aria-label="Pick" />)
+      expect(screen.getByRole('combobox')).toHaveValue('')
+      expect(
+        (screen.getByRole('option', { name: 'Choose...' }) as HTMLOptionElement).selected,
+      ).toBe(true)
+    })
+
+    it('honors defaultValue when uncontrolled', () => {
+      render(
+        <Select
+          id="s"
+          options={options}
+          placeholder="Choose..."
+          defaultValue="b"
+          aria-label="Pick"
+        />,
+      )
+      expect(screen.getByRole('combobox')).toHaveValue('b')
+    })
+
+    it('selects the first option when uncontrolled without placeholder', () => {
+      render(<Select id="s" options={options} aria-label="Pick" />)
+      expect(screen.getByRole('combobox')).toHaveValue('a')
+    })
+
+    it('follows the value prop when controlled', () => {
+      const consoleError = vi.spyOn(console, 'error').mockImplementation(noop)
+      const { rerender } = render(
+        <Select
+          id="s"
+          options={options}
+          placeholder="Choose..."
+          value=""
+          onChange={noop}
+          aria-label="Pick"
+        />,
+      )
+      expect(screen.getByRole('combobox')).toHaveValue('')
+
+      rerender(
+        <Select
+          id="s"
+          options={options}
+          placeholder="Choose..."
+          value="c"
+          onChange={noop}
+          aria-label="Pick"
+        />,
+      )
+      expect(screen.getByRole('combobox')).toHaveValue('c')
+      expect(consoleError).not.toHaveBeenCalled()
+      consoleError.mockRestore()
+    })
   })
 
   it('has no accessibility violations', async () => {
